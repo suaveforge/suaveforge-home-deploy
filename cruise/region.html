@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="지역별 크루즈 특가 모음. 지중해, 카리브해, 알래스카, 아시아 크루즈를 최저가로 비교하세요.">
+  <title>지역별 크루즈 - CruisePickers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+<script src="./portfolio-presentation.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">🔍</span>
+      <div>
+        <div class="logo-text">CruisePickers</div>
+        <div class="logo-sub">한국어 최저가 크루즈 비교</div>
+      </div>
+    </a>
+    <nav id="mainNav">
+      <a href="index.html">홈</a>
+      <a href="lines.html">크루즈사</a>
+      <a href="region.html" class="active">지역별</a>
+      <a href="guide.html">여행 가이드</a>
+      <a href="index.html#deals" class="nav-cta">🔥 특가 보기</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="ko">한국어</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+    </div>
+  </div>
+</header>
+
+<section style="background:linear-gradient(135deg,#0066cc,#004fa3);color:white;padding:60px 20px;text-align:center">
+  <div class="hero-badge">🗺️ 지역별 크루즈</div>
+  <h1 style="font-size:clamp(26px,4vw,42px);font-weight:900;margin:12px 0">원하는 지역을 선택하세요</h1>
+  <p style="font-size:16px;opacity:.9">지역별로 최저가 크루즈를 한눈에 비교해보세요</p>
+</section>
+
+<section>
+  <div class="container">
+    <div class="filters" id="regionFilters">
+      <button class="filter-btn active" data-filter="all">전체</button>
+      <button class="filter-btn" data-filter="mediterranean">🌊 지중해</button>
+      <button class="filter-btn" data-filter="caribbean">🏝️ 카리브해</button>
+      <button class="filter-btn" data-filter="alaska">🧊 알래스카</button>
+      <button class="filter-btn" data-filter="asia">⛩️ 아시아</button>
+      <button class="filter-btn" data-filter="europe">🏔️ 북유럽</button>
+      <button class="filter-btn" data-filter="middleeast">🕌 중동</button>
+    </div>
+    <div class="cruise-grid" id="cruiseGrid"></div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <h2>크루즈 예약이 처음이신가요?</h2>
+  <p>초보자를 위한 크루즈 완벽 가이드를 읽어보세요!</p>
+  <a href="guide.html" class="cta-btn">크루즈 가이드 보기 →</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="logo-icon">🚢</span>
+        <div>
+          <div class="logo-text">CruisePickers</div>
+          <div class="logo-sub">한국어 최저가 크루즈 예약</div>
+        </div>
+      </div>
+      <p>전 세계 크루즈 특가를 한국어로 쉽게 비교하고 예약하세요.</p>
+    </div>
+    <div class="footer-col">
+      <h4>지역별 크루즈</h4>
+      <ul>
+        <li><a href="region.html?r=mediterranean">지중해 크루즈</a></li>
+        <li><a href="region.html?r=caribbean">카리브해 크루즈</a></li>
+        <li><a href="region.html?r=alaska">알래스카 크루즈</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>정보</h4>
+      <ul>
+        <li><a href="guide.html">크루즈 입문 가이드</a></li>
+        <li><a href="#">개인정보처리방침</a></li>
+        <li><a href="#">이용약관</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <span>© 2025 CruisePickers. All rights reserved.</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const r = params.get("r");
+    if (r) {
+      filterCruises(r);
+    } else {
+      renderCruises(cruises);
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => filterCruises(btn.dataset.filter));
+      });
+    }
+  });
+</script>
+</body>
+</html>

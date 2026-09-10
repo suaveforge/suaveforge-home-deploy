@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="한국어로 최저가 크루즈를 비교하고 예약하세요. Compare and book the world's best cruises at the lowest price.">
+  <meta name="keywords" content="크루즈 예약, 크루즈 최저가, cruise booking, cruise deals, Royal Caribbean, MSC, Norwegian">
+  <meta property="og:title" content="CruisePickers - 한국어 최저가 크루즈 비교">
+  <meta property="og:type" content="website">
+  <title>CruisePickers - 최저가 크루즈 비교·예약</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+<script src="./portfolio-presentation.js"></script>
+
+  <!-- SITEHUB-BEGIN -->
+  <link rel="canonical" href="https://suaveforge.com/cruise/">
+  <meta property="og:description" content="한국어로 최저가 크루즈를 비교하고 예약하세요. Compare and book the world">
+  <meta property="og:image" content="https://sitehub.suaveforge.com/assets/namecard-default.png">
+  <meta property="og:url" content="https://suaveforge.com/cruise/">
+  <meta property="og:site_name" content="SuaveForge">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://sitehub.suaveforge.com/analytics-loader.js" data-sitehub-project="p09"></script>
+  <!-- SITEHUB-END -->
+<!-- sitehub-searchops-complete-head:begin -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CruisePickers","url":"https://suaveforge.com/cruise/","description":"CruisePickers는 한국어로 글로벌 크루즈사의 노선·지역·특가를 비교하고 예약 정보를 확인하는 크루즈 비교 서비스입니다.","creator":{"@type":"Organization","name":"SuaveForge","url":"https://suaveforge.com/"},"isPartOf":{"@type":"WebSite","name":"SuaveForge","url":"https://suaveforge.com/"}}</script>
+<!-- sitehub-searchops-complete-head:end -->
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">🔍</span>
+      <div>
+        <div class="logo-text">CruisePickers</div>
+        <div class="logo-sub" data-i18n="nav.home" style="font-weight:400;font-size:11px;color:var(--text-light)">한국어 최저가 크루즈 비교</div>
+      </div>
+    </a>
+    <nav id="mainNav">
+      <a href="index.html" class="active" data-i18n="nav.home">홈</a>
+      <a href="lines.html" data-i18n="nav.lines">크루즈사</a>
+      <a href="region.html" data-i18n="nav.region">지역별</a>
+      <a href="guide.html" data-i18n="nav.guide">여행 가이드</a>
+      <a href="index.html#deals" class="nav-cta" data-i18n="nav.cta">🔥 특가 보기</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="ko">한국어</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge" data-i18n="hero.badge">✈️ 한국어로 쉽게 · 11개 크루즈사 비교</div>
+  <h1 data-i18n="hero.title">전 세계 크루즈를<br><span>최저가</span>로 비교하세요</h1>
+  <p data-i18n="hero.sub">로열캐리비안, MSC, NCL, 카니발 등<br>인기 크루즈 특가를 한눈에 스캔합니다</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <strong data-i18n="hero.stat1.num">11개</strong>
+      <span data-i18n="hero.stat1.label">글로벌 크루즈사</span>
+    </div>
+    <div class="hero-stat">
+      <strong data-i18n="hero.stat2.num">6개</strong>
+      <span data-i18n="hero.stat2.label">여행 지역</span>
+    </div>
+    <div class="hero-stat">
+      <strong data-i18n="hero.stat3.num">최대 40%</strong>
+      <span data-i18n="hero.stat3.label">할인 특가</span>
+    </div>
+  </div>
+</section>
+
+<div class="search-section">
+  <div class="search-bar">
+    <select class="search-select" id="regionSelect">
+      <option value="">전체 지역</option>
+      <option value="mediterranean">지중해</option>
+      <option value="caribbean">카리브해</option>
+      <option value="alaska">알래스카</option>
+      <option value="asia">아시아</option>
+      <option value="europe">북유럽</option>
+      <option value="middleeast">중동</option>
+    </select>
+    <input type="text" class="search-input" id="searchInput" data-i18n="search.placeholder" placeholder="크루즈명, 크루즈사, 기항지 검색...">
+    <button class="search-btn" onclick="handleSearch()" data-i18n="search.btn">🔍 검색</button>
+  </div>
+</div>
+
+<section id="deals">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge" data-i18n="deals.badge">🔥 BEST DEALS</div>
+      <h2 data-i18n="deals.title">지금 바로 예약 가능한 특가</h2>
+      <p data-i18n="deals.sub">한국인이 가장 많이 찾는 크루즈를 최저가로 만나보세요</p>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">전체</button>
+      <button class="filter-btn" data-filter="mediterranean">🌊 지중해</button>
+      <button class="filter-btn" data-filter="caribbean">🏝️ 카리브해</button>
+      <button class="filter-btn" data-filter="alaska">🧊 알래스카</button>
+      <button class="filter-btn" data-filter="asia">⛩️ 아시아</button>
+      <button class="filter-btn" data-filter="europe">🏔️ 북유럽</button>
+      <button class="filter-btn" data-filter="middleeast">🕌 중동</button>
+    </div>
+    <div class="cruise-grid" id="cruiseGrid"></div>
+  </div>
+</section>
+
+<section style="background:var(--white)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge" data-i18n="lines.badge">🚢 크루즈사 비교</div>
+      <h2 data-i18n="lines.title">어떤 크루즈사가 나에게 맞을까?</h2>
+      <p data-i18n="lines.sub">11개 글로벌 크루즈사의 특징, 가격, 추천 대상을 한눈에 비교하세요</p>
+    </div>
+    <div class="line-grid" id="lineGrid"></div>
+    <div style="text-align:center;margin-top:32px">
+      <a href="lines.html" data-i18n="lines.more" style="display:inline-block;border:2px solid var(--primary);color:var(--primary);padding:12px 32px;border-radius:30px;font-weight:700;font-size:14px;transition:all 0.2s" onmouseover="this.style.background='var(--primary)';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='var(--primary)'">전체 크루즈사 비교 보기 →</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge" data-i18n="regions.badge">🗺️ 지역별 탐색</div>
+      <h2 data-i18n="regions.title">어디로 떠나고 싶으세요?</h2>
+      <p data-i18n="regions.sub">원하는 지역을 클릭하면 해당 크루즈만 모아볼 수 있어요</p>
+    </div>
+    <div class="region-grid">
+      <div class="region-card" onclick="goToRegion('mediterranean')">
+        <div class="region-bg" style="background:linear-gradient(135deg,#1e3c72,#2a5298)">🌊</div>
+        <div class="region-overlay">
+          <div class="region-name" data-i18n="filter.mediterranean">지중해</div>
+          <div class="region-count">5~10월 · 유럽 문화</div>
+        </div>
+      </div>
+      <div class="region-card" onclick="goToRegion('caribbean')">
+        <div class="region-bg" style="background:linear-gradient(135deg,#11998e,#38ef7d)">🏝️</div>
+        <div class="region-overlay">
+          <div class="region-name" data-i18n="filter.caribbean">카리브해</div>
+          <div class="region-count">12~4월 · 에메랄드 바다</div>
+        </div>
+      </div>
+      <div class="region-card" onclick="goToRegion('alaska')">
+        <div class="region-bg" style="background:linear-gradient(135deg,#2193b0,#6dd5ed)">🧊</div>
+        <div class="region-overlay">
+          <div class="region-name" data-i18n="filter.alaska">알래스카</div>
+          <div class="region-count">5~9월 · 빙하 대자연</div>
+        </div>
+      </div>
+      <div class="region-card" onclick="goToRegion('asia')">
+        <div class="region-bg" style="background:linear-gradient(135deg,#c94b4b,#4b134f)">⛩️</div>
+        <div class="region-overlay">
+          <div class="region-name" data-i18n="filter.asia">아시아</div>
+          <div class="region-count">부산·제주 출발 가능</div>
+        </div>
+      </div>
+      <div class="region-card" onclick="goToRegion('europe')">
+        <div class="region-bg" style="background:linear-gradient(135deg,#5f2c82,#49a09d)">🏔️</div>
+        <div class="region-overlay">
+          <div class="region-name" data-i18n="filter.europe">북유럽</div>
+          <div class="region-count">6~8월 · 피오르 절경</div>
+        </div>
+      </div>
+      <div class="region-card" onclick="goToRegion('middleeast')">
+        <div class="region-bg" style="background:linear-gradient(135deg,#373b44,#4286f4)">🕌</div>
+        <div class="region-overlay">
+          <div class="region-name" data-i18n="filter.middleeast">중동</div>
+          <div class="region-count">10~4월 · 두바이 출발</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--white)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge" data-i18n="why.badge">💡 왜 CruisePickers?</div>
+      <h2 data-i18n="why.title">한국인을 위한 크루즈 전문 비교 서비스</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🇰🇷</div>
+        <h3 data-i18n="why.1.title">한국어 서비스</h3>
+        <p data-i18n="why.1.desc">복잡한 영어 사이트 걱정 없이 한국어로 쉽게 크루즈를 찾고 비교하세요</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔍</div>
+        <h3 data-i18n="why.2.title">11개 선사 한눈에</h3>
+        <p data-i18n="why.2.desc">로열캐리비안부터 리젠트 세븐씨즈까지 주요 크루즈사를 한 번에 비교할 수 있어요</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💰</div>
+        <h3 data-i18n="why.3.title">최저가 안내</h3>
+        <p data-i18n="why.3.desc">글로벌 크루즈 예약 사이트의 최저가를 스캔해 가장 저렴한 가격을 찾아드려요</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📖</div>
+        <h3 data-i18n="why.4.title">완벽한 가이드</h3>
+        <p data-i18n="why.4.desc">크루즈 초보자도 걱정 없어요. 예약부터 승선까지 한국어 가이드를 제공해요</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <h2 data-i18n="cta.title">지금 바로 최저가 크루즈를 찾아보세요!</h2>
+  <p data-i18n="cta.sub">한정 특가 마감 전에 서둘러 예약하세요 🚢</p>
+  <a href="#deals" class="cta-btn" data-i18n="cta.btn">특가 크루즈 스캔하기 →</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="logo-icon">🔍</span>
+        <div><div class="logo-text">CruisePickers</div></div>
+      </div>
+      <p data-i18n="footer.sub">전 세계 크루즈 특가를 한국어로 쉽게 비교하고 예약하세요.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.col1">지역별 크루즈</h4>
+      <ul>
+        <li><a href="region.html?r=mediterranean" data-i18n="filter.mediterranean">지중해 크루즈</a></li>
+        <li><a href="region.html?r=caribbean" data-i18n="filter.caribbean">카리브해 크루즈</a></li>
+        <li><a href="region.html?r=alaska" data-i18n="filter.alaska">알래스카 크루즈</a></li>
+        <li><a href="region.html?r=asia" data-i18n="filter.asia">아시아 크루즈</a></li>
+        <li><a href="region.html?r=europe" data-i18n="filter.europe">북유럽 크루즈</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.col2">크루즈사</h4>
+      <ul>
+        <li><a href="lines.html?id=royal-caribbean">Royal Caribbean</a></li>
+        <li><a href="lines.html?id=msc">MSC Cruises</a></li>
+        <li><a href="lines.html?id=ncl">Norwegian (NCL)</a></li>
+        <li><a href="lines.html?id=carnival">Carnival</a></li>
+        <li><a href="lines.html" data-i18n="footer.col2.more">전체 크루즈사 보기</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.col3">정보</h4>
+      <ul>
+        <li><a href="guide.html" data-i18n="footer.guide">크루즈 입문 가이드</a></li>
+        <li><a href="guide.html#faq" data-i18n="footer.faq">자주 묻는 질문</a></li>
+        <li><a href="#" data-i18n="footer.privacy">개인정보처리방침</a></li>
+        <li><a href="#" data-i18n="footer.terms">이용약관</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-disclaimer" data-i18n="footer.disclaimer">※ CruisePickers는 제휴(Affiliate) 마케팅 사이트로, 예약 사이트 링크 클릭 후 구매 시 수수료를 받을 수 있습니다.</div>
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto">
+    <span data-i18n="footer.copy">© 2026 CruisePickers. All rights reserved.</span>
+    <span>contact@cruisepickers.com</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<!-- sitehub-searchops-complete-content:begin -->
+<section data-sitehub-searchops="p09" aria-label="서비스 정보" style="box-sizing:border-box;position:relative;z-index:1;max-width:1040px;margin:32px auto;padding:20px 24px;font:14px/1.65 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:inherit;background:transparent">
+  <h2 style="font:inherit;font-size:1.25rem;font-weight:700;margin:0 0 10px">CruisePickers</h2>
+  <p style="margin:0 0 12px">CruisePickers는 한국어로 글로벌 크루즈사의 노선·지역·특가를 비교하고 예약 정보를 확인하는 크루즈 비교 서비스입니다.</p>
+  <h3 style="font:inherit;font-size:1rem;font-weight:700;margin:12px 0 6px">이 서비스는 무엇을 하나요?</h3>
+  <p style="margin:0 0 10px">CruisePickers는 한국어로 글로벌 크루즈사의 노선·지역·특가를 비교하고 예약 정보를 확인하는 크루즈 비교 서비스입니다. 실제 화면에서 주요 기능과 정보 흐름을 확인할 수 있습니다.</p>
+  <h3 style="font:inherit;font-size:1rem;font-weight:700;margin:12px 0 6px">어떻게 사용하나요?</h3>
+  <p style="margin:0 0 10px">페이지의 시작·조회·관리·확인 기능을 이용해 서비스의 핵심 흐름을 확인하세요.</p>
+  <p style="margin:12px 0 0"><strong>운영 및 지원:</strong> SuaveForge · 서비스 관련 정보와 지원은 SuaveForge를 통해 확인할 수 있습니다.</p>
+</section>
+<!-- sitehub-searchops-complete-content:end -->
+</body>
+</html>
