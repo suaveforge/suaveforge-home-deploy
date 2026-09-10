@@ -11,7 +11,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
 </head>
 <body>
 <div class="preview-status" id="preview-status">Loading SuaveForge preview…</div>
-<iframe id="preview" title="SuaveForge 계약 혜택 테스트" src="/?offer-lab-preview=1"></iframe>
+<iframe id="preview" title="SuaveForge 계약 혜택 테스트" src="/?offer-lab-preview=3"></iframe>
 <script>
 (()=>{
   const frame=document.getElementById('preview');
@@ -25,15 +25,55 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
       const style=d.createElement('style');
       style.id='offerlab-preview-style';
       style.textContent=`
-      .offerlab-section{position:relative;overflow:hidden;padding:124px 0 120px;background:#f5f2ec;border-top:1px solid #cfcac2;border-bottom:1px solid #cfcac2}
-      .offerlab-section:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.3;background-image:linear-gradient(rgba(17,19,24,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(17,19,24,.045) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,transparent,black 18%,black 82%,transparent)}
-      .offerlab-inner{position:relative;z-index:1}.offerlab-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.42fr);align-items:end;gap:72px;margin-bottom:62px}.offerlab-kicker{margin:0 0 20px;color:#c52621;font-size:11px;font-weight:950;letter-spacing:.17em;text-transform:uppercase}.offerlab-head h2{max-width:930px;margin:0;color:#111318;font-size:clamp(44px,5.2vw,76px);font-weight:950;line-height:1.04;letter-spacing:-.062em}.offerlab-head h2 em{position:relative;font-style:normal;z-index:0}.offerlab-head h2 em:after{content:"";position:absolute;z-index:-1;left:-.02em;right:-.06em;bottom:.05em;height:.24em;background:#ffd84d;transform:rotate(-1.2deg)}.offerlab-head>p{margin:0 0 6px;color:#666b75;font-size:15px;line-height:1.8}
-      .offerlab-grid{display:grid;grid-template-columns:.82fr .82fr 1.36fr;border-top:1px solid #bdb8af;border-bottom:1px solid #bdb8af}.offerlab-card{position:relative;min-height:520px;padding:34px 30px 32px;border-right:1px solid #bdb8af;background:rgba(255,255,255,.14);transition:transform .22s ease,background .22s ease}.offerlab-card:last-child{border-right:0}.offerlab-card:hover{background:rgba(255,255,255,.5);transform:translateY(-5px)}.offerlab-no{display:flex;align-items:center;justify-content:space-between;margin-bottom:52px;color:#c52621;font-size:13px;font-weight:950;letter-spacing:.13em}.offerlab-no strong{font-size:48px;line-height:1;letter-spacing:-.06em}.offerlab-no span{color:#777b83;font-size:9px;letter-spacing:.14em}.offerlab-card h3{margin:0;color:#111318;font-size:clamp(28px,2.5vw,40px);line-height:1.08;letter-spacing:-.052em}.offerlab-card>p{margin:22px 0 0;color:#666b75;font-size:14px;line-height:1.75}
-      .offerlab-points{display:grid;gap:10px;margin-top:34px;padding:0;list-style:none}.offerlab-points li{display:flex;align-items:flex-start;gap:10px;color:#3f434b;font-size:12px;font-weight:800;line-height:1.55}.offerlab-points li:before{content:"✓";display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;border-radius:50%;background:#c52621;color:#fff;font-size:11px}.offerlab-timeline{display:grid;grid-template-columns:repeat(4,1fr);margin-top:46px;border-top:1px solid #c9c4bc}.offerlab-timeline span{position:relative;padding-top:18px;color:#686c74;font-size:10px;font-weight:900}.offerlab-timeline span:before{content:"";position:absolute;top:-4px;left:0;width:8px;height:8px;border-radius:50%;background:#c52621}.offerlab-maintain{margin-top:46px;border:1px solid #c9c4bc;padding:20px;background:#fff}.offerlab-maintain b{display:block;margin-bottom:9px;font-size:13px}.offerlab-maintain small{display:block;color:#6c7078;font-size:11px;line-height:1.6}
-      .offerlab-feature{background:#111318;color:#fff}.offerlab-feature:hover{background:#171a20}.offerlab-feature .offerlab-no{color:#ff6c66}.offerlab-feature .offerlab-no span{color:#9297a2}.offerlab-feature h3{color:#fff}.offerlab-feature>p{color:#b4b8c1}.forge-badge{display:inline-flex;margin:0 0 16px;padding:7px 10px;border:1px solid rgba(255,255,255,.22);color:#ffd84d;font-size:9px;font-weight:950;letter-spacing:.12em;text-transform:uppercase}.forge-controls{margin-top:26px}.forge-controls input{position:absolute;opacity:0;pointer-events:none}.forge-labels{display:flex;flex-wrap:wrap;gap:7px}.forge-labels label{cursor:pointer;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:7px 10px;color:#b9bdc5;font-size:10px;font-weight:900;transition:.2s}.forge-labels label:hover{border-color:#fff;color:#fff}#forge-original:checked~.forge-labels label[for=forge-original],#forge-warm:checked~.forge-labels label[for=forge-warm],#forge-focus:checked~.forge-labels label[for=forge-focus],#forge-compact:checked~.forge-labels label[for=forge-compact]{background:#c52621;border-color:#c52621;color:#fff}
-      .forge-stage{margin-top:18px;border:1px solid rgba(255,255,255,.22);background:#f7f4ee;color:#111318;box-shadow:0 22px 50px rgba(0,0,0,.22)}.forge-browser{display:flex;align-items:center;gap:6px;height:27px;padding:0 10px;border-bottom:1px solid #d9d4cb;background:#ebe7df}.forge-browser i{width:6px;height:6px;border-radius:50%;background:#aaa}.forge-browser b{margin-left:auto;color:#777;font-size:8px;letter-spacing:.08em}.forge-preview{display:grid;grid-template-columns:1.05fr .95fr;min-height:190px;padding:18px;gap:16px;transition:.3s}.forge-copy{align-self:center}.forge-copy span{display:block;margin-bottom:8px;color:#c52621;font-size:8px;font-weight:950;letter-spacing:.13em}.forge-copy strong{display:block;max-width:210px;font-size:24px;line-height:1.02;letter-spacing:-.055em}.forge-copy p{width:78%;height:5px;margin:16px 0 0;background:#c8c4bc;box-shadow:0 10px 0 #ddd8d0,0 20px 0 #ddd8d0}.forge-art{min-height:150px;background:linear-gradient(140deg,#22252b 0 46%,#c52621 46% 50%,#d8d2c8 50%);transition:.3s}.forge-cta{display:inline-block;margin-top:35px;padding:8px 11px;background:#111318;color:#fff;font-size:8px;font-weight:950}#forge-warm:checked~.forge-stage .forge-preview{background:#f3e6d6}#forge-warm:checked~.forge-stage .forge-art{background:linear-gradient(135deg,#6f2c22,#e0a55d 55%,#f3dfb7)}#forge-focus:checked~.forge-stage .forge-preview{grid-template-columns:.78fr 1.22fr}#forge-focus:checked~.forge-stage .forge-art{background:linear-gradient(145deg,#111318 0 52%,#ffd84d 52% 57%,#c52621 57%)}#forge-focus:checked~.forge-stage .forge-copy strong{font-size:20px}#forge-compact:checked~.forge-stage .forge-preview{grid-template-columns:1fr}#forge-compact:checked~.forge-stage .forge-art{min-height:80px;order:-1;background:linear-gradient(90deg,#111318,#454b56)}#forge-compact:checked~.forge-stage .forge-copy p{display:none}
-      .offerlab-foot{display:flex;align-items:center;justify-content:space-between;gap:30px;padding-top:34px}.offerlab-foot p{margin:0;color:#555a62;font-size:14px}.offerlab-foot p strong{color:#111318}.offerlab-cta{display:inline-flex;align-items:center;gap:18px;border-radius:999px;padding:15px 22px;background:#c52621;color:#fff;font-size:12px;font-weight:950;transition:.2s}.offerlab-cta:hover{background:#111318;transform:translateY(-2px)}
-      @media(max-width:980px){.offerlab-section{padding:96px 0}.offerlab-head{grid-template-columns:1fr;gap:22px}.offerlab-grid{grid-template-columns:1fr}.offerlab-card{min-height:0;border-right:0;border-bottom:1px solid #bdb8af}.offerlab-card:last-child{border-bottom:0}.offerlab-feature{min-height:620px}.offerlab-no{margin-bottom:30px}}@media(max-width:640px){.offerlab-section{padding:78px 0}.offerlab-head h2{font-size:42px}.offerlab-card{padding:28px 22px}.offerlab-feature{min-height:0}.forge-preview{grid-template-columns:1fr}.forge-art{min-height:120px}.offerlab-foot{align-items:flex-start;flex-direction:column}}
+      .offerlab-section{position:relative;overflow:hidden;padding:132px 0 0;background:#f5f2ec;border-top:1px solid #cfcac2;border-bottom:1px solid #cfcac2;color:#111318}
+      .offerlab-section:before{content:"";position:absolute;inset:0 0 auto;height:700px;pointer-events:none;opacity:.28;background-image:linear-gradient(rgba(17,19,24,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(17,19,24,.045) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,black,transparent 92%)}
+      .offerlab-inner{position:relative;z-index:1}
+      .offerlab-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.38fr);align-items:end;gap:72px;margin-bottom:74px}
+      .offerlab-kicker{margin:0 0 20px;color:#c52621;font-size:11px;font-weight:950;letter-spacing:.17em;text-transform:uppercase}
+      .offerlab-head h2{max-width:930px;margin:0;color:#111318;font-size:clamp(46px,5.5vw,82px);font-weight:950;line-height:1.02;letter-spacing:-.065em}
+      .offerlab-head h2 em{position:relative;font-style:normal;z-index:0}.offerlab-head h2 em:after{content:"";position:absolute;z-index:-1;left:-.03em;right:-.05em;bottom:.05em;height:.23em;background:#ffd84d;transform:rotate(-1.1deg)}
+      .offerlab-head>p{margin:0 0 8px;color:#666b75;font-size:15px;line-height:1.82}
+
+      .offerlab-light{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #aaa69f;border-bottom:1px solid #aaa69f;margin-bottom:72px}
+      .offerlab-lite{display:grid;grid-template-columns:112px 1fr;gap:18px;min-height:214px;padding:38px 40px 38px 0;align-items:start}
+      .offerlab-lite+.offerlab-lite{border-left:1px solid #aaa69f;padding-left:40px}
+      .offerlab-lite-no{font-size:64px;font-weight:950;line-height:.86;letter-spacing:-.07em;color:#c52621}
+      .offerlab-lite-copy small{display:block;margin:1px 0 15px;color:#777b83;font-size:9px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}
+      .offerlab-lite-copy h3{margin:0;font-size:clamp(27px,2.4vw,38px);line-height:1.08;letter-spacing:-.052em}
+      .offerlab-lite-copy p{max-width:500px;margin:18px 0 0;color:#61666e;font-size:13px;line-height:1.75}
+      .offerlab-mini-track{display:flex;align-items:center;gap:7px;margin-top:25px;color:#676c74;font-size:9px;font-weight:900;letter-spacing:.02em}.offerlab-mini-track i{display:block;width:5px;height:5px;border-radius:50%;background:#c52621}.offerlab-mini-track b{display:block;width:30px;height:1px;background:#b8b3aa}
+      .offerlab-care-pill{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:9px 12px;border:1px solid #c8c3bb;background:rgba(255,255,255,.45);font-size:10px;font-weight:900}.offerlab-care-pill strong{color:#c52621}
+
+      .offerlab-forge{position:relative;overflow:hidden;background:#111318;color:#fff;margin:0 calc(var(--pad) * -1);padding:84px var(--pad) 88px}
+      .offerlab-forge:before{content:"03";position:absolute;right:-.03em;top:-.22em;color:rgba(255,255,255,.035);font-size:min(34vw,520px);font-weight:950;line-height:1;letter-spacing:-.1em;pointer-events:none}
+      .offerlab-forge-grid{position:relative;z-index:1;display:grid;grid-template-columns:.86fr 1.14fr;gap:76px;align-items:center}
+      .forge-kicker{display:flex;align-items:center;gap:12px;margin-bottom:23px;color:#ff7771;font-size:10px;font-weight:950;letter-spacing:.16em;text-transform:uppercase}.forge-kicker:before{content:"";width:34px;height:2px;background:#c52621}
+      .forge-copy-block h3{margin:0;color:#fff;font-size:clamp(48px,5.2vw,78px);line-height:.94;letter-spacing:-.067em}.forge-copy-block h3 span{display:block;margin-top:13px;color:#ffd84d;font-size:.47em;line-height:1.06;letter-spacing:-.045em}
+      .forge-copy-block>p{max-width:540px;margin:27px 0 0;color:#b8bdc7;font-size:14px;line-height:1.84}
+      .forge-promise{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:37px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.16)}
+      .forge-promise div{background:#111318;padding:18px 19px}.forge-promise strong{display:block;color:#fff;font-size:28px;line-height:1;letter-spacing:-.045em}.forge-promise span{display:block;margin-top:8px;color:#979ca7;font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+      .forge-idea-line{margin-top:28px;padding-left:18px;border-left:2px solid #c52621;color:#fff;font-size:12px;font-weight:850;line-height:1.7}
+      .forge-idea-line em{color:#ffd84d;font-style:normal}
+
+      .forge-demo-wrap{position:relative}.forge-demo-note{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#8f949e;font-size:8px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.forge-demo-note b{color:#ffd84d;font-weight:950}
+      .forge-controls input{position:absolute;opacity:0;pointer-events:none}.forge-labels{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.forge-labels label{cursor:pointer;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:8px 12px;color:#b9bdc5;font-size:10px;font-weight:900;transition:.2s}.forge-labels label:hover{border-color:#fff;color:#fff}
+      #forge-original:checked~.forge-labels label[for=forge-original],#forge-warm:checked~.forge-labels label[for=forge-warm],#forge-focus:checked~.forge-labels label[for=forge-focus],#forge-compact:checked~.forge-labels label[for=forge-compact]{background:#c52621;border-color:#c52621;color:#fff}
+      .forge-stage{border:1px solid rgba(255,255,255,.24);background:#f7f4ee;color:#111318;box-shadow:0 30px 80px rgba(0,0,0,.34);transition:.3s}
+      .forge-browser{display:flex;align-items:center;gap:7px;height:36px;padding:0 13px;border-bottom:1px solid #d9d4cb;background:#ebe7df}.forge-browser i{width:7px;height:7px;border-radius:50%;background:#aaa}.forge-browser b{margin-left:auto;color:#777;font-size:8px;letter-spacing:.08em}
+      .forge-preview{display:grid;grid-template-columns:1.02fr .98fr;min-height:350px;padding:30px;gap:28px;transition:.3s}.forge-screen-copy{align-self:center}.forge-screen-copy span{display:block;margin-bottom:11px;color:#c52621;font-size:9px;font-weight:950;letter-spacing:.14em}.forge-screen-copy strong{display:block;max-width:320px;font-size:clamp(27px,2.5vw,39px);line-height:1.01;letter-spacing:-.058em}.forge-screen-copy p{width:79%;height:6px;margin:22px 0 0;background:#c8c4bc;box-shadow:0 12px 0 #ddd8d0,0 24px 0 #ddd8d0}.forge-screen-copy b{display:inline-block;margin-top:48px;padding:10px 13px;background:#111318;color:#fff;font-size:9px;font-weight:950}
+      .forge-art{min-height:285px;background:linear-gradient(140deg,#22252b 0 46%,#c52621 46% 50%,#d8d2c8 50%);transition:.3s}.forge-demo-caption{margin:13px 0 0;color:#9297a2;font-size:10px;line-height:1.6}
+      #forge-warm:checked~.forge-stage .forge-preview{background:#f3e6d6}#forge-warm:checked~.forge-stage .forge-art{background:linear-gradient(135deg,#6f2c22,#e0a55d 55%,#f3dfb7)}
+      #forge-focus:checked~.forge-stage .forge-preview{grid-template-columns:.72fr 1.28fr}#forge-focus:checked~.forge-stage .forge-art{background:linear-gradient(145deg,#111318 0 52%,#ffd84d 52% 57%,#c52621 57%)}#forge-focus:checked~.forge-stage .forge-screen-copy strong{font-size:28px}
+      #forge-compact:checked~.forge-stage .forge-preview{grid-template-columns:1fr;min-height:350px}#forge-compact:checked~.forge-stage .forge-art{min-height:125px;order:-1;background:linear-gradient(90deg,#111318,#454b56)}#forge-compact:checked~.forge-stage .forge-screen-copy{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}#forge-compact:checked~.forge-stage .forge-screen-copy p{display:none}#forge-compact:checked~.forge-stage .forge-screen-copy b{margin-top:0;justify-self:end}
+
+      .offerlab-total{position:relative;padding:78px 0 92px;background:#f5f2ec}
+      .offerlab-total-top{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:40px}
+      .offerlab-total-top span{color:#c52621;font-size:10px;font-weight:950;letter-spacing:.17em;text-transform:uppercase}.offerlab-total-top h3{max-width:900px;margin:0;font-size:clamp(38px,4.8vw,68px);line-height:1.02;letter-spacing:-.062em}.offerlab-total-top h3 em{font-style:normal;color:#c52621}
+      .offerlab-equation{display:grid;grid-template-columns:1fr auto 1fr auto 1.28fr auto;align-items:stretch;border-top:1px solid #aaa69f;border-bottom:1px solid #aaa69f}.offerlab-equation article{padding:30px 22px}.offerlab-equation article:first-child{padding-left:0}.offerlab-equation small{display:block;margin-bottom:8px;color:#777b83;font-size:8px;font-weight:950;letter-spacing:.12em}.offerlab-equation strong{display:block;font-size:20px;line-height:1.16;letter-spacing:-.035em}.offerlab-plus{display:grid;place-items:center;width:38px;color:#c52621;font-size:26px;font-weight:400}.offerlab-all{display:grid;place-items:center;min-width:145px;margin:13px 0 13px 18px;background:#c52621;color:#fff;font-size:11px;font-weight:950;letter-spacing:.12em;text-align:center}.offerlab-all b{display:block;color:#ffd84d;font-size:26px;line-height:1;letter-spacing:-.045em;margin-bottom:5px}
+      .offerlab-final{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-top:34px}.offerlab-final p{margin:0;color:#555a62;font-size:13px;line-height:1.65}.offerlab-final p strong{color:#111318}.offerlab-cta{display:inline-flex;align-items:center;gap:18px;border-radius:999px;padding:15px 22px;background:#111318;color:#fff;font-size:12px;font-weight:950;transition:.2s}.offerlab-cta:hover{background:#c52621;transform:translateY(-2px)}
+
+      @media(max-width:1040px){.offerlab-head{grid-template-columns:1fr;gap:22px}.offerlab-light{grid-template-columns:1fr}.offerlab-lite+.offerlab-lite{border-left:0;border-top:1px solid #aaa69f;padding-left:0}.offerlab-forge-grid{grid-template-columns:1fr;gap:52px}.forge-preview{min-height:320px}.offerlab-equation{grid-template-columns:1fr}.offerlab-equation article{padding:22px 0;border-bottom:1px solid #d0cbc3}.offerlab-plus{display:none}.offerlab-all{min-height:84px;margin:20px 0 0}.offerlab-total-top{align-items:flex-start;flex-direction:column}}
+      @media(max-width:640px){.offerlab-section{padding-top:88px}.offerlab-head{margin-bottom:48px}.offerlab-head h2{font-size:43px}.offerlab-light{margin-bottom:48px}.offerlab-lite{grid-template-columns:74px 1fr;min-height:0;padding:28px 0}.offerlab-lite-no{font-size:48px}.offerlab-lite-copy h3{font-size:28px}.offerlab-forge{margin:0 calc(var(--pad) * -1);padding:66px var(--pad) 68px}.forge-copy-block h3{font-size:50px}.forge-promise{grid-template-columns:1fr}.forge-preview{grid-template-columns:1fr;min-height:0;padding:20px}.forge-art{min-height:180px}.offerlab-total{padding:60px 0 74px}.offerlab-total-top h3{font-size:42px}.offerlab-final{align-items:flex-start;flex-direction:column}.offerlab-cta{width:100%;justify-content:space-between;box-sizing:border-box}}
       `;
       d.head.appendChild(style);
 
@@ -41,13 +81,56 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
       section.className='offerlab-section';
       section.id='offerlab-benefits';
       section.innerHTML=`<div class="container offerlab-inner">
-        <div class="offerlab-head"><div><p class="offerlab-kicker">PROJECT BENEFITS</p><h2>부담은 나누고,<br><em>아이디어는 더 빠르게</em> 화면이 됩니다.</h2></div><p>프로젝트 비용은 진행 단계에 맞춰 나누고, 오픈 이후에는 안정적인 유지보수와 아이디어 실체화 도구까지 이어집니다.</p></div>
-        <div class="offerlab-grid">
-          <article class="offerlab-card"><div class="offerlab-no"><strong>01</strong><span>FLEXIBLE PAYMENT</span></div><h3>프로젝트 비용<br>단계별 분할납부</h3><p>한 번에 큰 비용을 부담하기보다, 실제 진행 단계와 결과를 확인하면서 프로젝트 비용을 나눠 납부합니다.</p><div class="offerlab-timeline"><span>착수</span><span>중간</span><span>검수</span><span>오픈</span></div><ul class="offerlab-points"><li>프로젝트 규모에 맞춘 납부 구간</li><li>진행 결과를 확인하며 다음 단계로</li><li>초기 비용 부담을 분산</li></ul></article>
-          <article class="offerlab-card"><div class="offerlab-no"><strong>02</strong><span>3 MONTH CARE</span></div><h3>오픈 후 3개월<br>무료 유지보수</h3><p>서비스가 실제 운영에 자리 잡는 초기 3개월 동안, 납품 범위의 오류와 업데이트 문제를 추가 비용 없이 바로잡습니다.</p><div class="offerlab-maintain"><b>OPEN → STABILIZE</b><small>오류 대응 · 업데이트 이슈 · 초기 운영 안정화</small></div><ul class="offerlab-points"><li>오픈 이후 실제 운영 기준 대응</li><li>초기 안정화 기간 무상 지원</li><li>다시 개발자를 찾는 시간 절감</li></ul></article>
-          <article class="offerlab-card offerlab-feature"><div class="offerlab-no"><strong>03</strong><span>IDEA → SCREEN</span></div><div class="forge-badge">6 MONTHS · 24H · INCLUDED</div><h3>AI IDEA FORGE</h3><p>아이디어가 떠오르는 순간 전용 게시판에 남기세요. AI가 화면 복사본에서 색상, 배치, 문구, 크기와 화면 구성을 새로운 시안으로 빠르게 실체화합니다.</p><div class="forge-controls"><input type="radio" name="forge" id="forge-original" checked><input type="radio" name="forge" id="forge-warm"><input type="radio" name="forge" id="forge-focus"><input type="radio" name="forge" id="forge-compact"><div class="forge-labels"><label for="forge-original">원본</label><label for="forge-warm">분위기</label><label for="forge-focus">강조</label><label for="forge-compact">배치</label></div><div class="forge-stage"><div class="forge-browser"><i></i><i></i><i></i><b>IDEA PREVIEW</b></div><div class="forge-preview"><div class="forge-copy"><span>YOUR IDEA</span><strong>보고 선택할 수 있는 화면으로.</strong><p></p><b class="forge-cta">아이디어 실체화 →</b></div><div class="forge-art"></div></div></div></div></article>
+        <div class="offerlab-head">
+          <div><p class="offerlab-kicker">PROJECT BENEFITS</p><h2>제작 부담은 낮추고,<br><em>오픈 이후의 가치</em>는 더 길게.</h2></div>
+          <p>프로젝트를 시작하기 쉽게, 운영은 오래 안정적으로. 그리고 떠오른 아이디어는 기다리지 않고 바로 화면으로 확인할 수 있게 준비했습니다.</p>
         </div>
-        <div class="offerlab-foot"><p><strong>계약 고객 전용 혜택.</strong> 제작부터 오픈 이후 개선까지 한 흐름으로 이어갑니다.</p><a class="offerlab-cta" href="#contact">프로젝트 상담 요청 <span>↗</span></a></div>
+
+        <div class="offerlab-light">
+          <article class="offerlab-lite">
+            <div class="offerlab-lite-no">01</div>
+            <div class="offerlab-lite-copy"><small>FLEXIBLE PAYMENT</small><h3>프로젝트 비용<br>단계별 분할납부</h3><p>진행 결과를 확인하면서 다음 단계로 넘어갑니다. 프로젝트 비용도 그 흐름에 맞춰 나눕니다.</p><div class="offerlab-mini-track"><i></i>착수<b></b><i></i>중간<b></b><i></i>검수<b></b><i></i>오픈</div></div>
+          </article>
+          <article class="offerlab-lite">
+            <div class="offerlab-lite-no">02</div>
+            <div class="offerlab-lite-copy"><small>3 MONTH CARE</small><h3>오픈 후 3개월<br>무료 유지보수</h3><p>서비스가 실제 운영에 자리 잡는 초기 3개월 동안 납품 범위의 오류와 업데이트 문제를 추가 비용 없이 바로잡습니다.</p><div class="offerlab-care-pill"><strong>3 MONTHS</strong><span>오류 대응 · 업데이트 · 초기 안정화</span></div></div>
+          </article>
+        </div>
+
+        <div class="offerlab-forge">
+          <div class="offerlab-forge-grid">
+            <div class="forge-copy-block">
+              <div class="forge-kicker">03 / EXCLUSIVE BENEFIT</div>
+              <h3>AI IDEA FORGE<span>생각을 화면으로 만드는 24시간 아이디어 도구</span></h3>
+              <p>“버튼을 옮기면?”, “색을 바꾸면?”, “메인 구성을 다르게 보면?” 생각나는 순간 전용 게시판에 남기세요. AI가 페이지 복사본에서 새로운 화면으로 빠르게 실체화합니다.</p>
+              <div class="forge-promise"><div><strong>6 MONTHS</strong><span>PROJECT OPEN 이후 제공</span></div><div><strong>24 HOURS</strong><span>아이디어가 떠오를 때 언제든</span></div></div>
+              <div class="forge-idea-line">말로 설명하고 기다리는 대신, <em>먼저 보고 선택할 수 있는 화면</em>으로 만듭니다.</div>
+            </div>
+            <div class="forge-demo-wrap">
+              <div class="forge-demo-note"><span>LIVE IDEA PREVIEW</span><b>TRY 4 DIRECTIONS</b></div>
+              <div class="forge-controls">
+                <input type="radio" name="forge" id="forge-original" checked>
+                <input type="radio" name="forge" id="forge-warm">
+                <input type="radio" name="forge" id="forge-focus">
+                <input type="radio" name="forge" id="forge-compact">
+                <div class="forge-labels"><label for="forge-original">원본</label><label for="forge-warm">분위기</label><label for="forge-focus">강조</label><label for="forge-compact">배치</label></div>
+                <div class="forge-stage"><div class="forge-browser"><i></i><i></i><i></i><b>COPY PAGE / IDEA PREVIEW</b></div><div class="forge-preview"><div class="forge-screen-copy"><span>YOUR IDEA</span><strong>떠오른 생각을, 직접 보고 선택할 수 있는 화면으로.</strong><p></p><b>아이디어 실체화 →</b></div><div class="forge-art"></div></div></div>
+              </div>
+              <p class="forge-demo-caption">위 버튼을 눌러 같은 화면이 어떻게 달라지는지 바로 확인해보세요.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="offerlab-total">
+          <div class="offerlab-total-top"><span>ONE PROJECT · ALL INCLUDED</span><h3>그리고 이 중 하나를 고르는 게 아닙니다.<br><em>전부 함께 제공합니다.</em></h3></div>
+          <div class="offerlab-equation">
+            <article><small>01 / START EASIER</small><strong>단계별<br>분할납부</strong></article><div class="offerlab-plus">+</div>
+            <article><small>02 / STAY STABLE</small><strong>3개월<br>무료 유지보수</strong></article><div class="offerlab-plus">+</div>
+            <article><small>03 / KEEP CREATING</small><strong>6개월 · 24시간<br>AI IDEA FORGE</strong></article>
+            <div class="offerlab-all"><div><b>ALL</b>INCLUDED</div></div>
+          </div>
+          <div class="offerlab-final"><p><strong>프로젝트가 끝난 뒤까지, 이미 계약 안에 들어 있습니다.</strong><br>제작 → 오픈 → 안정화 → 아이디어 실체화까지 한 흐름으로 이어갑니다.</p><a class="offerlab-cta" href="#contact">프로젝트 상담 요청 <span>↗</span></a></div>
+        </div>
       </div>`;
 
       const process=d.getElementById('process');
