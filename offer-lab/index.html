@@ -11,7 +11,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
 </head>
 <body>
 <div class="preview-status" id="preview-status">Loading SuaveForge preview…</div>
-<iframe id="preview" title="SuaveForge 계약 혜택 테스트" src="/?offer-lab-preview=3"></iframe>
+<iframe id="preview" title="SuaveForge 계약 혜택 테스트" src="/?offer-lab-preview=4"></iframe>
 <script>
 (()=>{
   const frame=document.getElementById('preview');
@@ -34,6 +34,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
       .offerlab-head h2 em{position:relative;font-style:normal;z-index:0}.offerlab-head h2 em:after{content:"";position:absolute;z-index:-1;left:-.03em;right:-.05em;bottom:.05em;height:.23em;background:#ffd84d;transform:rotate(-1.1deg)}
       .offerlab-head>p{margin:0 0 8px;color:#666b75;font-size:15px;line-height:1.82}
 
+      .offerlab-proof-strip{display:grid;grid-template-columns:repeat(4,1fr);margin:-22px 0 52px;border-top:1px solid #aaa69f;border-bottom:1px solid #aaa69f;background:rgba(255,255,255,.22)}.offerlab-proof-strip>div{padding:19px 22px;border-right:1px solid #d0cbc3}.offerlab-proof-strip>div:last-child{border-right:0}.offerlab-proof-strip strong{display:block;color:#111318;font-size:20px;line-height:1;font-weight:950;letter-spacing:-.04em}.offerlab-proof-strip span{display:block;margin-top:8px;color:#6d7178;font-size:9px;font-weight:850;letter-spacing:.04em}
       .offerlab-light{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #aaa69f;border-bottom:1px solid #aaa69f;margin-bottom:72px}
       .offerlab-lite{display:grid;grid-template-columns:112px 1fr;gap:18px;min-height:214px;padding:38px 40px 38px 0;align-items:start}
       .offerlab-lite+.offerlab-lite{border-left:1px solid #aaa69f;padding-left:40px}
@@ -72,8 +73,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
       .offerlab-equation{display:grid;grid-template-columns:1fr auto 1fr auto 1.28fr auto;align-items:stretch;border-top:1px solid #aaa69f;border-bottom:1px solid #aaa69f}.offerlab-equation article{padding:30px 22px}.offerlab-equation article:first-child{padding-left:0}.offerlab-equation small{display:block;margin-bottom:8px;color:#777b83;font-size:8px;font-weight:950;letter-spacing:.12em}.offerlab-equation strong{display:block;font-size:20px;line-height:1.16;letter-spacing:-.035em}.offerlab-plus{display:grid;place-items:center;width:38px;color:#c52621;font-size:26px;font-weight:400}.offerlab-all{display:grid;place-items:center;min-width:145px;margin:13px 0 13px 18px;background:#c52621;color:#fff;font-size:11px;font-weight:950;letter-spacing:.12em;text-align:center}.offerlab-all b{display:block;color:#ffd84d;font-size:26px;line-height:1;letter-spacing:-.045em;margin-bottom:5px}
       .offerlab-final{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-top:34px}.offerlab-final p{margin:0;color:#555a62;font-size:13px;line-height:1.65}.offerlab-final p strong{color:#111318}.offerlab-cta{display:inline-flex;align-items:center;gap:18px;border-radius:999px;padding:15px 22px;background:#111318;color:#fff;font-size:12px;font-weight:950;transition:.2s}.offerlab-cta:hover{background:#c52621;transform:translateY(-2px)}
 
-      @media(max-width:1040px){.offerlab-head{grid-template-columns:1fr;gap:22px}.offerlab-light{grid-template-columns:1fr}.offerlab-lite+.offerlab-lite{border-left:0;border-top:1px solid #aaa69f;padding-left:0}.offerlab-forge-grid{grid-template-columns:1fr;gap:52px}.forge-preview{min-height:320px}.offerlab-equation{grid-template-columns:1fr}.offerlab-equation article{padding:22px 0;border-bottom:1px solid #d0cbc3}.offerlab-plus{display:none}.offerlab-all{min-height:84px;margin:20px 0 0}.offerlab-total-top{align-items:flex-start;flex-direction:column}}
-      @media(max-width:640px){.offerlab-section{padding-top:88px}.offerlab-head{margin-bottom:48px}.offerlab-head h2{font-size:43px}.offerlab-light{margin-bottom:48px}.offerlab-lite{grid-template-columns:74px 1fr;min-height:0;padding:28px 0}.offerlab-lite-no{font-size:48px}.offerlab-lite-copy h3{font-size:28px}.offerlab-forge{margin:0 calc(var(--pad) * -1);padding:66px var(--pad) 68px}.forge-copy-block h3{font-size:50px}.forge-promise{grid-template-columns:1fr}.forge-preview{grid-template-columns:1fr;min-height:0;padding:20px}.forge-art{min-height:180px}.offerlab-total{padding:60px 0 74px}.offerlab-total-top h3{font-size:42px}.offerlab-final{align-items:flex-start;flex-direction:column}.offerlab-cta{width:100%;justify-content:space-between;box-sizing:border-box}}
+      @media(max-width:1040px){.offerlab-proof-strip{grid-template-columns:1fr 1fr}.offerlab-proof-strip>div:nth-child(2){border-right:0}.offerlab-proof-strip>div:nth-child(-n+2){border-bottom:1px solid #d0cbc3}.offerlab-head{grid-template-columns:1fr;gap:22px}.offerlab-light{grid-template-columns:1fr}.offerlab-lite+.offerlab-lite{border-left:0;border-top:1px solid #aaa69f;padding-left:0}.offerlab-forge-grid{grid-template-columns:1fr;gap:52px}.forge-preview{min-height:320px}.offerlab-equation{grid-template-columns:1fr}.offerlab-equation article{padding:22px 0;border-bottom:1px solid #d0cbc3}.offerlab-plus{display:none}.offerlab-all{min-height:84px;margin:20px 0 0}.offerlab-total-top{align-items:flex-start;flex-direction:column}}
+      @media(max-width:640px){.offerlab-proof-strip{grid-template-columns:1fr 1fr;margin-top:0}.offerlab-proof-strip>div{padding:16px 14px}.offerlab-proof-strip strong{font-size:17px}.offerlab-section{padding-top:88px}.offerlab-head{margin-bottom:48px}.offerlab-head h2{font-size:43px}.offerlab-light{margin-bottom:48px}.offerlab-lite{grid-template-columns:74px 1fr;min-height:0;padding:28px 0}.offerlab-lite-no{font-size:48px}.offerlab-lite-copy h3{font-size:28px}.offerlab-forge{margin:0 calc(var(--pad) * -1);padding:66px var(--pad) 68px}.forge-copy-block h3{font-size:50px}.forge-promise{grid-template-columns:1fr}.forge-preview{grid-template-columns:1fr;min-height:0;padding:20px}.forge-art{min-height:180px}.offerlab-total{padding:60px 0 74px}.offerlab-total-top h3{font-size:42px}.offerlab-final{align-items:flex-start;flex-direction:column}.offerlab-cta{width:100%;justify-content:space-between;box-sizing:border-box}}
       `;
       d.head.appendChild(style);
 
@@ -82,8 +83,15 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
       section.id='offerlab-benefits';
       section.innerHTML=`<div class="container offerlab-inner">
         <div class="offerlab-head">
-          <div><p class="offerlab-kicker">PROJECT BENEFITS</p><h2>제작 부담은 낮추고,<br><em>오픈 이후의 가치</em>는 더 길게.</h2></div>
-          <p>프로젝트를 시작하기 쉽게, 운영은 오래 안정적으로. 그리고 떠오른 아이디어는 기다리지 않고 바로 화면으로 확인할 수 있게 준비했습니다.</p>
+          <div><p class="offerlab-kicker">PROOF FIRST · BENEFITS INCLUDED</p><h2>잘 만드는 건 기본입니다.<br><em>계약은 더 안전하게,</em> 가치는 더 길게.</h2></div>
+          <p>실력은 실제 프로젝트에서 먼저 확인하세요. 그다음 계약 부담과 운영 위험을 줄이고, 오픈 후에도 아이디어 실험이 이어지게 설계했습니다.</p>
+        </div>
+
+        <div class="offerlab-proof-strip" aria-label="구매 전 확인할 수 있는 신뢰 기준">
+          <div><strong>21</strong><span>공개 프로젝트</span></div>
+          <div><strong>REAL</strong><span>실제 화면·구현 범위 공개</span></div>
+          <div><strong>SCOPE</strong><span>범위 확정 후 개발</span></div>
+          <div><strong>NDA</strong><span>비밀유지 계약</span></div>
         </div>
 
         <div class="offerlab-light">
@@ -122,20 +130,27 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f2ec}#pr
         </div>
 
         <div class="offerlab-total">
-          <div class="offerlab-total-top"><span>ONE PROJECT · ALL INCLUDED</span><h3>그리고 이 중 하나를 고르는 게 아닙니다.<br><em>전부 함께 제공합니다.</em></h3></div>
+          <div class="offerlab-total-top"><span>ONE PROJECT · ALL INCLUDED</span><h3>추가 옵션을 고르는 구조가 아닙니다.<br><em>기본 계약에 전부 포함합니다.</em></h3></div>
           <div class="offerlab-equation">
             <article><small>01 / START EASIER</small><strong>단계별<br>분할납부</strong></article><div class="offerlab-plus">+</div>
             <article><small>02 / STAY STABLE</small><strong>3개월<br>무료 유지보수</strong></article><div class="offerlab-plus">+</div>
             <article><small>03 / KEEP CREATING</small><strong>6개월 · 24시간<br>AI IDEA FORGE</strong></article>
             <div class="offerlab-all"><div><b>ALL</b>INCLUDED</div></div>
           </div>
-          <div class="offerlab-final"><p><strong>프로젝트가 끝난 뒤까지, 이미 계약 안에 들어 있습니다.</strong><br>제작 → 오픈 → 안정화 → 아이디어 실체화까지 한 흐름으로 이어갑니다.</p><a class="offerlab-cta" href="#contact">프로젝트 상담 요청 <span>↗</span></a></div>
+          <div class="offerlab-final"><p><strong>잘 만드는 팀을 고른 뒤, 계약 때문에 망설일 이유를 줄였습니다.</strong><br>제작 → 오픈 → 안정화 → 아이디어 실체화까지 한 흐름으로 이어집니다.</p><a class="offerlab-cta" href="#contact">프로젝트 상담 요청 <span>↗</span></a></div>
         </div>
       </div>`;
 
       const process=d.getElementById('process');
       if(!process) throw new Error('#process not found');
       process.insertAdjacentElement('afterend',section);
+
+      // Conversion-lab ordering: proof first, then process, then risk/value stack.
+      const diagnosis=d.getElementById('diagnosis');
+      const partnership=d.getElementById('partnership');
+      if(partnership) partnership.style.display='none';
+      if(diagnosis) section.insertAdjacentElement('afterend',diagnosis);
+
       status.classList.add('is-hidden');
     }catch(err){
       status.textContent='Preview injection failed';
