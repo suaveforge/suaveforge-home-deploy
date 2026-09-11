@@ -94,10 +94,10 @@
   function render(d){
     const m=d.topMetrics||{};
     const primary=[
-      ['방문자','visitors','고유 방문자'],
-      ['OfferLab','offerlab_view',`${pct(m.offerlab_view,m.visitors)}% 방문→혜택`],
-      ['상담 시작','contact_form_start',`${pct(m.contact_form_start,m.visitors)}% 방문→상담 시작`],
-      ['상담 제출','contact_submit_success',`${pct(m.contact_submit_success,m.visitors)}% 방문→제출`]
+      ['개편 후 방문자','purchaseVisitors','구매 퍼널 기준 방문자'],
+      ['OfferLab','offerlab_view',`${pct(m.offerlab_view,m.purchaseVisitors)}% 방문→혜택`],
+      ['상담 시작','contact_form_start',`${pct(m.contact_form_start,m.purchaseVisitors)}% 방문→상담 시작`],
+      ['상담 제출','contact_submit_success',`${pct(m.contact_submit_success,m.purchaseVisitors)}% 방문→제출`]
     ];
     const secondary=[
       ['페이지뷰','pageviews'],['프로젝트 열기','project_open'],['Offer CTA','offerlab_cta_click'],['진단 시작','diagnosis_started'],['진단 상담','consultation_submitted'],['계약','contract']
@@ -110,6 +110,11 @@
     const purchaseLabels={visitor:'방문자',offerlab_view:'OfferLab 도달',offerlab_cta_click:'가능 여부 확인',contact_form_start:'상담 시작',contact_submit_success:'상담 제출'};
     const visual=window.SF_ADMIN_VISUALS;
     document.getElementById('purchaseFunnel').innerHTML=visual?visual.funnel(d.purchaseStages||[],purchaseLabels):'<p class="empty-block">차트 로더 없음</p>';
+    const purchaseBaselineNote=document.getElementById('purchaseBaselineNote');
+    if(purchaseBaselineNote){
+      const baseline=d.purchaseBaselineAt?new Date(d.purchaseBaselineAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}):'-';
+      purchaseBaselineNote.textContent=`개편 측정 기준: ${baseline} 이후 데이터만 집계`;
+    }
     document.getElementById('funnel').innerHTML=visual?visual.funnel(d.stages||[],labels):'<p class="empty-block">차트 로더 없음</p>';
     document.getElementById('channels').innerHTML=conversionRows(d.channels||[],'source');
     document.getElementById('campaigns').innerHTML=conversionRows(d.campaigns||[],'campaign');
