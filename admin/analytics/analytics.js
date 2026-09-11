@@ -13,6 +13,26 @@
   const pct=(a,b)=>b?Math.round(Number(a||0)/Number(b)*1000)/10:0;
   const date=v=>v?new Date(v).toLocaleString('ko-KR'):'-';
   const seconds=v=>v?`${Math.round(Number(v)/100)/10}초`:'-';
+  const PURCHASE_RULES=[
+    {key:'offerlab_view',label:'방문 → OfferLab',denominator:'purchaseVisitors',minSample:100,watchRate:35,okRate:50,action:'첫 화면·프로젝트 구간에서 OfferLab까지 도달하지 못하는 원인을 점검'},
+    {key:'offerlab_cta_click',label:'OfferLab → 가능 여부 확인',denominator:'offerlab_view',minSample:50,watchRate:5,okRate:10,action:'혜택 강도·CTA 문구·버튼 위치를 점검'},
+    {key:'contact_form_start',label:'CTA → 상담 시작',denominator:'offerlab_cta_click',minSample:25,watchRate:50,okRate:70,action:'상담폼 진입 마찰과 CTA-폼 연결을 점검'},
+    {key:'contact_submit_success',label:'상담 시작 → 제출',denominator:'contact_form_start',minSample:20,watchRate:40,okRate:60,action:'폼 길이·필수항목·전송 오류를 점검'}
+  ];
+  const purchaseDecision=(m)=>{
+    const cards=PURCHASE_RULES.map(rule=>{
+      const den=Number(m[rule.denominator]||0),value=Number(m[rule.key]||0);
+      const rate=den?value/den*100:0;
+      let state='sample',title='표본 부족',detail=`판정까지 ${Math.max(0,rule.minSample-den)}명 필요`;
+      if(den>=rule.minSample){
+        if(rate<rule.watchRate){state='action';title='개선 검토';detail=rule.action;}
+        else if(rate<rule.okRate){state='watch';title='관찰';detail='당장 수정하지 말고 추가 표본을 확인';}
+        else{state='good';title='유지';detail='현재 구간은 우선 유지';}
+      }
+      return `<article class="decision-card decision-${state}"><div><b>${esc(rule.label)}</b><span>${den.toLocaleString()} → ${value.toLocaleString()} · ${rate.toFixed(1)}%</span></div><strong>${title}</strong><small>${esc(detail)}</small></article>`;
+    }).join('');
+    return `<div class="decision-head"><b>데이터 판정</b><span>내부 운영 기준 · 업계 벤치마크가 아님</span></div><div class="decision-grid">${cards}</div>`;
+  };
   const empty=(cols,text='데이터 없음')=>`<tr><td colspan="${cols}" class="empty">${text}</td></tr>`;
   const state=x=>[x.consultation?'상담':'',x.pilot?'선개발':'',x.contract?'계약':''].filter(Boolean).map(v=>`<span class="tag ${v==='계약'?'tag-contract':''}">${v}</span>`).join(' ')||'<span class="muted">-</span>';
 
@@ -110,6 +130,7 @@
     const purchaseLabels={visitor:'방문자',offerlab_view:'OfferLab 도달',offerlab_cta_click:'가능 여부 확인',contact_form_start:'상담 시작',contact_submit_success:'상담 제출'};
     const visual=window.SF_ADMIN_VISUALS;
     document.getElementById('purchaseFunnel').innerHTML=visual?visual.funnel(d.purchaseStages||[],purchaseLabels):'<p class="empty-block">차트 로더 없음</p>';
+    document.getElementById('purchaseDecision').innerHTML=purchaseDecision(m);
     const purchaseBaselineNote=document.getElementById('purchaseBaselineNote');
     if(purchaseBaselineNote){
       const baseline=d.purchaseBaselineAt?new Date(d.purchaseBaselineAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}):'-';
