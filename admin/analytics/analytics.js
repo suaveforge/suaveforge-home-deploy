@@ -95,19 +95,21 @@
     const m=d.topMetrics||{};
     const primary=[
       ['방문자','visitors','고유 방문자'],
-      ['진단 시작','diagnosis_started',`${pct(m.diagnosis_started,m.visitors)}% 방문→진단`],
-      ['상담','consultation_submitted',`${pct(m.consultation_submitted,m.visitors)}% 방문→상담`],
-      ['계약','contract',`${pct(m.contract,m.visitors)}% 방문→계약`]
+      ['OfferLab','offerlab_view',`${pct(m.offerlab_view,m.visitors)}% 방문→혜택`],
+      ['상담 시작','contact_form_start',`${pct(m.contact_form_start,m.visitors)}% 방문→상담 시작`],
+      ['상담 제출','contact_submit_success',`${pct(m.contact_submit_success,m.visitors)}% 방문→제출`]
     ];
     const secondary=[
-      ['페이지뷰','pageviews'],['진단 완료','diagnosis_completed'],['결과 확인','result_viewed'],['이메일','email_report_submitted'],['선개발','pilot_started']
+      ['페이지뷰','pageviews'],['프로젝트 열기','project_open'],['Offer CTA','offerlab_cta_click'],['진단 시작','diagnosis_started'],['진단 상담','consultation_submitted'],['계약','contract']
     ];
     document.getElementById('topMetrics').innerHTML=
       primary.map(([label,key,note])=>`<article class="metric-primary"><span>${label}</span><b>${num(m[key])}</b><small>${note}</small></article>`).join('')+
       secondary.map(([label,key])=>`<article class="metric-secondary"><span>${label}</span><b>${num(m[key])}</b></article>`).join('');
 
     const labels={visitor:'방문자',diagnosis_started:'진단 시작',diagnosis_completed:'진단 완료',result_viewed:'결과 확인',email_report_submitted:'이메일',consultation_submitted:'상담',pilot_started:'선개발',contract:'계약'};
+    const purchaseLabels={visitor:'방문자',offerlab_view:'OfferLab 도달',offerlab_cta_click:'가능 여부 확인',contact_form_start:'상담 시작',contact_submit_success:'상담 제출'};
     const visual=window.SF_ADMIN_VISUALS;
+    document.getElementById('purchaseFunnel').innerHTML=visual?visual.funnel(d.purchaseStages||[],purchaseLabels):'<p class="empty-block">차트 로더 없음</p>';
     document.getElementById('funnel').innerHTML=visual?visual.funnel(d.stages||[],labels):'<p class="empty-block">차트 로더 없음</p>';
     document.getElementById('channels').innerHTML=conversionRows(d.channels||[],'source');
     document.getElementById('campaigns').innerHTML=conversionRows(d.campaigns||[],'campaign');
