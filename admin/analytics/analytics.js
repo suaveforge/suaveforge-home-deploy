@@ -19,6 +19,29 @@
     {key:'contact_form_start',label:'CTA → 상담 시작',denominator:'offerlab_cta_click',minSample:25,watchRate:50,okRate:70,action:'상담폼 진입 마찰과 CTA-폼 연결을 점검'},
     {key:'contact_submit_success',label:'상담 시작 → 제출',denominator:'contact_form_start',minSample:20,watchRate:40,okRate:60,action:'폼 길이·필수항목·전송 오류를 점검'}
   ];
+  const measurementMode=(m)=>{
+    const visit=Number(m.purchaseVisitors||0);
+    const offer=Number(m.offerlab_view||0);
+    const cta=Number(m.offerlab_cta_click||0);
+    const form=Number(m.contact_form_start||0);
+    const gates=[
+      {label:'방문',now:visit,min:100},
+      {label:'OfferLab',now:offer,min:50},
+      {label:'CTA',now:cta,min:25},
+      {label:'상담 시작',now:form,min:20}
+    ];
+    const pending=gates.filter(g=>g.now<g.min);
+    const locked=pending.length>0;
+    const nearest=pending[0];
+    return {
+      locked,
+      title:locked?'랜딩 구조 고정':'분석 가능',
+      detail:locked
+        ? `최소 표본 미도달 · ${nearest.label} ${nearest.now}/${nearest.min}. 구조·카피·CTA 변경 금지`
+        : '모든 최소 표본 도달 · 실제 이탈 신호가 있는 구간만 개선 검토',
+      progress:gates.map(g=>`${g.label} ${g.now}/${g.min}`).join(' · ')
+    };
+  };
   const purchaseDecision=(m)=>{
     const cards=PURCHASE_RULES.map(rule=>{
       const den=Number(m[rule.denominator]||0),value=Number(m[rule.key]||0);
@@ -113,6 +136,12 @@
 
   function render(d){
     const m=d.topMetrics||{};
+    const mode=measurementMode(m);
+    const modeEl=document.getElementById('measurementModeStatus');
+    if(modeEl){
+      modeEl.classList.toggle('measurement-unlocked',!mode.locked);
+      modeEl.innerHTML=`<div><span>MEASUREMENT MODE</span><b>${esc(mode.title)}</b></div><p>${esc(mode.detail)}<br><small>${esc(mode.progress)}</small></p>`;
+    }
     const primary=[
       ['개편 후 방문자','purchaseVisitors','구매 퍼널 기준 방문자'],
       ['OfferLab','offerlab_view',`${pct(m.offerlab_view,m.purchaseVisitors)}% 방문→혜택`],
