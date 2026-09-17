@@ -3,7 +3,7 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>필터 초기화 버튼이 있어도 검색 조건이 남으면 초기화가 아니다 | SuaveForge A/B</title>
 <meta name="robots" content="noindex,nofollow,noarchive">
-<link rel="stylesheet" href="/content/content.css?v=20260904-1"></head>
+<link rel="stylesheet" href="/content/content.css?v=20260904-1"><script async src="https://sitehub.suaveforge.com/analytics-loader.js" data-sitehub-project="p01"></script></head>
 <body><header class="sf-content-header"><div class="sf-content-header__inner"><a class="sf-content-brand" href="/">SuaveForge</a></div></header>
 <main><div class="content-kicker">A/B TEST · A · v2.7.9</div><h1 class="content-title">필터 초기화 버튼이 있어도 검색 조건이 남으면 초기화가 아니다</h1>
 <p class="content-lead">화면에서 입력값이 사라져도 URL이나 다음 검색 요청에 이전 조건이 남아 있으면 초기화가 끝난 것이 아니다. 검색 필터는 입력칸뿐 아니라 실제 요청 조건과 목록 결과도 기본 상태로 돌아왔는지 확인해야 한다.</p><div class="article-shell"><article class="article-body"><p>관리자 목록에는 기간, 상태, 담당자처럼 여러 필터가 붙는다. 초기화 버튼을 누르면 입력칸이 비어 보이기 때문에 기능이 제대로 동작한 것처럼 보이기 쉽다.</p><p>예를 들어 상태를 ‘처리 중’으로 고르고 검색한 뒤 초기화를 눌렀다고 하자. 화면의 선택값은 없어졌는데 URL이나 다음 검색 요청에 <code>status=pending</code>이 남아 있으면 목록에는 계속 처리 중인 항목만 나올 수 있다. 사용자는 필터가 비어 있는데 결과가 왜 그대로인지 알기 어렵다.</p><pre><code>필터 선택
