@@ -1,0 +1,79 @@
+name: Repair live SuaveForge SiteHub analytics p01 once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sitehub-analytics-p01-live-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inject SiteHub analytics across public deployed HTML
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const loader='<script async src="https://sitehub.suaveforge.com/analytics-loader.js" data-sitehub-project="p01"></script>';
+          const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return e.isDirectory()?walk(p):[p]});
+          const files=walk('.').filter(p=>p.endsWith('.html')&&!p.startsWith('.git/')&&!p.startsWith('admin/')&&!p.includes('/admin/'));
+          let changed=0,loaders=0,cspChanged=0;
+          for(const file of files){
+            let s=fs.readFileSync(file,'utf8'),before=s;
+            if(/Content-Security-Policy/i.test(s)){
+              s=s.replace(/script-src([^;]*);/i,(m,x)=>/sitehub\.suaveforge\.com/i.test(x)?m:`script-src${x} https://sitehub.suaveforge.com;`);
+              s=s.replace(/connect-src([^;]*);/i,(m,x)=>/api-sitehub\.suaveforge\.com(?::18464)?/i.test(x)?m:`connect-src${x} https://api-sitehub.suaveforge.com:18464;`);
+              if(s!==before)cspChanged++;
+            }
+            if(!/data-sitehub-project\s*=\s*["']p01["']/i.test(s)&&/<\/head\s*>/i.test(s)){
+              s=s.replace(/<\/head\s*>/i,`${loader}</head>`);loaders++;
+            }
+            if(s!==before){fs.writeFileSync(file,s);changed++;}
+          }
+          console.log(`PUBLIC_HTML=${files.length}`);
+          console.log(`CHANGED_HTML=${changed}`);
+          console.log(`LOADERS_ADDED=${loaders}`);
+          console.log(`CSP_CHANGED=${cspChanged}`);
+          if(!files.length||!changed)throw new Error('expected deployed HTML changes');
+          const root=fs.readFileSync('index.html','utf8');
+          if(!root.includes('data-sitehub-project="p01"'))throw new Error('root loader missing');
+          if(!root.includes('https://sitehub.suaveforge.com'))throw new Error('root CSP script allow missing');
+          if(!root.includes('https://api-sitehub.suaveforge.com:18464'))throw new Error('root CSP connect allow missing');
+          NODE
+      - name: Commit deployed fix
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name 'SuaveForge Automation'
+          git config user.email '53187583+programmer119@users.noreply.github.com'
+          git add -A ':!.github/workflows/sitehub-analytics-p01-live-once.yml'
+          git commit -m 'fix: enable SiteHub analytics across SuaveForge public pages'
+          git push origin HEAD:main
+      - name: Verify live Pages HTML and loader reachability
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          OK=0
+          for i in $(seq 1 36); do
+            ROOT=$(curl -fsS --max-time 8 https://suaveforge.com/ 2>/dev/null || true)
+            WORK=$(curl -fsS --max-time 8 https://suaveforge.com/work/idhair/ 2>/dev/null || true)
+            LOADER=$(curl -fsS --max-time 8 https://sitehub.suaveforge.com/analytics-loader.js 2>/dev/null || true)
+            if grep -Fq 'data-sitehub-project="p01"' <<<"$ROOT" && grep -Fq 'https://sitehub.suaveforge.com' <<<"$ROOT" && grep -Fq 'https://api-sitehub.suaveforge.com:18464' <<<"$ROOT" && grep -Fq 'data-sitehub-project="p01"' <<<"$WORK" && grep -Fq 'SITEHUB_ANALYTICS' <<<"$LOADER"; then
+              OK=1; break
+            fi
+            sleep 5
+          done
+          test "$OK" = 1
+          echo 'SUAVEFORGE_SITEHUB_ANALYTICS_LIVE=PASS'
