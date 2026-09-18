@@ -1,0 +1,34 @@
+name: Validate public product discovery links once
+
+on:
+  push:
+    branches: ['fix/product-discovery-links-20260918']
+    paths: ['.github/workflows/product-discovery-deploy-validate-once.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate deployed root discovery graph
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq '<a href="https://jumprope.suaveforge.com/"' index.html
+          grep -Fq '<a href="https://nuguradar.suaveforge.com/"' index.html
+          grep -Fq '<span>ROPEJUMP · JUMPROPE</span>' index.html
+          grep -Fq '<span>NUGU RADAR</span>' index.html
+          node <<'NODE'
+          const fs=require('fs');
+          const h=fs.readFileSync('index.html','utf8');
+          const scripts=[...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m=>JSON.parse(m[1]));
+          const list=scripts.find(x=>x['@type']==='ItemList'&&x.name==='SuaveForge 프로젝트');
+          if(!list||Number(list.numberOfItems)!==23)throw new Error('project list invalid');
+          const urls=(list.itemListElement||[]).map(x=>x.url);
+          for(const u of ['https://jumprope.suaveforge.com/','https://nuguradar.suaveforge.com/']) if(!urls.includes(u)) throw new Error('missing '+u);
+          console.log('P01_PUBLIC_DISCOVERY_VALID=PASS items='+list.numberOfItems);
+          NODE
