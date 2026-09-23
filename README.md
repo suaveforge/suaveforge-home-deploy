@@ -33,5 +33,6 @@ The official website publishes project pages showing implementation scope and sc
 - AI image collection/cleanup tool: https://suaveforge.com/work/imgfind/
 - LMS operations dashboard: https://suaveforge.com/work/lms/
 - Patent administration SaaS: https://suaveforge.com/work/patent/
+- NUGU RADAR K-pop discovery platform: https://suaveforge.com/work/nuguradar/ → https://nuguradar.suaveforge.com/
 
 External brand identity: https://kmong.com/@SUAVEFORGE
