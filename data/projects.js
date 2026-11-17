@@ -16,7 +16,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/16/05.png",
       "assets/portfolio/16/06.png"
     ],
-    "url": "https://gyeol.suaveforge.com/",
+
     "stack": [
       "Flutter",
       "Dart",
@@ -55,7 +55,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/17/05.png",
       "assets/portfolio/17/06.png"
     ],
-    "url": "https://pcroom-home.suaveforge.com/",
+
     "stack": [
       "JavaScript",
       "HTML/CSS",
@@ -91,7 +91,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/18/05.png",
       "assets/portfolio/18/06.png"
     ],
-    "url": "https://ontalk.suaveforge.com/",
+
     "stack": [
       "Asterisk",
       "AMI",
@@ -128,7 +128,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/19/05.png",
       "assets/portfolio/19/06.png"
     ],
-    "url": "https://u2link.suaveforge.com/",
+
     "stack": [
       "Java 17",
       "Spring Boot",
@@ -164,7 +164,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/20/05.png",
       "assets/portfolio/20/06.png"
     ],
-    "url": "https://idhair.suaveforge.com/",
+
     "stack": [
       "JavaScript",
       "HTML/CSS",
@@ -211,7 +211,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/acs/08-settings.webp",
       "assets/portfolio/acs/09-command-search.webp"
     ],
-    "url": "https://acs.suaveforge.com/",
+
     "stack": [
       "Python",
       "PySide6",
@@ -295,7 +295,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/01/05-05_detail_d99ff3a2.webp",
       "assets/portfolio/01/06-06_detail_10831e6b.webp"
     ],
-    "url": "https://imgfind.suaveforge.com/",
+
     "stack": [
       "Python",
       "Playwright",
@@ -341,7 +341,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/03/full-2.webp",
       "assets/portfolio/03/full-3.webp"
     ],
-    "url": "https://foxpro.suaveforge.com/",
+
     "stack": [
       "JavaScript",
       "Vite",
@@ -385,7 +385,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/04/full-11.webp",
       "assets/portfolio/04/full-12.webp"
     ],
-    "url": "https://tsample.suaveforge.com/",
+
     "stack": [
       "Go",
       "Node.js",
@@ -423,7 +423,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/05/detail-actual.webp",
       "assets/portfolio/05/02-02_detail_f0fe546b.webp"
     ],
-    "url": "https://programmer119.github.io/react-kiosk-dashboard/",
+
     "stack": [
       "React 19",
       "Vite 7",
@@ -452,7 +452,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/06/detail-actual.webp",
       "assets/portfolio/06/02-02_detail_d17abd8a.webp"
     ],
-    "url": "https://programmer119.github.io/ai-saas-pc-stgnn-ai-1/",
+
     "stack": [
       "TensorFlow.js",
       "Python",
@@ -481,7 +481,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/07/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/jetpack-compose-ui-mcx-client-android/",
+
     "stack": [
       "HTML",
       "CSS",
@@ -508,7 +508,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/08/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/moafesta-prototype/",
+
     "stack": [
       "HTML",
       "CSS",
@@ -535,7 +535,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/09/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/python-react-saas-3-7-5/",
+
     "stack": [
       "HTML",
       "CSS",
@@ -563,7 +563,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/10/detail-actual.webp",
       "assets/portfolio/10/02-02_detail_7ddc73cc.webp"
     ],
-    "url": "https://programmer119.github.io/ivr-java-avaya-650-850-2026/",
+
     "stack": [
       "JavaScript",
       "Web Speech API",
@@ -591,7 +591,7 @@ window.SF_PROJECTS = [
       "assets/portfolio/11/detail-actual.webp",
       "assets/portfolio/11/02-02_detail_2348d3e8.webp"
     ],
-    "url": "https://programmer119.github.io/lms-asap-12-7-x-5/",
+
     "stack": [
       "HTML",
       "CSS",
@@ -618,7 +618,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/12/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/palate-track-prototype-v2/",
+
     "stack": [
       "HTML",
       "CSS",
@@ -645,7 +645,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/13/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/1-crm-db-ga-2-2/",
+
     "stack": [
       "JavaScript",
       "HTML",
@@ -672,7 +672,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/14/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/flutter-flutter-2-2-3-5/",
+
     "stack": [
       "Flutter",
       "Dart 3",
@@ -698,7 +698,7 @@ window.SF_PROJECTS = [
     "gallery": [
       "assets/portfolio/15/detail-actual.webp"
     ],
-    "url": "https://programmer119.github.io/25-1-ui-ux-client-windows/",
+
     "stack": [
       "HTML",
       "CSS",
