@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "research/charts/gallery/**"
+      - "research/charts/advanced/**"
       - "research/charts/index.html"
       - "research/research.css"
       - ".github/workflows/research-chart-gallery-qa.yml"
@@ -23,6 +24,8 @@ jobs:
         run: |
           node --check research/charts/gallery/gallery.js
           node --check research/charts/gallery/qa.cjs
+          node --check research/charts/advanced/references.js
+          node --check research/charts/advanced/qa.cjs
           test -s research/charts/gallery/index.html
           test -s research/charts/index.html
           test -s research/charts/gallery/gallery.css
@@ -44,6 +47,16 @@ jobs:
           exit 1
       - name: Verify 5 real engines x 4 categories and mobile
         run: node research/charts/gallery/qa.cjs
+      - name: Verify advanced research filters and desktop/mobile captures
+        run: node research/charts/advanced/qa.cjs
+      - name: Upload advanced research screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-advanced-qa-${{ github.run_id }}
+          path: research/charts/advanced/qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Upload actual Chrome screenshots and report
         if: always()
         uses: actions/upload-artifact@v4
