@@ -28,6 +28,7 @@ const expected=[
   vega:document.querySelectorAll('[data-engine-root=vega] svg').length,
   d3:document.querySelectorAll('[data-engine-root=d3] svg').length
   }}));
+  await page.waitForTimeout(1150);
   await page.screenshot({path:path.join(OUT,'desktop-'+cat.key+'.png'),fullPage:true,animations:'disabled'});
   const pass=data.ok===5&&data.failed===0&&data.rows===cat.rows&&Object.values(data.elements).every(x=>x>0);
   reports.push({category:cat.key,pass,...data}); console.log('CATEGORY_QA',cat.key,JSON.stringify(data));
@@ -38,6 +39,7 @@ const expected=[
  try{await mobile.waitForFunction(()=>document.querySelectorAll('.live-state.good').length===5,null,{timeout:27000})}catch{}
  const mobileCount=await mobile.locator('.live-state.good').count();
  const horizontalOverflow=await mobile.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+2);
+ await mobile.waitForTimeout(1150);
  await mobile.screenshot({path:path.join(OUT,'mobile-trend.png'),fullPage:true,animations:'disabled'});
  const result={pass:reports.every(x=>x.pass)&&mobileCount===5&&!horizontalOverflow&&errors.length===0,categories:reports,mobile:{rendered:mobileCount,horizontalOverflow},errors};
  fs.writeFileSync(path.join(OUT,'qa-results.json'),JSON.stringify(result,null,2)+'\n');
