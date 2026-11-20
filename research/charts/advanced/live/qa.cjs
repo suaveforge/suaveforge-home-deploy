@@ -65,13 +65,17 @@ const CATS=[['flow',6],['hierarchy',6],['density',6],['multi',6],['story',5],['o
    mobileCounts[category]=await mobile.locator('.advanced-live-card').count();
   }
   await mobile.locator('[data-category="flow"]').click();
-  await mobile.locator('[data-ref="R001"] [data-chart]').scrollIntoViewIfNeeded();
-  await mobile.locator('[data-ref="R001"] .preview-state.ok,.advanced-live-card[data-ref="R001"] .preview-state.error').waitFor({state:'visible',timeout:25000});
+  let mobileRendered=0;
+  for(const card of await mobile.locator('.advanced-live-card').all()){
+   await card.locator('[data-chart]').scrollIntoViewIfNeeded();
+   await card.locator('.preview-state.ok,.preview-state.error').waitFor({state:'visible',timeout:25000});
+   if(await card.locator('.preview-state.ok').count()===1)mobileRendered++;
+  }
   mobileOverflow=await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
   await mobile.evaluate(()=>window.scrollTo(0,0));
   await mobile.screenshot({path:path.join(OUT,'advanced-live-mobile.png'),fullPage:true,animations:'disabled'});
-  const passed=initial===14&&reported.length===35&&reported.every(x=>x.passed)&&Object.entries(counts).every(([c,n])=>CATS.some(x=>x[0]===c&&x[1]===n))&&Object.entries(mobileCounts).every(([c,n])=>CATS.some(x=>x[0]===c&&x[1]===n))&&allCount===35&&searchCount>=2&&modalSuccess&&modalClosed&&!desktopOverflow&&!mobileOverflow&&errors.length===0;
-  const result={passed,initial,allCount,searchCount,modalSuccess,modalClosed,desktopOverflow,mobileOverflow,counts,mobileCounts,rendered:reported.filter(x=>x.passed).length,total:reported.length,failures:reported.filter(x=>!x.passed),errors};
+  const passed=initial===14&&reported.length===35&&reported.every(x=>x.passed)&&Object.entries(counts).every(([c,n])=>CATS.some(x=>x[0]===c&&x[1]===n))&&Object.entries(mobileCounts).every(([c,n])=>CATS.some(x=>x[0]===c&&x[1]===n))&&allCount===35&&searchCount>=2&&modalSuccess&&modalClosed&&!desktopOverflow&&!mobileOverflow&&mobileRendered===6&&errors.length===0;
+  const result={passed,initial,allCount,searchCount,modalSuccess,modalClosed,desktopOverflow,mobileOverflow,mobileRendered,counts,mobileCounts,rendered:reported.filter(x=>x.passed).length,total:reported.length,failures:reported.filter(x=>!x.passed),errors};
   fs.writeFileSync(path.join(OUT,'advanced-live-results.json'),JSON.stringify({...result,individual:reported},null,2)+'\n');
   console.log('ADVANCED_LIVE_QA',JSON.stringify(result));
   if(!passed)process.exitCode=1;
