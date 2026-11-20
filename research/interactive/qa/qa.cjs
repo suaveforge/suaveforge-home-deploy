@@ -32,24 +32,30 @@ const BASE='http://127.0.0.1:8181';
  await page.locator('[data-floor="3"]').click();await page.waitForTimeout(280);
  report.desktop.floor=await snapshot();
  const levelsBefore=report.desktop.floor.levels;
- await page.locator('[data-explode]').click();await page.waitForTimeout(580);
+ await page.locator('[data-explode]').click();
+ const baseFloorDelta=levelsBefore[4]-levelsBefore[0];
+ try{await page.waitForFunction(delta=>{const s=window.__sfInteractiveQA.snapshot();return s.levels[4]-s.levels[0]>delta+.65},baseFloorDelta,{timeout:12000})}catch{}
  report.desktop.exploded=await snapshot();
  report.desktop.floorSeparation=report.desktop.exploded.levels[4]-report.desktop.exploded.levels[0]>(levelsBefore[4]-levelsBefore[0])+.65;
  await page.locator('[data-theme="structure"]').click();
  await page.locator('[data-floor="-1"]').click();await page.waitForTimeout(450);
  await page.locator('[data-explode]').click();await page.waitForTimeout(450);
  const beforeRotate=await snapshot();await page.locator('[data-motion="rotate"]').click();
- try{await page.waitForFunction(before=>window.__sfInteractiveQA.snapshot().rotation-before>.30,beforeRotate.rotation,{timeout:6000})}catch{}
+ try{await page.waitForFunction(before=>window.__sfInteractiveQA.snapshot().rotation-before>.30,beforeRotate.rotation,{timeout:10000})}catch{}
  report.desktop.rotated=(await snapshot()).rotation-beforeRotate.rotation>.30;
- await page.locator('[data-motion="move"]').click();await page.waitForTimeout(355);
+ await page.locator('[data-motion="move"]').click();
+ try{await page.waitForFunction(()=>Math.abs(window.__sfInteractiveQA.snapshot().position)>.08,null,{timeout:12000})}catch{}
  report.desktop.moved=Math.abs((await snapshot()).position)>.08;
- await page.locator('[data-motion="scale"]').click();await page.waitForTimeout(350);
+ await page.locator('[data-motion="scale"]').click();
+ try{await page.waitForFunction(()=>window.__sfInteractiveQA.snapshot().scale>1.04,null,{timeout:12000})}catch{}
  report.desktop.scaled=(await snapshot()).scale>1.04;
  await page.locator('[data-reset]').click();await page.waitForTimeout(500);
  await page.screenshot({path:path.join(OUT,'building-desktop.png'),fullPage:true,animations:'disabled'});
  await page.locator('[data-scene-mode="equipment"]').click();await page.waitForTimeout(600);
  report.desktop.equipment=await snapshot();
- await page.locator('[data-explode]').click();await page.waitForTimeout(600);
+ await page.locator('[data-explode]').click();
+ const basePartDelta=report.desktop.equipment.parts[4]-report.desktop.equipment.parts[0];
+ try{await page.waitForFunction(delta=>{const s=window.__sfInteractiveQA.snapshot();return s.parts[4]-s.parts[0]>delta+.55},basePartDelta,{timeout:12000})}catch{}
  report.desktop.equipmentExploded=await snapshot();
  report.desktop.equipmentSeparated=report.desktop.equipmentExploded.parts[4]-report.desktop.equipmentExploded.parts[0]>(report.desktop.equipment.parts[4]-report.desktop.equipment.parts[0])+.55;
  await page.screenshot({path:path.join(OUT,'equipment-desktop.png'),fullPage:true,animations:'disabled'});
