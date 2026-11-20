@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shader & VFX Laboratory | SuaveForge Research</title>
+<meta name="description" content="SuaveForge 쉐이더·VFX 연구소. 16개 독립 제작 WebGL GPU 쉐이더를 금속·유리·왜곡·글리치·파티클·레이마칭·오로라·후처리 8개 분야에서 직접 실행하고 비교합니다.">
+<link rel="canonical" href="https://suaveforge.com/research/interactive/shaders/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="Shader & VFX Laboratory | SuaveForge">
+<meta property="og:description" content="16 original GLSL effects · 8 categories · Interactive GPU comparisons">
+<link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/research/interactive/shaders/shaders.css?v=20261121-01">
+<script defer src="/research/interactive/shaders/effects.js?v=20261121-01"></script>
+<script defer src="/research/interactive/shaders/lab.js?v=20261121-01"></script>
+</head>
+<body><a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar"><div class="shell top-inner"><a class="brand" href="/"><img src="/assets/logo-motion/suaveforge-logo-final.svg" alt="" width="29" height="29">SuaveForge <small>/ RESEARCH</small></a><nav class="nav" aria-label="연구소 메뉴"><a href="/research/">연구소</a><a href="/research/interactive/">인터랙티브</a><a href="/research/interactive/physics/">물리</a><a href="/research/interactive/shaders/" aria-current="page">쉐이더·VFX</a></nav></div></header>
+<main class="shell" id="main">
+<div class="crumb"><a href="/">HOME</a><span>/</span><a href="/research/">RESEARCH</a><span>/</span><a href="/research/interactive/">INTERACTIVE</a><span>/</span><b>SHADER & VFX</b></div>
+<section class="hero" aria-label="GPU 쉐이더 연구소 소개">
+<div class="hero-copy"><div class="eyebrow">SUAVEFORGE / REALTIME GPU EFFECTS LIBRARY</div>
+<h1>Pixels with<br><em>personality.</em></h1>
+<p>유리와 금속의 질감, 액체 왜곡, 타이포 후처리, 파티클과 절차적 3D. 16개의 자체 제작 GLSL 쉐이더를 브라우저 GPU에서 직접 계산하고, 속도·강도·색을 조절하며 같은 화면에서 비교합니다.</p>
+<div class="hero-tags"><span>16 ORIGINAL GPU FX</span><span>8 CATEGORIES</span><span>GLSL · WEBGL</span><span>SINGLE GPU CONTEXT</span><span>16 CURATED REFERENCES</span></div></div>
+<div class="hero-image" aria-hidden="true"><svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="orb" cx="33%" cy="23%"><stop stop-color="#edf8ff"/><stop offset=".2" stop-color="#adc6fc"/><stop offset=".42" stop-color="#507fdd"/><stop offset=".63" stop-color="#8c69c9"/><stop offset=".82" stop-color="#203d83"/><stop offset="1" stop-color="#041c38"/></radialGradient><linearGradient id="arc"><stop stop-color="#a1f3e0"/><stop offset=".5" stop-color="#a6b2fd"/><stop offset="1" stop-color="#f5adad"/></linearGradient></defs>
+<ellipse cx="133" cy="114" rx="110" ry="37" transform="rotate(-30 133 114)" stroke="url(#arc)" fill="none" stroke-width="1.5" opacity=".85"/>
+<circle cx="132" cy="109" r="71" fill="url(#orb)"/><ellipse cx="132" cy="109" rx="58" ry="73" fill="none" stroke="#ffffff65" stroke-width="1.2" transform="rotate(35 132 109)"/>
+<path d="M28 169Q89 97 131 116T240 40" fill="none" stroke="#72d5f5aa" stroke-width="3" stroke-linecap="round"/>
+<circle cx="214" cy="46" r="6" fill="#f5adcf"/><circle cx="55" cy="179" r="3" fill="#c7ebff"/><circle cx="98" cy="16" r="2.5" fill="#9fe7de"/><circle cx="211" cy="169" r="4" fill="#a9b9ff"/>
+</svg></div></section>
+<nav class="lab-tabs" aria-label="인터랙티브 연구 분야"><a href="/research/interactive/#showcase">인터랙티브 12종</a><a href="/research/interactive/physics/">물리 시뮬레이션 12종</a><a href="/research/interactive/shaders/" aria-current="page">쉐이더·VFX 16종</a></nav>
+<section id="gallery" aria-labelledby="gallery-title">
+<div class="section-top"><div><span class="kicker">01 / LIVE GPU EFFECTS</span><h2 id="gallery-title">효과별로 직접 조작하는 쉐이더</h2></div><p>이미지나 녹화 영상이 아닌 실제 WebGL 프래그먼트 프로그램입니다. 마우스 위치와 강도·속도·색상에 반응하며 화면에 들어오는 카드부터 렌더링합니다.</p></div>
+<div class="toolbar"><div class="filters" data-shader-filters role="group" aria-label="VFX 효과 분류"></div><input type="search" data-shader-search placeholder="쉐이더 종류 · 연출 검색" aria-label="쉐이더 검색" autocomplete="off"></div>
+<div class="countline"><span data-shader-count aria-live="polite">16개 실제 GPU 쉐이더</span><span class="gpu-status" aria-busy="true" data-gpu-status>WEBGL 연결 중</span></div>
+<div class="shader-grid" data-shader-grid aria-label="직접 실행하는 16개 쉐이더"><p>GLSL 연출을 준비하고 있습니다.</p></div>
+<p class="no-result" data-shader-empty hidden>검색 조건에 맞는 효과가 없습니다.</p>
+</section>
+<section id="compare" class="compare" aria-labelledby="compare-title">
+<div class="compare-header"><div><span class="kicker">02 / EFFECT COMPARISON</span><h3 id="compare-title">3개 효과 동시 비교</h3><p>각 카드의 ‘비교 추가’로 원하는 효과를 최대 3개까지 고릅니다. 아래의 동일한 강도·속도 설정을 세 효과에 함께 적용합니다.</p></div><button type="button" data-compare-reset style="color:#bcd6fa;border:1px solid #50729d;border-radius:9px;background:transparent;padding:8px 12px;font-size:10px;font-weight:900;white-space:nowrap">선택 해제</button></div>
+<div class="compare-settings"><label>공통 강도 <input type="range" min="0.2" max="2" step="0.1" value="1" data-compare-intensity aria-label="비교 차트 공통 강도"><output>1.0</output></label><label>공통 속도 <input type="range" min="0.1" max="2.5" step="0.1" value="1" data-compare-speed aria-label="비교 차트 공통 속도"><output>1.0</output></label></div>
+<div class="compare-grid" data-compare-grid aria-label="선택한 최대 세 쉐이더의 GPU 효과 비교"></div><p data-compare-empty class="compare-empty" hidden>비교할 쉐이더를 먼저 선택하세요.</p><div class="compare-note">동일한 파라미터를 적용하되 효과마다 계산식은 다릅니다. 상용 업체의 원본 구현을 복제하거나 비교 벤치마크 수치로 주장하지 않습니다.</div>
+</section>
+<section id="references" aria-labelledby="reference-title"><div class="section-top"><div><span class="kicker">03 / PROFESSIONAL RESEARCH REFERENCES</span><h2 id="reference-title">전문 쉐이더 자료·갤러리 16곳</h2></div><p>Shadertoy, Paper Shaders, Shaders.com, Codrops, Three.js, Shader Park, Book of Shaders 등을 한곳에 모았습니다. 원본 작품을 무단으로 내려받지 않고 출처로 연결합니다.</p></div>
+<div class="ref-grid" data-shader-references aria-label="외부 전문 쉐이더 참고자료"></div></section>
+<div class="license"><strong>구현 및 사용권 고지.</strong> GPU에서 실행되는 16개 GLSL 효과는 SuaveForge에서 독립 작성한 연구용 시연입니다. 정교한 레이마칭, 굴절, 연기와 광선 산란 등은 시각적 근사 연출이며 실제 광학·유체의 물리적으로 정확한 시뮬레이션은 아닙니다. 외부 갤러리와 제조사 콘텐츠의 저작권은 각 원작자에게 있고, 유료 제품 및 예제 코드는 프로젝트 도입 전 별도 허가·라이선스를 확인해야 합니다. GPU가 지원되지 않는 환경에서는 실패 상태를 명시적으로 보여줍니다.</div>
+</main>
+<dialog class="modal" data-shader-modal aria-label="쉐이더 확대 보기"><div class="modal-head"><h3 data-shader-modal-title>쉐이더 확대</h3><button type="button" aria-label="확대 창 닫기" data-modal-close>×</button></div><div data-shader-modal-content></div></dialog>
+<footer class="footer"><div class="shell"><span>© SuaveForge · Shader & VFX Research</span><a href="/research/interactive/">인터랙티브 연구소 돌아가기 ↗</a></div></footer>
+</body></html>
