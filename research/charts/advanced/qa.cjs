@@ -1,4 +1,4 @@
-const {chromium}=require('playwright');
+const {chromium}=require('../gallery/node_modules/playwright');
 const fs=require('node:fs');const path=require('node:path');
 const dir=path.join(__dirname,'qa-artifacts');fs.mkdirSync(dir,{recursive:true});
 (async()=>{
