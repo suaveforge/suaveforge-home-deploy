@@ -26,6 +26,9 @@ jobs:
           node --check research/charts/gallery/qa.cjs
           node --check research/charts/advanced/references.js
           node --check research/charts/advanced/qa.cjs
+          node --check research/charts/advanced/live/live.js
+          node --check research/charts/advanced/live/qa.cjs
+          test -s research/charts/advanced/live/index.html
           test -s research/charts/gallery/index.html
           test -s research/charts/index.html
           test -s research/charts/gallery/gallery.css
@@ -49,6 +52,16 @@ jobs:
         run: node research/charts/gallery/qa.cjs
       - name: Verify advanced research filters and desktop/mobile captures
         run: node research/charts/advanced/qa.cjs
+      - name: Verify 35 locally rendered advanced charts in desktop and mobile Chromium
+        run: node research/charts/advanced/live/qa.cjs
+      - name: Upload 35 live advanced chart screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-advanced-live-qa-${{ github.run_id }}
+          path: research/charts/advanced/live/qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Upload advanced research screenshots
         if: always()
         uses: actions/upload-artifact@v4
