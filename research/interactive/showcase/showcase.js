@@ -45,7 +45,7 @@ function mapScene(){const path='<path d="M38 46 79 27 136 42 157 29 207 48 274 5
 function stageFor(id){const fn={floors:floorScene,systems:systemScene,orbit:orbitScene,config:productScene,assembly:assemblyScene,timeline:timelineScene,state:stateScene,magnet:magnetScene,particles:particleScene,waves:waveScene,towers:towerScene,map:mapScene}[id];return fn()}
 function buttons(id){const b=(val,label)=>'<button type="button" data-action="'+val+'">'+label+'</button>';if(id==='floors')return '<div class="control-buttons">'+b('floorall','전체')+b('floor2','2F')+b('floor4','4F')+b('split','층 분리')+'</div><span class="sample-live-value" data-sample-value>ALL FLOORS</span>';
 if(id==='systems')return '<div class="control-buttons">'+b('power','전기')+b('hvac','공조')+b('safety','소방')+b('structure','전체')+'</div>';
-if(id==='orbit')return '<div class="control-buttons">'+b('reset','원점 복귀')+'</div><span class="sample-live-value" data-sample-value>Y 36°</span>';
+if(id==='orbit')return '<div class="control-buttons">'+b('turn','회전 +45°')+b('reset','원점 복귀')+'</div><span class="sample-live-value" data-sample-value>Y 36°</span>';
 if(id==='config')return '<div class="control-buttons">'+b('blue','블루')+b('mint','민트')+b('orange','코랄')+'</div><span class="sample-live-value" data-sample-value>BLUE / ACTIVE</span>';
 if(id==='assembly')return '<span class="sample-live-value">EXPLODE</span><input type="range" data-range="assembly" min="0" max="100" value="35" aria-label="부품 분리 비율"><span class="sample-live-value" data-sample-value>35%</span>';
 if(id==='timeline')return b('play','PLAY')+'<input type="range" data-range="timeline" min="0" max="100" value="0" aria-label="키프레임 진행률"><span class="sample-live-value" data-sample-value>00%</span>';
@@ -81,7 +81,7 @@ frame(card,draw);card.__onCanvasMode=k=>{card.dataset.canvasMode=k;setSelected(c
 function handle(card){const id=card.dataset.sample;card.dataset.ready='true';
 if(id==='floors'){card.dataset.floor='all';card.dataset.split='false';assignFloors(card);card.querySelectorAll('[data-floor-shape]').forEach(g=>g.addEventListener('click',()=>{card.dataset.floor=g.dataset.floorShape;assignFloors(card)}))}
 if(id==='systems')setSystem(card,'power');
-if(id==='orbit'){setRotation(card,-20,-36);let drag;const wrap=card.querySelector('[data-drag-orbit]');wrap.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,yaw:-36,pitch:-20};wrap.setPointerCapture(e.pointerId)});wrap.addEventListener('pointermove',e=>{if(!drag)return;const yaw=drag.yaw+(e.clientX-drag.x)*.45,pitch=Math.max(-65,Math.min(65,drag.pitch-(e.clientY-drag.y)*.45));setRotation(card,pitch,yaw)});wrap.addEventListener('pointerup',()=>drag=null);wrap.addEventListener('pointercancel',()=>drag=null)}
+if(id==='orbit'){setRotation(card,-20,-36);let drag;const wrap=card.querySelector('[data-drag-orbit]');wrap.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,yaw:-36,pitch:-20};wrap.setPointerCapture(e.pointerId)});wrap.addEventListener('pointermove',e=>{if(!drag){if(e.pointerType==='mouse'){const r=wrap.getBoundingClientRect();const dx=(e.clientX-r.left-r.width/2)/r.width,dy=(e.clientY-r.top-r.height/2)/r.height;setRotation(card,-20-dy*36,-36+dx*68)}return;}const yaw=drag.yaw+(e.clientX-drag.x)*.45,pitch=Math.max(-65,Math.min(65,drag.pitch-(e.clientY-drag.y)*.45));setRotation(card,pitch,yaw)});wrap.addEventListener('pointerup',()=>drag=null);wrap.addEventListener('pointercancel',()=>drag=null)}
 if(id==='config')setProduct(card,'blue');if(id==='assembly')setAssembly(card,35);if(id==='timeline')setTimeline(card,0);if(id==='state')setState(card,0);
 if(id==='magnet'){const wrap=card.querySelector('[data-magnetic]');wrap.addEventListener('pointermove',e=>{const r=wrap.getBoundingClientRect();setMagnet(card,(e.clientX-r.left-r.width/2)*.18,(e.clientY-r.top-r.height/2)*.18)});wrap.addEventListener('pointerleave',()=>setMagnet(card))}
 if(id==='particles'||id==='waves')startCanvas(card,id);
@@ -89,6 +89,7 @@ if(id==='towers')drawTowers(card,'population');if(id==='map')setMap(card,3);
 card.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.action;if(id==='floors'){if(k==='split'){card.dataset.split=String(card.dataset.split!=='true')}else card.dataset.floor=k==='floorall'?'all':String(Number(k.slice(5))-1);assignFloors(card)}
 if(id==='systems')setSystem(card,k);
 if(id==='orbit'&&k==='reset')setRotation(card,-20,-36);
+if(id==='orbit'&&k==='turn')setRotation(card,-20,Number(card.dataset.yaw||-36)+45);
 if(id==='config')setProduct(card,k);
 if(id==='state')setState(card,Number(k.replace('step','')));
 if(id==='magnet'&&k==='reset')setMagnet(card);
