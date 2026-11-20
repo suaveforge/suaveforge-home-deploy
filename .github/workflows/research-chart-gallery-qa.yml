@@ -1,0 +1,54 @@
+name: Research Chart Gallery Real Browser QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "research/charts/gallery/**"
+      - "research/charts/index.html"
+      - "research/research.css"
+      - ".github/workflows/research-chart-gallery-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: research-chart-gallery-qa
+  cancel-in-progress: true
+jobs:
+  chromium-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source syntax check
+        run: |
+          node --check research/charts/gallery/gallery.js
+          node --check research/charts/gallery/qa.cjs
+          test -s research/charts/gallery/index.html
+          test -s research/charts/index.html
+          test -s research/charts/gallery/gallery.css
+          grep -q "실제 차트 비교" research/charts/index.html
+          grep -q "data-live-grid" research/charts/gallery/index.html
+      - name: Install Chromium test runtime
+        working-directory: research/charts/gallery
+        run: |
+          npm install --no-save playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Start isolated static preview
+        run: |
+          python3 -m http.server 8181 --bind 127.0.0.1 >/tmp/suaveforge-chart-gallery-http.log 2>&1 &
+          for i in $(seq 1 25); do
+            if curl -fsS http://127.0.0.1:8181/research/charts/gallery/ -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/suaveforge-chart-gallery-http.log
+          exit 1
+      - name: Verify 5 real engines x 4 categories and mobile
+        run: node research/charts/gallery/qa.cjs
+      - name: Upload actual Chrome screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-chart-gallery-qa-${{ github.run_id }}
+          path: research/charts/gallery/qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
