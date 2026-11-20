@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Physics Simulation Lab | SuaveForge Research</title>
+<meta name="description" content="SuaveForge 물리 시뮬레이션 연구실. 12개의 원본 브라우저 물리 계산 실험을 강체·충돌, 천·연체, 유체·입자, 파동, 중력, 전자기·광학 여섯 분야에서 직접 실행하고 파라미터를 조작합니다.">
+<link rel="canonical" href="https://suaveforge.com/research/interactive/physics/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="Physics Simulation Lab | SuaveForge"><meta property="og:description" content="실제 물리 계산이 실행되는 12종 브라우저 시뮬레이션과 14개 전문 공식 참고처">
+<link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/research/interactive/physics/physics.css?v=20261121-01">
+<script defer src="/research/interactive/physics/models.js?v=20261121-01"></script>
+<script defer src="/research/interactive/physics/lab.js?v=20261121-01"></script>
+</head><body>
+<a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar"><div class="shell top-inner"><a class="brand" href="/"><img src="/assets/logo-motion/suaveforge-logo-final.svg" width="29" height="29" alt="">SuaveForge <small>/ RESEARCH</small></a><nav class="nav" aria-label="연구소 메뉴"><a href="/research/">연구소</a><a href="/research/charts/">차트</a><a href="/research/interactive/">인터랙티브</a><a href="/research/interactive/physics/" aria-current="page">물리 시뮬레이션</a></nav></div></header>
+<main id="main" class="shell">
+<div class="crumb"><a href="/">HOME</a><span>/</span><a href="/research/">RESEARCH</a><span>/</span><a href="/research/interactive/">INTERACTIVE</a><span>/</span><b>PHYSICS</b></div>
+<nav class="lab-nav" aria-label="인터랙티브 연구실"><a href="/research/interactive/#showcase">인터랙티브 12종</a><a href="/research/interactive/#live">3D 공간 탐색</a><a href="/research/interactive/physics/" aria-current="page">물리 시뮬레이션 12종</a></nav>
+<section class="hero">
+<div class="hero-main"><span class="overline">SUAVEFORGE / INTERACTIVE PHYSICS LABORATORY</span><h1>Motion is math.<br><em>Make it tangible.</em></h1>
+<p>충돌의 순간부터 천의 변형, 수면의 파동, 궤도와 전기장까지. 실제 방정식과 수치 적분을 브라우저에서 직접 실행하고, 중력·강성·반발계수·굴절률을 바꿔 물리 현상의 차이를 확인합니다.</p>
+<div class="hero-stat"><span>12 ORIGINAL SIMULATIONS</span><span>6 PHYSICS FIELDS</span><span>FIXED TIMESTEP</span><span>NO PAID SDK</span></div></div>
+<div class="hero-visual" aria-hidden="true">
+<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg"><g fill="none"><circle cx="160" cy="113" r="78" stroke="#8db0e166" stroke-width="1.5"/><circle cx="160" cy="113" r="107" stroke="#8db0e13a" stroke-dasharray="4 10"/><ellipse cx="160" cy="113" rx="120" ry="57" transform="rotate(-26 160 113)" stroke="#b0cdfd77" stroke-width="1.8"/><path d="M36 113H282M160 7V217" stroke="#b3c9e82e" stroke-dasharray="4 6"/><path d="M45 156Q96 45 154 111T274 76" stroke="#47d7cd" stroke-width="3" stroke-linecap="round"/><path d="M65 145Q117 97 149 129T240 154" stroke="#e8a378bb" stroke-width="2"/></g><circle cx="160" cy="113" r="21" fill="#f4ae6d" opacity=".13"/><circle cx="160" cy="113" r="12" fill="#ffcd84"/><circle cx="225" cy="58" r="10" fill="#6299f0"/><circle cx="225" cy="58" r="17" fill="#6299f0" opacity=".18"/><circle cx="59" cy="151" r="5" fill="#46d7c5"/><g fill="#a9c9f7" font-size="9" font-family="monospace"><text x="169" y="100">F = ma</text><text x="184" y="196">SIMULATION</text><text x="19" y="54">t → 0.011s</text></g></svg></div>
+</section>
+<section id="simulations" aria-labelledby="sim-title">
+<div class="section-head"><div><span class="kicker">01 / ORIGINAL NUMERICAL EXPERIMENTS</span><h2 id="sim-title">종류별로 직접 실행하는 물리 시뮬레이션</h2></div><p>각 카드는 실제 상태를 시간에 따라 적분합니다. 시뮬레이션을 일시정지하거나 수치를 바꾸고, 화면을 클릭·드래그해 물체와 상호작용할 수 있습니다.</p></div>
+<div class="explain"><div><b>12개 원본 계산 모델 · 6개 분야</b><p>대부분 Canvas 2D 기반이며 수치 계산은 직접 작성했습니다. 고급 전문 엔진의 복제본이 아니라 기술을 비교·학습하기 위한 간소화 시뮬레이터입니다.</p></div><a href="#references">물리 전문 갤러리 14곳 ↗</a></div>
+<div class="toolbar"><div class="filters" data-physics-filters role="group" aria-label="물리 시뮬레이션 카테고리"></div><input type="search" data-physics-search aria-label="물리 시뮬레이션 검색" placeholder="물리 법칙 · 실험 · 엔진 검색" autocomplete="off"></div>
+<div class="summary-line"><span data-physics-count aria-live="polite">12개 실행 시뮬레이션</span><span>드래그·클릭 · 슬라이더 · 일시정지 · 초기화</span></div>
+<div class="simulation-grid" data-physics-grid aria-label="카테고리별 실행 시뮬레이션"><p>실제 계산 모형을 불러오는 중입니다.</p></div>
+<div class="no-result" data-physics-empty hidden>조건에 맞는 시뮬레이션이 없습니다.</div>
+</section>
+<section id="references" aria-labelledby="ref-title"><div class="section-head"><div><span class="kicker">02 / OFFICIAL PHYSICS REFERENCE SOURCES</span><h2 id="ref-title">전문 물리 시뮬레이션 갤러리 14곳</h2></div><p>Rapier·Matter.js·Ten Minute Physics·myPhysicsLab·Falstad·PhET 등 실제 예제와 알고리즘 설명을 제공하는 전문 사이트를 모았습니다. 당사에서 임의로 코드나 이미지를 복제하지 않습니다.</p></div><div class="reference-grid" data-physics-references aria-label="공식 물리 시뮬레이션 기술 참고처"><p>공식 자료 목록을 불러오는 중입니다.</p></div></section>
+<div class="license-note"><strong>물리 정확도 및 사용권 구분</strong> · 이 연구실의 실험은 단위와 시간 배율이 교육용으로 조정된 간소화 수치 모델입니다. 천·로프는 거리 제약 기반, 액체 입자는 유체의 시각적 특성을 흉내 낸 근사 모델이며 정밀 CFD·FEM·실제 BIM 검증 용도로 사용해서는 안 됩니다. 전문 제조사 예제는 공식 사이트로만 연결하고, 특히 PhET의 CC BY-NC 기반 시뮬레이션은 상업적 재사용·임베딩 전에 별도 이용허락이 필요합니다.</div>
+</main>
+<dialog class="dialog" data-physics-modal aria-label="물리 시뮬레이션 확대"><div class="dialog-bar"><h2 data-physics-modal-title>실험 확대</h2><button type="button" data-modal-close aria-label="시뮬레이션 닫기">×</button></div><div data-physics-modal-body></div></dialog>
+<footer class="footer"><div class="shell"><span>© SuaveForge · Physics Simulation Research</span><a href="/research/interactive/">인터랙티브 연구소 돌아가기 ↗</a></div></footer>
+</body></html>
