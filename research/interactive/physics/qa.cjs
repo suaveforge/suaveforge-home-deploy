@@ -47,7 +47,8 @@ try{
    const paused=p1===p2;
    const slider=card.locator('input[type=range]');
    const max=Number(await slider.getAttribute('max')),min=Number(await slider.getAttribute('min')),step=Number(await slider.getAttribute('step'));
-   const allowed=Number((min+Math.round((max-min)*.78/step)*step).toFixed(4));
+   let allowed=Number((min+Math.round((max-min)*.78/step)*step).toFixed(4));
+   if(allowed===before.param)allowed=min;
    await slider.fill(String(allowed));
    const changed=await page.evaluate(k=>window.__SFPhysicsLab.stats().find(x=>x.id===k).param,id);
    const paramChanged=changed!==before.param;
