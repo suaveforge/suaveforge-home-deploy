@@ -1,0 +1,54 @@
+name: Research Physics Lab Real Browser QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "research/interactive/physics/**"
+      - ".github/workflows/research-physics-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: research-physics-qa
+  cancel-in-progress: true
+jobs:
+  physics-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate real physics source and page
+        run: |
+          node --check research/interactive/physics/models.js
+          node --check research/interactive/physics/lab.js
+          node --check research/interactive/physics/qa.cjs
+          test -s research/interactive/physics/index.html
+          test -s research/interactive/physics/physics.css
+          test -s research/interactive/physics/README.md
+          grep -q 'href="/research/interactive/physics/"' index.html
+          grep -q 'href="/research/interactive/physics/"' research/index.html
+          grep -q 'href="/research/interactive/physics/"' research/interactive/index.html
+      - name: Prepare isolated Chromium runtime
+        working-directory: research/interactive/qa
+        run: |
+          npm install --no-save playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Serve original publicly deployed static source
+        run: |
+          python3 -m http.server 8181 --bind 127.0.0.1 >/tmp/suaveforge-physics-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8181/research/interactive/physics/ -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/suaveforge-physics-http.log
+          exit 1
+      - name: Real physics integration, interactions, filters and mobile Chromium
+        run: node research/interactive/physics/qa.cjs
+      - name: Store category screenshots and physics report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: physics-lab-browser-qa-${{ github.run_id }}
+          path: research/interactive/physics/qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
