@@ -28,6 +28,8 @@ try{
  await interactive.goto(BASE+'/research/interactive/',{waitUntil:'domcontentloaded',timeout:45000});
  menu.interactive=await interactive.locator('.physics-promo a[href="/research/interactive/physics/"]').count();
  menu.existingShowcase=await interactive.locator('.sample-card').count();
+ await Promise.all([site.close(),research.close(),interactive.close()]);
+ await page.bringToFront();
  for(const [category,ids] of groups){
   await page.locator('[data-physics-filters] button[data-category="'+category+'"]').click();
   await page.waitForFunction(()=>window.__SFPhysicsLab.stats().length===2);
@@ -37,7 +39,7 @@ try{
    await card.locator('canvas').scrollIntoViewIfNeeded();
    try{await page.waitForFunction(k=>window.__SFPhysicsLab.stats().find(x=>x.id===k)?.steps>=4,id,{timeout:14000})}catch{}
    const before=await page.evaluate(k=>window.__SFPhysicsLab.stats().find(x=>x.id===k),id);
-   await page.waitForTimeout(600);
+   try{await page.waitForFunction(arg=>{const now=window.__SFPhysicsLab.stats().find(x=>x.id===arg.id);return now?.steps>=arg.steps+3&&JSON.stringify(now.metric)!==arg.metric},{id,steps:before.steps,metric:JSON.stringify(before.metric)},{timeout:11000})}catch{}
    const after=await page.evaluate(k=>window.__SFPhysicsLab.stats().find(x=>x.id===k),id);
    const dynamic=after.steps>before.steps && JSON.stringify(after.metric)!==JSON.stringify(before.metric);
    await card.locator('[data-toggle]').click();
