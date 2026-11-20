@@ -71,7 +71,7 @@ const BASE='http://127.0.0.1:8181';
  report.mobileMenu=await site.locator('#mobile-research a[href="/research/interactive/"]').count();
  const research=await browser.newPage({viewport:{width:1440,height:900}});
  await research.goto(BASE+'/research/',{waitUntil:'domcontentloaded',timeout:45000});
- report.researchTile=await research.locator('.research-tiles a[href="/research/interactive/"]').count();
+ report.researchTile=await research.locator('.research-tiles a[href^="/research/interactive/"]').count();
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
  mobile.on('pageerror',e=>errors.push('mobile: '+e.message));mobile.on('console',m=>{if(m.type()==='error')errors.push('mobile console: '+m.text())});
  await mobile.goto(BASE+'/research/interactive/',{waitUntil:'domcontentloaded',timeout:45000});
