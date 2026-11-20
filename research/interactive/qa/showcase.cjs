@@ -33,7 +33,7 @@ async function card(page,id){return page.locator('[data-sample="'+id+'"]')}
  await page.mouse.down();await page.mouse.move(orbBox.x+orbBox.width/2+100,orbBox.y+orbBox.height/2+30,{steps:8});await page.mouse.up();
  observations.orbit={before:yawBefore,after:await orbit.getAttribute('data-yaw')};
  await orbit.locator('[data-action=turn]').click();observations.orbit.button=await orbit.getAttribute('data-yaw');
- await page.screenshot({path:path.join(OUT,'01-spatial-desktop.png'),fullPage:true,animations:'disabled'});
+ await page.evaluate(()=>window.getSelection()?.removeAllRanges());await page.screenshot({path:path.join(OUT,'01-spatial-desktop.png'),fullPage:true,animations:'disabled'});
  await page.locator('[data-showcase-filters] button[data-category=product]').click();
  const config=await card(page,'config');
  await config.locator('[data-action=mint]').click();
@@ -41,7 +41,7 @@ async function card(page,id){return page.locator('[data-sample="'+id+'"]')}
  const assembly=await card(page,'assembly');
  await assembly.locator('[data-range=assembly]').fill('86');
  observations.assembly=await assembly.getAttribute('data-progress');
- await page.screenshot({path:path.join(OUT,'02-product-desktop.png'),fullPage:true,animations:'disabled'});
+ await page.evaluate(()=>window.getSelection()?.removeAllRanges());await page.screenshot({path:path.join(OUT,'02-product-desktop.png'),fullPage:true,animations:'disabled'});
  await page.locator('[data-showcase-filters] button[data-category=motion]').click();
  const timeline=await card(page,'timeline');await timeline.locator('[data-range=timeline]').fill('72');
  observations.timeline=await timeline.getAttribute('data-progress');
@@ -49,18 +49,18 @@ async function card(page,id){return page.locator('[data-sample="'+id+'"]')}
  const magnet=await card(page,'magnet');const magBox=await magnet.locator('[data-magnetic]').boundingBox();
  await page.mouse.move(magBox.x+magBox.width*.8,magBox.y+magBox.height*.74);
  observations.magnet=await magnet.getAttribute('data-offset');
- await page.screenshot({path:path.join(OUT,'03-motion-desktop.png'),fullPage:true,animations:'disabled'});
+ await page.evaluate(()=>window.getSelection()?.removeAllRanges());await page.screenshot({path:path.join(OUT,'03-motion-desktop.png'),fullPage:true,animations:'disabled'});
  await page.locator('[data-showcase-filters] button[data-category=graphics]').click();
  const p=await card(page,'particles');const w=await card(page,'waves');await p.locator('[data-action=attract]').click();await w.locator('[data-action=dynamic]').click();
  await page.waitForTimeout(450);
  observations.graphics=await page.evaluate(()=>[...document.querySelectorAll('.sample-card canvas')].map(c=>({type:c.dataset.canvas,w:c.width,h:c.height,pixel:Array.from(c.getContext('2d').getImageData(Math.max(0,Math.floor(c.width/2)),Math.max(0,Math.floor(c.height/2)),1,1).data)})));
  observations.modes={particles:await p.getAttribute('data-canvas-mode'),waves:await w.getAttribute('data-canvas-mode')};
- await page.screenshot({path:path.join(OUT,'04-graphics-desktop.png'),fullPage:true,animations:'disabled'});
+ await page.evaluate(()=>window.getSelection()?.removeAllRanges());await page.screenshot({path:path.join(OUT,'04-graphics-desktop.png'),fullPage:true,animations:'disabled'});
  await page.locator('[data-showcase-filters] button[data-category=data]').click();
  const towers=await card(page,'towers');await towers.locator('[data-action=energy]').click();
  observations.towers={metric:await towers.getAttribute('data-metric'),count:await towers.locator('[data-tower]').count()};
  const map=await card(page,'map');await map.locator('[data-range=map]').fill('11');observations.map=await map.getAttribute('data-month');
- await page.screenshot({path:path.join(OUT,'05-data-desktop.png'),fullPage:true,animations:'disabled'});
+ await page.evaluate(()=>window.getSelection()?.removeAllRanges());await page.screenshot({path:path.join(OUT,'05-data-desktop.png'),fullPage:true,animations:'disabled'});
  await page.locator('[data-showcase-filters] button[data-category=all]').click();
  observations.all=await page.locator('.sample-card').count();
  await page.locator('[data-showcase-search]').fill('파티클');observations.search=await page.locator('.sample-card').count();
@@ -74,7 +74,7 @@ async function card(page,id){return page.locator('[data-sample="'+id+'"]')}
  observations.desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+2);
  await page.locator('[data-showcase-filters] button[data-category=all]').click();
  await page.locator('#showcase').scrollIntoViewIfNeeded();
- await page.screenshot({path:path.join(OUT,'00-showcase-overview-desktop.png'),fullPage:true,animations:'disabled'});
+ await page.evaluate(()=>window.getSelection()?.removeAllRanges());await page.screenshot({path:path.join(OUT,'00-showcase-overview-desktop.png'),fullPage:true,animations:'disabled'});
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
  mobile.on('pageerror',e=>errors.push('mobile: '+e.message));
  await mobile.goto(BASE,{waitUntil:'domcontentloaded',timeout:50000});
