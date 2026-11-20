@@ -9,7 +9,9 @@
 <meta property="og:description" content="건축 3D, 인터랙티브 씬, 모션 디자인, WebGL 전문 샘플 연구실">
 <link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/research/interactive/interactive.css?v=20261121-02">
+<link rel="stylesheet" href="/research/interactive/showcase/showcase.css?v=20261121-01">
 <script defer src="/research/interactive/catalog.js?v=20261121-01"></script>
+<script defer src="/research/interactive/showcase/showcase.js?v=20261121-01"></script>
 <script type="module" src="/research/interactive/spatial-lab.js?v=20261121-02"></script>
 </head>
 <body><a class="skip" href="#main">본문 바로가기</a>
@@ -23,11 +25,19 @@
 <div class="hero-text"><div class="overline">SUAVEFORGE / INTERACTIVE SYSTEMS RESEARCH</div>
 <h1>Make complex<br><em>feel intuitive.</em></h1>
 <p>공간을 선택하고, 부재를 강조하고, 구조를 분리하고, 움직임으로 정보를 이해합니다. 3D 건축·제품 탐색·UI 모션·WebGL 시각화를 실제 실행 가능한 기술 자산으로 연구합니다.</p>
-<div class="hero-meta"><span>INTERACTIVE 3D</span><span>TRANSFORM ANIMATIONS</span><span>WEBGL</span><span>24 CURATED SOURCES</span></div></div>
+<div class="hero-meta"><span>INTERACTIVE 3D</span><span>TRANSFORM ANIMATIONS</span><span>WEBGL</span><span>12 LOCAL LIVE SAMPLES</span><span>24 CURATED SOURCES</span></div></div>
 <div class="hero-deco" aria-hidden="true"><div class="geo"><div></div><div></div><div></div><span class="axis">X · Y · Z</span></div></div>
 </section>
+<section id="showcase" class="showcase" aria-labelledby="showcase-title">
+<div class="section-top"><div><span class="kicker">01 / ORIGINAL INTERACTIVE GALLERY</span><h2 id="showcase-title">종류별로 직접 실행하는 인터랙티브 샘플</h2></div><p>단순 참고 링크가 아닙니다. 3D·제품·모션·그래픽·공간 데이터 기술을 <strong>12개의 실제 실행 샘플</strong>로 모았습니다. 카테고리를 선택한 뒤 카드 안에서 직접 조작하고, 필요하면 확대해서 확인하세요.</p></div>
+<div class="showcase-banner"><div><b>12개의 원본 인터랙티브 데모 · 5개 분야</b><p>SuaveForge 자체 제작 · 브라우저에서 즉시 실행 · 공개된 구현 기술별로 구분 · 외부 데모 코드 복제 없음</p></div><a href="#showcase-grid">갤러리 탐색 ↓</a></div>
+<div class="showcase-tools"><div data-showcase-filters class="showcase-filters" role="group" aria-label="실제 인터랙티브 샘플 종류 선택"></div><input type="search" data-showcase-search placeholder="샘플 · 기술 · 작동 방식 검색" aria-label="실제 인터랙티브 샘플 검색" autocomplete="off"></div>
+<div data-showcase-count class="showcase-result" aria-live="polite">12개 실제 인터랙티브 샘플</div>
+<div id="showcase-grid" data-showcase-grid class="showcase-grid" aria-label="SuaveForge 직접 실행 인터랙티브 샘플"><p>직접 실행 샘플을 불러오는 중입니다.</p></div>
+<p class="sample-empty" data-showcase-empty hidden>일치하는 실행 샘플이 없습니다.</p>
+</section>
 <section id="live" aria-labelledby="live-title">
-<div class="section-top"><div><span class="kicker">01 / LIVE SPATIAL PROTOTYPE</span><h2 id="live-title">클릭해서 움직이는 3D 공간</h2></div><p>사진이나 동영상이 아닙니다. 테마·층·카메라를 직접 조작하는 원본 WebGL 시연입니다. 모든 모델은 연구 목적의 단순화된 자체 제작 도형입니다.</p></div>
+<div class="section-top"><div><span class="kicker">02 / LIVE SPATIAL PROTOTYPE</span><h2 id="live-title">클릭해서 움직이는 3D 공간</h2></div><p>사진이나 동영상이 아닙니다. 테마·층·카메라를 직접 조작하는 원본 WebGL 시연입니다. 모든 모델은 연구 목적의 단순화된 자체 제작 도형입니다.</p></div>
 <div class="modebar" role="group" aria-label="3D 샘플 선택"><button type="button" data-scene-mode="building" aria-pressed="true">01 · 5층 건물 구조도</button><button type="button" data-scene-mode="equipment" aria-pressed="false">02 · 모듈형 장비 분해도</button></div>
 <div class="studio">
 <div class="viewport" data-spatial-viewport data-webgl-ready="false" data-scene-mode="building" data-scene-theme="structure" data-scene-floor="-1" data-scene-exploded="false" role="group" aria-label="3D 뷰포트. 마우스와 터치 드래그로 회전, 휠로 확대. 층을 클릭해 선택할 수 있습니다.">
@@ -68,7 +78,7 @@
 </div>
 </section>
 <section id="references" aria-labelledby="ref-title">
-<div class="section-top"><div><span class="kicker">02 / PROFESSIONAL SOURCE DIRECTORY</span><h2 id="ref-title">전문 인터랙티브 갤러리</h2></div><p>외부 갤러리를 단순 나열하지 않고 분야별로 분류했습니다. 무엇을 참고해야 하는지, 소스 재사용이 가능한지, 별도 라이선스 검토가 필요한지를 함께 표시합니다.</p></div>
+<div class="section-top"><div><span class="kicker">03 / PROFESSIONAL SOURCE DIRECTORY</span><h2 id="ref-title">외부 기술·예제 참고처 24곳</h2></div><p>위의 12개는 우리 사이트에서 직접 실행하는 샘플이고, 이 아래 24곳은 연구용 외부 참고자료입니다. 실제 소스 사용 허용 범위와 라이선스 조건을 구분해 확인할 수 있도록 정리했습니다.</p></div>
 <div class="filters" role="group" aria-label="전문 인터랙티브 갤러리 분류">
 <button type="button" data-catalog-filter="all" aria-pressed="true">전체</button>
 <button type="button" data-catalog-filter="spatial" aria-pressed="false">건축·공간</button>
@@ -84,5 +94,6 @@
 </section>
 <div class="note"><strong>재사용 및 라이선스 원칙.</strong> 3D 뷰포트는 SuaveForge에서 직접 만든 개념 모델이며 실제 건축 도면·IFC·BIM을 표현한 것이 아닙니다. 외부 연구 사례의 이미지·모델·코드를 허가 없이 복사하지 않고 공식 사이트로 연결합니다. 특히 xeokit의 AGPL, 상용 편집기·모션 툴 및 개별 작품의 사용 조건은 실제 납품 프로젝트마다 재검토해야 합니다.</div>
 </main>
+<dialog class="sample-modal" data-showcase-modal aria-label="인터랙티브 샘플 크게 보기"><header class="sample-modal-head"><h3 data-showcase-modal-title>샘플 크게 보기</h3><button type="button" data-showcase-close aria-label="크게 보기 닫기">×</button></header><div data-showcase-modal-body class="sample-modal-content"></div><p class="sample-modal-desc">SuaveForge 자체 제작 브라우저 인터랙션. 실제 사용자가 조작할 수 있는 샘플입니다.</p></dialog>
 <footer class="footer"><div class="shell"><span>© SuaveForge · Interactive Systems Research</span><a href="/research/">연구소 돌아가기 ↗</a></div></footer>
 </body></html>
