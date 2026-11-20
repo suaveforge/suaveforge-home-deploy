@@ -28,3 +28,11 @@
 .physics-promo a{display:inline-flex;white-space:nowrap;border-radius:10px;color:white;background:#23416b;font-size:11px;font-weight:900;padding:11px 16px}
 .physics-promo .physics-kicker{font:900 9px 'DM Sans',sans-serif;letter-spacing:.15em;color:#c4554c}
 @media(max-width:680px){.physics-promo{display:block;padding:19px}.physics-promo a{margin-top:13px}.physics-promo h2{font-size:17px}}
+
+/* Shader & VFX research entrypoint. Existing interactive gallery stays unchanged. */
+.shader-promo{margin:18px 0 5px;padding:22px 26px;background:linear-gradient(106deg,#172c48,#25395b 68%,#263452);border:1px solid #425d86;border-radius:17px;color:#edf5ff;display:flex;gap:23px;align-items:center;justify-content:space-between}
+.shader-promo .shader-kicker{font:900 9px 'DM Sans',sans-serif;letter-spacing:.18em;color:#adccff}
+.shader-promo h2{font-size:20px;color:#fff;margin:7px 0 6px}
+.shader-promo p{max-width:700px;font-size:11px;color:#c2d4ee;line-height:1.85;margin:0}
+.shader-promo a{display:inline-flex;align-items:center;white-space:nowrap;border-radius:9px;padding:11px 14px;background:#e4edff;color:#263d64;font-size:11px;font-weight:900}
+@media(max-width:720px){.shader-promo{display:block;padding:19px}.shader-promo a{margin-top:13px}.shader-promo h2{font-size:17px}.nav a:nth-child(-n+2),.nav a:nth-last-child(3),.nav a:last-child{display:none}}
