@@ -20,7 +20,7 @@ const expected=[
  await page.waitForSelector('[data-category-controls] button');
  for(const cat of expected){
   await page.getByRole('button',{name:cat.button}).click();
-  try{await page.waitForFunction(()=>document.querySelectorAll('.live-state.good').length===5,null,{timeout:90000})}catch{}
+  try{await page.waitForFunction(()=>document.querySelectorAll('.live-state.good').length===5,null,{timeout:27000})}catch{}
   const data=await page.evaluate(()=>({ok:document.querySelectorAll('.live-state.good').length,failed:document.querySelectorAll('.live-state.bad').length,status:document.querySelector('[data-render-status]')?.textContent,rows:document.querySelectorAll('[data-sample-table] tbody tr').length,elements:{
   echarts:document.querySelectorAll('[data-engine-root=echarts] canvas').length,
   chartjs:document.querySelectorAll('[data-engine-root=chartjs] canvas').length,
@@ -30,12 +30,12 @@ const expected=[
   }}));
   await page.screenshot({path:path.join(OUT,'desktop-'+cat.key+'.png'),fullPage:true,animations:'disabled'});
   const pass=data.ok===5&&data.failed===0&&data.rows===cat.rows&&Object.values(data.elements).every(x=>x>0);
-  reports.push({category:cat.key,pass,...data});
+  reports.push({category:cat.key,pass,...data}); console.log('CATEGORY_QA',cat.key,JSON.stringify(data));
  }
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
  mobile.on('pageerror',err=>errors.push('mobile: '+err.message));
  await mobile.goto(BASE,{waitUntil:'domcontentloaded',timeout:45000});
- try{await mobile.waitForFunction(()=>document.querySelectorAll('.live-state.good').length===5,null,{timeout:90000})}catch{}
+ try{await mobile.waitForFunction(()=>document.querySelectorAll('.live-state.good').length===5,null,{timeout:27000})}catch{}
  const mobileCount=await mobile.locator('.live-state.good').count();
  const horizontalOverflow=await mobile.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+2);
  await mobile.screenshot({path:path.join(OUT,'mobile-trend.png'),fullPage:true,animations:'disabled'});
