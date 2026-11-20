@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Interactive Systems Lab | SuaveForge Research</title>
+<meta name="description" content="SuaveForge 인터랙티브 연구소. 3D 건물 구조도 테마 하이라이트·층 분리·position/rotation/scale 애니메이션과 모듈형 장비 분해를 직접 체험하고, 24개 WebGL·BIM·모션·3D 전문 자료를 탐색합니다.">
+<meta name="robots" content="index,follow"><link rel="canonical" href="https://suaveforge.com/research/interactive/">
+<meta property="og:title" content="Interactive Systems Lab | SuaveForge Research">
+<meta property="og:description" content="건축 3D, 인터랙티브 씬, 모션 디자인, WebGL 전문 샘플 연구실">
+<link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/research/interactive/interactive.css?v=20261121-01">
+<script defer src="/research/interactive/catalog.js?v=20261121-01"></script>
+<script type="module" src="/research/interactive/spatial-lab.js?v=20261121-01"></script>
+</head>
+<body><a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar"><div class="shell top-inner">
+<a class="brand" href="/"><img src="/assets/logo-motion/suaveforge-logo-final.svg" alt="" width="30" height="30">SuaveForge <small>/ RESEARCH</small></a>
+<nav class="nav" aria-label="연구소"><a href="/research/">연구소</a><a href="/research/charts/">차트</a><a class="current" href="/research/interactive/" aria-current="page">인터랙티브</a><a href="/">본 사이트</a></nav>
+</div></header>
+<main class="shell" id="main">
+<div class="crumb"><a href="/">HOME</a><span>/</span><a href="/research/">RESEARCH</a><span>/</span><b>INTERACTIVE</b></div>
+<section class="hero" aria-label="인터랙티브 연구소 소개">
+<div class="hero-text"><div class="overline">SUAVEFORGE / INTERACTIVE SYSTEMS RESEARCH</div>
+<h1>Make complex<br><em>feel intuitive.</em></h1>
+<p>공간을 선택하고, 부재를 강조하고, 구조를 분리하고, 움직임으로 정보를 이해합니다. 3D 건축·제품 탐색·UI 모션·WebGL 시각화를 실제 실행 가능한 기술 자산으로 연구합니다.</p>
+<div class="hero-meta"><span>INTERACTIVE 3D</span><span>TRANSFORM ANIMATIONS</span><span>WEBGL</span><span>24 CURATED SOURCES</span></div></div>
+<div class="hero-deco" aria-hidden="true"><div class="geo"><div></div><div></div><div></div><span class="axis">X · Y · Z</span></div></div>
+</section>
+<section id="live" aria-labelledby="live-title">
+<div class="section-top"><div><span class="kicker">01 / LIVE SPATIAL PROTOTYPE</span><h2 id="live-title">클릭해서 움직이는 3D 공간</h2></div><p>사진이나 동영상이 아닙니다. 테마·층·카메라를 직접 조작하는 원본 WebGL 시연입니다. 모든 모델은 연구 목적의 단순화된 자체 제작 도형입니다.</p></div>
+<div class="modebar" role="group" aria-label="3D 샘플 선택"><button type="button" data-scene-mode="building" aria-pressed="true">01 · 5층 건물 구조도</button><button type="button" data-scene-mode="equipment" aria-pressed="false">02 · 모듈형 장비 분해도</button></div>
+<div class="studio">
+<div class="viewport" data-spatial-viewport data-webgl-ready="false" data-scene-mode="building" data-scene-theme="structure" data-scene-floor="-1" data-scene-exploded="false" role="group" aria-label="3D 뷰포트. 마우스와 터치 드래그로 회전, 휠로 확대. 층을 클릭해 선택할 수 있습니다.">
+<div class="scene-top"><div class="scene-identity"><span class="scene-id">RESEARCH / 3D EXPLORABLE DIAGRAM</span><strong class="scene-name" data-scene-name>5층 건축 구조도</strong></div><span class="scene-badge" data-scene-status>3D 엔진 로딩 중</span></div>
+<div class="fallback" data-spatial-fallback><svg viewBox="0 0 210 170" role="img" aria-label="건축물 구조 미리보기" xmlns="http://www.w3.org/2000/svg"><g fill="#42699d44" stroke="#a8cdf8" stroke-width="2"><path d="M35 53 106 16 178 52 106 89Z"/><path d="M35 81 106 44 178 80 106 117Z"/><path d="M35 109 106 72 178 108 106 145Z"/></g></svg><p data-fallback-text>3D 환경을 준비하고 있습니다.</p></div>
+<div class="scene-overlay"><span class="hint">DRAG TO ORBIT · SCROLL TO ZOOM<br>CLICK A FLOOR · TAP TO SELECT</span><span class="coordinates" data-scene-xyz>YAW 42° · ZOOM 12.6m</span></div>
+</div>
+<aside class="panel" aria-label="3D 건물 탐색 도구">
+<div><div class="panel-row"><h3 class="panel-title">Object Explorer</h3><span class="swatch">P / R / S</span></div><p class="panel-help">선택한 테마만 강조하고 나머지 구성요소는 반투명 처리합니다.</p></div>
+<div><p class="panel-small">01 / HIGHLIGHT LAYERS</p><div class="control-set" role="group" aria-label="하이라이트 테마">
+<button type="button" data-theme="structure" aria-pressed="true"><i class="dot" style="background:#93acd9"></i>구조·외피</button>
+<button type="button" data-theme="power" aria-pressed="false"><i class="dot" style="background:#efb55d"></i>전기·배선</button>
+<button type="button" data-theme="hvac" aria-pressed="false"><i class="dot" style="background:#4fcfc5"></i>공조·환기</button>
+<button type="button" data-theme="safety" aria-pressed="false"><i class="dot" style="background:#ee7489"></i>소방·안전</button>
+</div></div>
+<div data-floor-controls><p class="panel-small">02 / LEVEL SELECTION</p><div class="floor-set" role="group" aria-label="건물 층별 탐색">
+<button type="button" data-floor="-1" aria-pressed="true">전체</button>
+<button type="button" data-floor="0" aria-pressed="false">1F</button>
+<button type="button" data-floor="1" aria-pressed="false">2F</button>
+<button type="button" data-floor="2" aria-pressed="false">3F</button>
+<button type="button" data-floor="3" aria-pressed="false">4F</button>
+<button type="button" data-floor="4" aria-pressed="false">5F</button>
+</div></div>
+<div><p class="panel-small">03 / POSITION · ROTATION · SCALE</p><div class="motion-set" role="group" aria-label="변환 애니메이션 실행">
+<button type="button" data-motion="move">Move ↗</button>
+<button type="button" data-motion="rotate">Rotate ⟳</button>
+<button type="button" data-motion="scale">Scale ⤢</button>
+</div></div>
+<div><p class="panel-small">04 / EXPLORE</p><div class="control-set"><button type="button" data-explode aria-pressed="false">층/부품 분리 ↗</button><button type="button" data-auto aria-pressed="false">자동 회전</button></div></div>
+<div class="scene-summary" data-spatial-summary aria-live="polite">구조·외피 객체를 강조합니다.</div>
+<div class="toggle-row"><span class="swatch">ORIGINAL WEBGL STUDY</span><button type="button" data-reset>초기화 <span aria-hidden="true">↺</span></button></div>
+</aside>
+</div>
+<div class="metrics">
+<div class="metric"><b>Theme / Highlight</b><span>부분별 강조·숨김·투명화</span></div>
+<div class="metric"><b>Transform / Timeline</b><span>position · rotation · scale 전환</span></div>
+<div class="metric"><b>Scene / Camera</b><span>3D 선택·드래그·줌·층 분리</span></div>
+</div>
+</section>
+<section id="references" aria-labelledby="ref-title">
+<div class="section-top"><div><span class="kicker">02 / PROFESSIONAL SOURCE DIRECTORY</span><h2 id="ref-title">전문 인터랙티브 갤러리</h2></div><p>외부 갤러리를 단순 나열하지 않고 분야별로 분류했습니다. 무엇을 참고해야 하는지, 소스 재사용이 가능한지, 별도 라이선스 검토가 필요한지를 함께 표시합니다.</p></div>
+<div class="filters" role="group" aria-label="전문 인터랙티브 갤러리 분류">
+<button type="button" data-catalog-filter="all" aria-pressed="true">전체</button>
+<button type="button" data-catalog-filter="spatial" aria-pressed="false">건축·공간</button>
+<button type="button" data-catalog-filter="product" aria-pressed="false">제품·3D 구성기</button>
+<button type="button" data-catalog-filter="motion" aria-pressed="false">모션·UI</button>
+<button type="button" data-catalog-filter="graphics" aria-pressed="false">WebGL·셰이더</button>
+<button type="button" data-catalog-filter="data" aria-pressed="false">지도·시뮬레이션</button>
+<input type="search" data-catalog-search aria-label="전문 사이트 검색" placeholder="기술 · 구현 목적 검색" autocomplete="off">
+</div>
+<div class="research-grid" data-references aria-label="인터랙티브 갤러리 참고자료"><p>자료를 불러오는 중입니다.</p></div>
+<p class="empty" data-catalog-empty hidden>검색 조건에 맞는 사이트가 없습니다.</p>
+<p class="count" data-catalog-count aria-live="polite">24개 참고처</p>
+</section>
+<div class="note"><strong>재사용 및 라이선스 원칙.</strong> 3D 뷰포트는 SuaveForge에서 직접 만든 개념 모델이며 실제 건축 도면·IFC·BIM을 표현한 것이 아닙니다. 외부 연구 사례의 이미지·모델·코드를 허가 없이 복사하지 않고 공식 사이트로 연결합니다. 특히 xeokit의 AGPL, 상용 편집기·모션 툴 및 개별 작품의 사용 조건은 실제 납품 프로젝트마다 재검토해야 합니다.</div>
+</main>
+<footer class="footer"><div class="shell"><span>© SuaveForge · Interactive Systems Research</span><a href="/research/">연구소 돌아가기 ↗</a></div></footer>
+</body></html>
