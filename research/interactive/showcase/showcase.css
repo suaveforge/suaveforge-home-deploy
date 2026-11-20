@@ -14,3 +14,5 @@
 @media(max-width:690px){.showcase-grid{grid-template-columns:1fr}.showcase-banner{display:block}.showcase-banner a{display:inline-flex;margin-top:10px}.sample-stage{height:230px}.showcase-tools input{flex-basis:100%;min-width:0;max-width:none;margin:0}.sample-heading h3{font-size:17px}.sample-modal-content .sample-stage{height:330px}}
 @media(prefers-reduced-motion:reduce){.sample-card,.sample-stage [data-focus],.sample-stage [data-floor-shape],.sample-3d-model,.product-shell,.state-node,.kinetic-target{transition:none!important}}
 @media print{.showcase-tools,.sample-controls,.sample-foot button,.sample-modal{display:none!important}.showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sample-card{break-inside:avoid}.sample-stage{height:190px}}
+/* Keep scene-type captions visible above the animated Canvas layer. */
+.sample-stage .stage-note{z-index:4;pointer-events:none}
