@@ -99,7 +99,7 @@ function setMode(mode){state.mode=mode;state.floor=-1;state.explode=false;state.
 function setTheme(theme){state.theme=theme;state.angle+=.12;buttonState()}
 function chooseFloor(floor){state.floor=floor;buttonState()}
 function toggleExplode(){state.explode=!state.explode;buttonState()}
-function pulse(kind){const t=performance.now();if(kind==='rotate'){state.angle+=Math.PI*.6;viewport.dataset.lastMotion='rotate'}else if(kind==='move'||kind==='scale'){state.pulseStart=t;state.pulseKind=kind;viewport.dataset.lastMotion=kind}else if(kind==='explode'){toggleExplode();viewport.dataset.lastMotion='explode'}}
+function pulse(kind){const t=performance.now();if(kind==='rotate'){state.angle+=Math.PI*.6;viewport.dataset.lastMotion='rotate'}else if(kind==='move'||kind==='scale'){state.pulseStart=t;state.pulseProgress=0;state.pulseKind=kind;viewport.dataset.lastMotion=kind}else if(kind==='explode'){toggleExplode();viewport.dataset.lastMotion='explode'}}
 function bind(){
  document.querySelectorAll('[data-scene-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.sceneMode)));
  document.querySelectorAll('[data-theme]').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.theme)));
@@ -134,7 +134,7 @@ try{
   stage.rotation.y+=(state.angle-stage.rotation.y)*ease;
   for(let i=0;i<floors.length;i++){const f=floors[i];const goal=i*(state.explode?1.20:.83);f.position.y+=(goal-f.position.y)*ease;const scale=state.floor===i?1.045:1;f.scale.setScalar(f.scale.x+(scale-f.scale.x)*ease);}
   for(let i=0;i<parts.length;i++){const p=parts[i],base=[0,.74,1.41,2.05,2.63][i];const desired=base+(state.explode?i*.42:0);p.position.y+=(desired-p.position.y)*ease;const desiredX=state.explode?(i%2===0?.15:-.15):0;p.position.x+=(desiredX-p.position.x)*ease;}
-  const now=t;let pulseScale=1,pulseX=0;if(state.pulseKind){const progress=Math.min(1,(now-state.pulseStart)/1200),value=Math.sin(progress*Math.PI);if(state.pulseKind==='move')pulseX=value*1.15;if(state.pulseKind==='scale')pulseScale=1+value*.25;if(progress>=1)state.pulseKind=''}
+  let pulseScale=1,pulseX=0;if(state.pulseKind){state.pulseProgress=Math.min(1,(state.pulseProgress||0)+dt/1.15);const progress=state.pulseProgress,value=Math.sin(progress*Math.PI);if(state.pulseKind==='move')pulseX=value*1.15;if(state.pulseKind==='scale')pulseScale=1+value*.25;if(progress>=1)state.pulseKind=''}
   stage.position.x+=(pulseX-stage.position.x)*ease;const s=stage.scale.x+(pulseScale-stage.scale.x)*ease;stage.scale.setScalar(s);
   for(const obj of meshes){if(!obj.material||!obj.userData.desired)continue;obj.material.opacity+=(obj.userData.desired-obj.material.opacity)*ease;}
   const ytarget=state.mode==='building'?(state.floor>=0?state.floor*(state.explode?1.20:.83)+.30:2.0):1.45;
