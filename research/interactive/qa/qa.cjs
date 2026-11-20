@@ -38,7 +38,8 @@ const BASE='http://127.0.0.1:8181';
  await page.locator('[data-theme="structure"]').click();
  await page.locator('[data-floor="-1"]').click();await page.waitForTimeout(450);
  await page.locator('[data-explode]').click();await page.waitForTimeout(450);
- const beforeRotate=await snapshot();await page.locator('[data-motion="rotate"]').click();await page.waitForTimeout(480);
+ const beforeRotate=await snapshot();await page.locator('[data-motion="rotate"]').click();
+ try{await page.waitForFunction(before=>window.__sfInteractiveQA.snapshot().rotation-before>.30,beforeRotate.rotation,{timeout:6000})}catch{}
  report.desktop.rotated=(await snapshot()).rotation-beforeRotate.rotation>.30;
  await page.locator('[data-motion="move"]').click();await page.waitForTimeout(355);
  report.desktop.moved=Math.abs((await snapshot()).position)>.08;
