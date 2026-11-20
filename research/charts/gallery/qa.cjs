@@ -15,7 +15,7 @@ const expected=[
  try{
  const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
  page.on('pageerror',err=>errors.push(err.message));
- page.on('console',msg=>{if(msg.type()==='error')errors.push('console: '+msg.text())});
+ page.on('console',msg=>{if(msg.type()==='error')errors.push('console: '+msg.text());if(msg.type()==='warning')console.log('BROWSER_WARNING',msg.text())});
  await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:45000});
  await page.waitForSelector('[data-category-controls] button');
  for(const cat of expected){
