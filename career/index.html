@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>개발 경력 현황 | SuaveForge</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#172330;background:#f5f7f9}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:1240px;margin:auto;padding:30px 22px 80px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center}
+.logo{font-weight:800;letter-spacing:.04em}.logo a{color:inherit;text-decoration:none}.meta{color:#667787;font-size:13px}
+h1{font-size:29px;letter-spacing:-.04em;margin:30px 0 7px}p{color:#657381;line-height:1.65}
+.notice{font-size:13px;padding:10px 14px;background:white;border:1px solid #e4e9ef;border-radius:8px}
+.section{margin-top:30px}.section h2{font-size:20px;margin-bottom:15px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.field{background:white;border:1px solid #e3e9f0;padding:19px;border-radius:12px}.name{font-weight:700;font-size:15px}
+.numbers{display:flex;justify-content:space-between;margin:12px 0 10px;align-items:baseline}.numbers b{font-size:25px;font-variant-numeric:tabular-nums}.numbers small{font-size:12px;color:#718090}
+.track{height:10px;border-radius:99px;background:#e9eef2;overflow:hidden}.fill{height:100%;border-radius:99px;background:#d14d4d}
+.foot{margin-top:9px;display:flex;justify-content:space-between;font-size:12px;color:#687989}
+.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.actions input,.actions select{font:inherit;border:1px solid #d6dfe8;padding:10px 11px;border-radius:8px;background:white;min-width:170px}
+.tablebox{overflow:auto;background:white;border:1px solid #e3e9ef;border-radius:12px}table{width:100%;border-collapse:collapse;min-width:820px}
+thead th{background:#f3f6f8;text-align:left;font-size:13px;color:#4d5a68;padding:13px;border-bottom:1px solid #e2e7ed}
+td{padding:14px 13px;font-size:13px;vertical-align:top;border-bottom:1px solid #edf0f4;line-height:1.55}tbody tr:last-child td{border-bottom:0}
+td:nth-child(2){font-weight:700}td:nth-child(4){min-width:260px}.pill{display:inline-block;border-radius:4px;padding:3px 7px;font-size:11px;background:#eff6f0;color:#25734b;white-space:nowrap}
+.pill.review{background:#fff2e6;color:#a55d1b}
+.empty{text-align:center;color:#687989;padding:28px}.footer{margin-top:27px;font-size:12px;color:#718090}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:20px 13px}.top{align-items:start}h1{font-size:25px}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.actions input,.actions select{width:100%}}
+</style></head>
+<body><div class="wrap"><header class="top"><div class="logo"><a href="/">SUAVEFORGE</a> <span style="font-weight:400;color:#89939e">/ CAREER</span></div><div class="meta" id="updated">확인 중</div></header>
+<h1>개발 경력 현황</h1>
+<p>회사·프로젝트별 실제 개발 작업과 분야별 경력기간 복원 진행도</p>
+<div class="notice" id="notice">집계 기준 확인 중</div>
+<section class="section"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
+<section class="section"><h2>회사·프로젝트별 작업</h2>
+<div class="actions"><input type="search" id="search" placeholder="회사·프로젝트·기술 검색" aria-label="프로젝트 검색"><select id="filter" aria-label="확인 상태"><option value="all">전체 항목</option><option value="linked">기간 연결</option><option value="review">추가 확인 필요</option></select><span class="meta" id="count"></span></div>
+<div class="tablebox"><table><thead><tr><th>회사·발주처</th><th>프로젝트</th><th>기간</th><th>작업 내용</th><th>검토</th></tr></thead><tbody id="projects"><tr><td colspan="5" class="empty">데이터를 불러오는 중입니다.</td></tr></tbody></table></div></section>
+<div class="footer">본 페이지는 경력 복원을 위한 작업 현황이며, 경력증명서 또는 KOSA 공식 승인 증명서가 아닙니다.</div>
+</div>
+<script>
+"use strict";
+const fieldBox=document.getElementById('fields'),projectBody=document.getElementById('projects'),q=document.getElementById('search'),filter=document.getElementById('filter');
+let projects=[];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){
+ const term=q.value.toLowerCase().trim(),status=filter.value;
+ const subset=projects.filter(p=>(status==='all'||p.status===status)&&[p.company,p.title,p.period,p.work].some(v=>String(v).toLowerCase().includes(term)));
+ document.getElementById('count').textContent=subset.length+'개 프로젝트';
+ projectBody.innerHTML=subset.length?subset.map(p=>'<tr><td>'+esc(p.company)+'</td><td>'+esc(p.title)+'</td><td>'+esc(p.period)+'</td><td>'+esc(p.work)+'</td><td><span class="pill '+(p.status==='review'?'review':'')+'">'+(p.status==='review'?'확인 필요':'기간 연결')+'</span></td></tr>').join(''):'<tr><td colspan="5" class="empty">검색 결과가 없습니다.</td></tr>';
+}
+q.addEventListener('input',render);filter.addEventListener('change',render);
+fetch('./data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('data fetch failed');return r.json()}).then(d=>{
+ document.getElementById('updated').textContent='업데이트 '+esc(d.updatedAt);
+ document.getElementById('notice').textContent=d.notice;
+ fieldBox.innerHTML=d.fields.map(f=>{
+ const n=Number(f.linked),t=Number(f.target),pct=t?Math.min(100,Math.max(0,n/t*100)):0,missing=Math.max(0,t-n),complete=n>=t;
+ return '<article class="field"><div class="name">'+esc(f.name)+'</div><div class="numbers"><b style="color:'+(complete?'#228650':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+n+' / '+t+'개월</small></div><div class="track"><div class="fill" style="width:'+pct.toFixed(2)+'%;background:'+(complete?'#228650':'#d14d4d')+'"></div></div><div class="foot"><span>연결 '+n+'개월</span><span>부족 '+missing+'개월</span></div></article>';
+ }).join('');
+ projects=Array.isArray(d.projects)?d.projects:[];render();
+}).catch(()=>{document.getElementById('updated').textContent='업데이트 확인 실패';projectBody.innerHTML='<tr><td colspan="5" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';fieldBox.innerHTML='<p>데이터 연결 상태를 확인해 주세요.</p>';});
+</script></body></html>
