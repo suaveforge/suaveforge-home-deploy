@@ -84,70 +84,127 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 (()=>{
 const $=id=>document.getElementById(id);
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const STORAGE='suaveforge:career:tasks:v1';
-let base=[],baselineRanges={},fields=[],tasks=[],editId=null,loading=true;
+const LEGACY='suaveforge:career:tasks:v1',STORAGE='suaveforge:career:state:v2';
+let base=[],fields=[],tasks=[],overrides={},editId=null,editBaseId=null;
 const monthId=s=>{if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(s||''))return null;return Number(s.slice(0,4))*12+Number(s.slice(5))-1};
 function months(a,b){let x=monthId(a),y=monthId(b);if(x===null||y===null||y<x||y-x>600)return [];return Array.from({length:y-x+1},(_,i)=>x+i)}
 function inMonths(t){return Boolean(t.start&&t.end&&months(t.start,t.end).length)}
 function status(t){return inMonths(t)?'linked':'review'}
-function stored(){try{const a=JSON.parse(localStorage.getItem(STORAGE)||'[]');return Array.isArray(a)?a.filter(t=>t&&Array.isArray(t.categories)):[]}catch{return []}}
-function persist(){try{localStorage.setItem(STORAGE,JSON.stringify(tasks));return true}catch{return false}}
-function allRows(){return base.map((p,i)=>({...p,kind:'base',rowId:'base:'+i})).concat(tasks.map(t=>({company:t.company,title:t.project,period:inMonths(t)?t.start+' ~ '+t.end:'기간 미확정',work:t.work,categories:t.categories,status:status(t),kind:'local',rowId:t.id})))}
+
+function stored(){
+ try{
+ const state=JSON.parse(localStorage.getItem(STORAGE)||'null');
+ if(state&&Array.isArray(state.tasks)&&state.overrides&&typeof state.overrides==='object'){
+  const ids=new Set(base.map(p=>p.id)),filtered={};
+  for(const [id,item] of Object.entries(state.overrides))if(ids.has(id)&&item&&Array.isArray(item.categories))filtered[id]=item;
+  return {tasks:state.tasks.filter(t=>t&&Array.isArray(t.categories)),overrides:filtered};
+ }
+ }catch{}
+ try{const old=JSON.parse(localStorage.getItem(LEGACY)||'[]');return {tasks:Array.isArray(old)?old.filter(t=>t&&Array.isArray(t.categories)):[],overrides:{}}}
+ catch{return {tasks:[],overrides:{}}}
+}
+function persist(){try{localStorage.setItem(STORAGE,JSON.stringify({tasks,overrides}));return true}catch{return false}}
+function baseRow(p){
+ const x=overrides[p.id];if(!x)return {...p,kind:'base',rowId:p.id,edited:false};
+ const start=x.start||'',end=x.end||'',valid=Boolean(months(start,end).length&&x.categories.length);
+ return {...p,company:x.company,title:x.project,work:x.work,start,end,categories:x.categories,
+ period:valid?start+' ~ '+end:'기간 미확정',status:valid?'linked':'review',
+ kind:'base',rowId:p.id,edited:true};
+}
+function allRows(){
+ return base.map(baseRow).concat(tasks.map(t=>({company:t.company,title:t.project,
+ period:inMonths(t)?t.start+' ~ '+t.end:'기간 미확정',start:t.start,end:t.end,
+ work:t.work,categories:t.categories,status:status(t),kind:'local',rowId:t.id})));
+}
+
 function renderFields(){
- const box=$('fields');
- box.innerHTML=fields.map(f=>{
-  const tracked=new Set((baselineRanges[f.name]||[]).flatMap(x=>months(x[0],x[1])));
-  const own=new Set(tasks.filter(t=>t.categories.includes(f.name)&&inMonths(t)).flatMap(t=>months(t.start,t.end)));
-  let additional=0;for(const m of own)if(!tracked.has(m))additional++;
-  const total=Number(f.linked)+additional,target=Number(f.target),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
-  return '<article class="field"><div class="name">'+escape(f.name)+'</div><div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+(additional?'추가 '+additional+'개월':'추가 0개월')+'</span></div></article>';
+ const rows=allRows();
+ $('fields').innerHTML=fields.map(f=>{
+  const actual=new Set(rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name)&&t.start&&t.end).flatMap(t=>months(t.start,t.end)));
+  const total=actual.size,target=Number(f.target),delta=total-Number(f.linked),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
+  const diff=delta===0?'기준과 동일':(delta>0?'+':'')+delta+'개월 변화';
+  return '<article class="field"><div class="name">'+escape(f.name)+'</div><div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div></article>';
  }).join('');
 }
+
 function renderTable(){
  const term=$('search').value.trim().toLowerCase(),state=$('filter').value;
  const rows=allRows().filter(p=>(state==='all'||p.status===state)&&[p.company,p.title,p.period,p.work,...(p.categories||[])].some(v=>String(v).toLowerCase().includes(term)));
  $('count').textContent=rows.length+'건';
  $('projects').innerHTML=rows.length?rows.map(p=>{
- const local=p.kind==='local',cats=local?'<div class="work-entry">'+p.categories.map(escape).join(' · ')+'</div>':'';
- const buttons=local?'<button class="btn secondary tiny" data-action="edit" data-id="'+escape(p.rowId)+'">수정</button> <button class="btn secondary tiny" data-action="delete" data-id="'+escape(p.rowId)+'">삭제</button>':'<button class="btn secondary tiny" data-action="add" data-id="'+escape(p.rowId)+'">+ 작업 추가</button>';
- return '<tr><td>'+escape(p.company)+(local?'<span class="saved-tag">내 입력</span>':'')+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status==='review'?'review':'')+'">'+(p.status==='review'?'기간 미확정':'기간 입력')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
+  const local=p.kind==='local',cats=p.categories?.length?'<div class="work-entry">'+p.categories.map(escape).join(' · ')+'</div>':'';
+  const label=local?'<span class="saved-tag">내 입력</span>':p.edited?'<span class="saved-tag">원본 수정</span>':'';
+  const id=escape(p.rowId);
+  const buttons=local?'<button class="btn secondary tiny" data-action="edit" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="delete" data-id="'+id+'">삭제</button>'
+   :'<button class="btn secondary tiny" data-action="editbase" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="add" data-id="'+id+'">+ 작업 추가</button>'+(p.edited?' <button class="btn secondary tiny" data-action="resetbase" data-id="'+id+'">원본 복원</button>':'');
+  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status==='review'?'review':'')+'">'+(p.status==='review'?'기간 미확정':'기간 입력')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
  }).join(''):'<tr><td colspan="6" class="empty">검색 결과가 없습니다.</td></tr>';
 }
 function redraw(){renderFields();renderTable()}
-function close(){editId=null;$('editor').hidden=true;$('taskForm').reset();$('formMsg').textContent=''}
-function openEdit(t){
- editId=t?.id??null;$('editor').hidden=false;
- $('editorTitle').textContent=editId?'작업 수정':'작업 추가';
- $('company').value=t?.company||'';$('project').value=t?.project||'';
+
+function close(){editId=null;editBaseId=null;$('editor').hidden=true;$('taskForm').reset();$('formMsg').textContent=''}
+function openEdit(t,baseId=null){
+ editId=baseId?null:(t?.id??null);editBaseId=baseId;$('editor').hidden=false;
+ $('editorTitle').textContent=baseId?'기존 프로젝트 수정':editId?'작업 수정':'작업 추가';
+ $('company').value=t?.company||'';$('project').value=t?.project??t?.title??'';
  $('start').value=t?.start||'';$('end').value=t?.end||'';$('work').value=t?.work||'';
  for(const el of $('categories').querySelectorAll('input'))el.checked=Boolean(t?.categories?.includes(el.value));
- $('formMsg').textContent='';$('editor').scrollIntoView({block:'start',behavior:'smooth'});$('work').focus({preventScroll:true});
+ $('formMsg').textContent=baseId?'원본 기록은 보존됩니다. 원본 복원으로 언제든 되돌릴 수 있습니다.':'';
+ $('editor').scrollIntoView({block:'start',behavior:'smooth'});$('work').focus({preventScroll:true});
 }
-function addFromProject(id){const i=Number(String(id).split(':')[1]);const p=base[i];openEdit({company:p?.company||'',project:p?.title||'',categories:[]})}
+function addFromProject(id){
+ const p=base.find(x=>x.id===id);if(!p)return;const current=baseRow(p);
+ openEdit({company:current.company,project:current.title,categories:[]});
+}
+function editBase(id){const p=base.find(x=>x.id===id);if(p)openEdit(baseRow(p),id)}
+function restoreBase(id){
+ if(!overrides[id]||!confirm('이 프로젝트를 원본 내용·기간·분야로 되돌릴까요?'))return;
+ const before=overrides;overrides={...overrides};delete overrides[id];
+ if(!persist()){overrides=before;alert('복원 저장에 실패했습니다.');return}
+ close();redraw();
+}
 function key(){return 'task-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}
+
 function save(e){
  e.preventDefault();const categories=[...$('categories').querySelectorAll('input:checked')].map(e=>e.value);
- const t={id:editId||key(),company:$('company').value.trim(),project:$('project').value.trim(),work:$('work').value.trim(),categories,start:$('start').value,end:$('end').value};
+ const t={id:editId||key(),company:$('company').value.trim(),project:$('project').value.trim(),
+ work:$('work').value.trim(),categories,start:$('start').value,end:$('end').value};
  if(!t.company||!t.project||!t.work){$('formMsg').textContent='회사·프로젝트·작업내용을 입력하세요.';return}
  if(!categories.length){$('formMsg').textContent='경력분야를 하나 이상 선택하세요.';return}
  if(Boolean(t.start)!==Boolean(t.end)){$('formMsg').textContent='시작월과 종료월을 모두 입력하거나 둘 다 비워 주세요.';return}
  if(t.start&&!inMonths(t)){$('formMsg').textContent='시작월·종료월을 확인하세요.';return}
- const before=tasks.slice();if(editId){const i=tasks.findIndex(x=>x.id===editId);if(i<0)return;tasks[i]=t}else tasks.push(t);
- if(!persist()){tasks=before;$('formMsg').textContent='브라우저 저장 공간을 사용할 수 없어 저장하지 못했습니다.';return}
+ const beforeTasks=tasks.slice(),beforeOverrides=overrides;
+ if(editBaseId){overrides={...overrides,[editBaseId]:{company:t.company,project:t.project,work:t.work,categories:t.categories,start:t.start,end:t.end}}}
+ else if(editId){const i=tasks.findIndex(x=>x.id===editId);if(i<0)return;tasks[i]=t}
+ else tasks.push(t);
+ if(!persist()){tasks=beforeTasks;overrides=beforeOverrides;$('formMsg').textContent='브라우저 저장에 실패했습니다.';return}
  close();redraw();$('count').textContent+=' · 저장 완료';
 }
 function del(id){const t=tasks.find(x=>x.id===id);if(!t||!confirm('이 작업을 삭제할까요?'))return;const before=tasks.slice();tasks=tasks.filter(x=>x.id!==id);if(!persist()){tasks=before;alert('삭제 내용을 저장하지 못했습니다.');return}close();redraw()}
+
 function backup(){
- const blob=new Blob([JSON.stringify({format:'suaveforge-career-local-v1',exportedAt:new Date().toISOString(),tasks},null,2)],{type:'application/json'});
+ const blob=new Blob([JSON.stringify({format:'suaveforge-career-local-v2',exportedAt:new Date().toISOString(),tasks,overrides},null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='suaveforge-career-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
 async function restore(file){
- if(!file)return;try{const d=JSON.parse(await file.text()),imported=d?.format==='suaveforge-career-local-v1'?d.tasks:null;
- if(!Array.isArray(imported)||imported.some(x=>!x||!Array.isArray(x.categories)||typeof x.company!=='string'||typeof x.project!=='string'||typeof x.work!=='string'||x.categories.some(c=>!fields.some(f=>f.name===c))))throw Error('지원하지 않는 백업 파일입니다.');
- if(!confirm(imported.length+'개 작업을 현재 입력과 합칠까요? (동일 ID는 교체됩니다)'))return;
- const map=new Map(tasks.map(x=>[x.id,x]));for(const t of imported){if(!t.id||!t.company||!t.project||!t.work)continue;map.set(t.id,{id:String(t.id),company:t.company.slice(0,160),project:t.project.slice(0,180),work:t.work.slice(0,4000),categories:t.categories,start:t.start||'',end:t.end||''})}
- const before=tasks.slice();tasks=[...map.values()];if(!persist()){tasks=before;throw Error('브라우저 저장 실패')};redraw();alert('백업 불러오기 완료');
- }catch(e){alert('불러오기 실패: '+e.message)}finally{$('restoreFile').value=''}}
+ if(!file)return;
+ try{
+  const d=JSON.parse(await file.text());
+  if(!['suaveforge-career-local-v1','suaveforge-career-local-v2'].includes(d?.format))throw Error('지원하지 않는 백업 파일입니다.');
+  const imported=d.tasks;
+  if(!Array.isArray(imported)||imported.some(x=>!x||!Array.isArray(x.categories)||typeof x.company!=='string'||typeof x.project!=='string'||typeof x.work!=='string'||x.categories.some(c=>!fields.some(f=>f.name===c))))throw Error('작업 데이터 형식이 올바르지 않습니다.');
+  const changes=d.format==='suaveforge-career-local-v2'?d.overrides||{}:{};
+  const validIds=new Set(base.map(p=>p.id));
+  if(!changes||typeof changes!=='object'||Array.isArray(changes)||Object.entries(changes).some(([id,x])=>!validIds.has(id)||!x||!Array.isArray(x.categories)||x.categories.some(c=>!fields.some(f=>f.name===c))||typeof x.work!=='string'))throw Error('원본 수정 데이터가 올바르지 않습니다.');
+  if(!confirm('새 작업 '+imported.length+'건, 기존 프로젝트 수정 '+Object.keys(changes).length+'건을 가져올까요?'))return;
+  const map=new Map(tasks.map(x=>[x.id,x]));
+  for(const t of imported){if(!t.id||!t.company||!t.project||!t.work)continue;map.set(t.id,{id:String(t.id),company:t.company.slice(0,160),project:t.project.slice(0,180),work:t.work.slice(0,4000),categories:t.categories,start:t.start||'',end:t.end||''})}
+  const beforeTasks=tasks,beforeOverrides=overrides;
+  tasks=[...map.values()];overrides={...overrides,...changes};
+  if(!persist()){tasks=beforeTasks;overrides=beforeOverrides;throw Error('브라우저 저장 실패')}
+  redraw();alert('백업 불러오기 완료');
+ }catch(e){alert('불러오기 실패: '+e.message)}finally{$('restoreFile').value=''}
+}
 function setup(){
  $('categories').innerHTML=fields.map((f,i)=>'<label><input type="checkbox" value="'+escape(f.name)+'">'+escape(f.name)+'</label>').join('');
  $('companyOptions').innerHTML=[...new Set(base.map(p=>p.company))].map(s=>'<option value="'+escape(s)+'"></option>').join('');
@@ -159,6 +216,8 @@ function setup(){
  const btn=e.target.closest('button[data-action]');if(!btn)return;
  const action=btn.dataset.action,id=btn.dataset.id;
  if(action==='add')addFromProject(id);
+ if(action==='editbase')editBase(id);
+ if(action==='resetbase')restoreBase(id);
  if(action==='edit'){const t=tasks.find(x=>x.id===id);if(t)openEdit(t)}
  if(action==='delete')del(id);
  });
@@ -169,10 +228,10 @@ function setup(){
 async function main(){
  try{
  const r=await fetch('./data.json',{cache:'no-store'});if(!r.ok)throw Error('데이터 HTTP '+r.status);
- const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];baselineRanges=data.baselineRanges||{};
+ const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];
  $('updated').textContent='기준 데이터 '+escape(data.updatedAt||'');
- $('notice').textContent='경력분야 목표 대비 연결된 개월 수 + 이 브라우저에서 추가한 작업의 중복 제외 기간. 비공식·자가 입력 경력입니다.';
- tasks=stored();setup();redraw();
+ $('notice').textContent='기존 프로젝트 수정과 신규 작업 입력으로 변경된 수행월을 중복 제외해 계산합니다. 이 브라우저에서만 저장되는 비공식 경력표입니다.';
+ const state=stored();tasks=state.tasks;overrides=state.overrides;setup();redraw();
  }catch(e){$('projects').innerHTML='<tr><td colspan="6" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';$('notice').textContent=e.message}
 }
 main();
