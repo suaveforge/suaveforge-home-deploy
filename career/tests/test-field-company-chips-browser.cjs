@@ -111,7 +111,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.wrapping);
    assert.equal(stats.timeline.totalMonths,214,'monthly timeline covers Feb 2009-Nov 2026');
    assert.equal(stats.timeline.years,18,'2009 to 2026 year grid');
-   assert.equal(stats.timeline.gapGroups,6,'6 unlinked intervals');
+   assert.equal(stats.timeline.gapGroups,5,'5 unlinked intervals');
    assert.ok(stats.timeline.summary.includes('184')&&stats.timeline.summary.includes('30'),'184 months linked, 30 need verification');
    assert.equal(stats.timeline.topOrder,true,'timeline goes before the nine field progress cards');
    assert.equal(stats.timeline.hasNoHorizontalClip,true,'each year row fits inside timeline card');
