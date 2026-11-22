@@ -44,6 +44,14 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .work-entry{font-size:12px;color:#405b6d;margin-top:5px}
 .project-action{white-space:nowrap}.mini{font-size:11px;font-weight:500;padding:4px 7px}
 #fields .field .foot{gap:6px}.footer a{color:inherit}
+.field-sources{display:grid;gap:7px;margin-top:12px;padding-top:11px;border-top:1px solid #edf1f5}
+.field-source-row{display:flex;align-items:flex-start;gap:8px;min-width:0}
+.field-source-label{color:#697b89;font-size:11px;font-weight:700;line-height:23px;min-width:43px;white-space:nowrap}
+.field-source-tags{display:flex;flex-wrap:wrap;gap:5px;min-width:0;flex:1}
+.field-source-chip{display:inline-flex;align-items:center;justify-content:center;min-height:23px;min-width:32px;max-width:100%;padding:2px 7px;border:1px solid #cedee6;border-radius:9px;background:#f1f6f9;color:#24576b;font-size:12px;font-weight:700;line-height:1.2;white-space:nowrap;cursor:help}
+.field-source-chip.pending{border-color:#d7dfe6;background:#f7f8fa;color:#677584}
+.field-source-empty{font-size:12px;line-height:23px;color:#8c98a3}
+.field-source-chip:focus-visible{outline:2px solid #23768a;outline-offset:2px}
 @media(max-width:750px){.editgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:540px){.editgrid{grid-template-columns:1fr}.wrap{padding:16px 12px}.btn{font-size:12px}.controls{gap:7px}}
 </style>
@@ -117,13 +125,43 @@ function allRows(){
  work:t.work,categories:t.categories,status:status(t),kind:'local',rowId:t.id})));
 }
 
+// A combined employer label (e.g. "넥슨GT / 유비펀") represents two
+// credited sources. Freelance work uses its actual client after the slash.
+function careerEmployers(company){
+ const parts=String(company||'').split(/\s*\/\s*/).map(x=>x.trim()).filter(Boolean);
+ return parts[0]==='프리랜서'&&parts.length>1?parts.slice(1):parts;
+}
+function fieldEmployerSources(rows,category){
+ const confirmed=new Map(),pending=new Map();
+ for(const row of rows){
+  if(!Array.isArray(row.categories)||!row.categories.includes(category))continue;
+  const destination=inMonths(row)?confirmed:pending;
+  for(const employer of careerEmployers(row.company)){
+   const identity=employer.normalize('NFKC').replace(/\s+/g,'').toLowerCase();
+   if(identity&&!destination.has(identity))destination.set(identity,employer);
+  }
+ }
+ // A company with an already-credited period needs only one badge.
+ for(const key of confirmed.keys())pending.delete(key);
+ return {confirmed:[...confirmed.values()],pending:[...pending.values()]};
+}
+function sourceChip(company,pending){
+ const short=Array.from(company).slice(0,2).join('');
+ const title=(pending?'기간 미확정 · ':'반영된 경력 · ')+company;
+ return '<span class="field-source-chip'+(pending?' pending':'')+'" title="'+escape(title)+'" aria-label="'+escape(title)+'" tabindex="0">'+escape(short)+'</span>';
+}
 function renderFields(){
  const rows=allRows();
  $('fields').innerHTML=fields.map(f=>{
   const actual=new Set(rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name)&&t.start&&t.end).flatMap(t=>months(t.start,t.end)));
   const total=actual.size,target=Number(f.target),delta=total-Number(f.linked),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
   const diff=delta===0?'기준과 동일':(delta>0?'+':'')+delta+'개월 변화';
-  return '<article class="field"><div class="name">'+escape(f.name)+'</div><div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div></article>';
+  const sources=fieldEmployerSources(rows,f.name);
+  const confirmed=sources.confirmed.map(company=>sourceChip(company,false)).join('');
+  const pending=sources.pending.map(company=>sourceChip(company,true)).join('');
+  const sourceList='<div class="field-sources"><div class="field-source-row"><span class="field-source-label">반영</span><div class="field-source-tags">'+(confirmed||'<span class="field-source-empty">기간 확정 경력 없음</span>')+'</div></div>'+
+   (pending?'<div class="field-source-row"><span class="field-source-label">확인 중</span><div class="field-source-tags">'+pending+'</div></div>':'')+'</div>';
+  return '<article class="field"><div class="name">'+escape(f.name)+'</div><div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>'+sourceList+'</article>';
  }).join('');
 }
 

@@ -1,0 +1,46 @@
+name: Career field company source tags
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'career/index.html'
+      - 'career/data.json'
+      - 'career/tests/test-field-company-chips.cjs'
+      - 'career/tests/test-field-company-chips-browser.cjs'
+      - '.github/workflows/career-field-company-chips.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'career/index.html'
+      - 'career/data.json'
+      - 'career/tests/test-field-company-chips.cjs'
+      - 'career/tests/test-field-company-chips-browser.cjs'
+      - '.github/workflows/career-field-company-chips.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate career source company badges (no network or data writes)
+        run: |
+          node career/tests/test-field-company-chips.cjs
+          echo CAREER_FIELD_COMPANY_SOURCE_CHIPS_PASS
+      - name: Real Chrome desktop/mobile source chip visual check
+        run: |
+          npm install --prefix "$RUNNER_TEMP/career-chip-qa" --no-save --no-package-lock --ignore-scripts playwright-core@1.56.1
+          NODE_PATH="$RUNNER_TEMP/career-chip-qa/node_modules" node career/tests/test-field-company-chips-browser.cjs
+      - name: Preserve desktop/mobile source chip screenshots
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: career-field-source-desktop-mobile
+          path: artifacts/career-field-sources-*.png
+          if-no-files-found: ignore
