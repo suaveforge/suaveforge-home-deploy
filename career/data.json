@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "updatedAt": "2026-11-22",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
   "notice": "검증된 Git 및 Telegram 실제 개발 작업 월만 내부 경력 게이지에 잠정 연결합니다. U.Podium 등 서비스명과 법적 고용·발주처는 별개이며 KOSA 공식 인정기간이 아닙니다. private Telegram 원문·비밀번호·키는 공개하지 않습니다.",
@@ -521,29 +521,33 @@
     },
     {
       "id": "p25",
-      "company": "발주처 미확인",
-      "title": "3D 캐릭터 커스터마이징 웹 기능 개발 (프로젝트명 미확인)",
+      "company": "ZeroMax",
+      "title": "U.Podium 말 커스터마이징 웹 — React Three Fiber",
       "period": "2023-07",
       "start": "2023-07",
       "end": "2023-07",
       "categories": [
         "웹 개발"
       ],
-      "work": "React·Three.js 캐릭터 모델 커스터마이징 프론트엔드 구현 및 미사용 리소스 제거; 본인 기존 경력기술서의 React Fiber 웹 커스터마이저 작업과 코드 기록을 연결 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
+      "work": "2023.07.11 React Three Fiber·Three.js 기반 말의 머리·몸통·다리·꼬리 등 GLTF 파츠와 머티리얼의 커스터마이징 웹 소스 변경 및 미사용 리소스 정리. ZM_DEV의 2023.02 '내말커스텀' 협업, 2023.07.19 upodium/horse_custom 저장소 공유, 기존 Git 내 A1-2.gltf 동명 리소스와 대조해 ZeroMax의 U.Podium 말 커스텀 작업 맥락으로 복원. 2023.07 개인 Git이 upodium 조직 저장소의 정확한 동일 커밋/배포본이라는 직접 증거는 미확인.",
       "status": "linked",
       "evidence": [
         {
           "type": "git_direct_code_commit",
           "url": "https://github.com/programmer119/react-threejs-charactercustom",
           "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2023-07 / example 710545f90e7de00b240873c8b8885f2fef85dd0d"
+        },
+        {
+          "type": "telegram_project_context",
+          "note": "ZM_DEV 2023-02-23 #58528·#58529·#58531 (내말커스텀, 창유 형의 말구성.xlsx 전달), 2023-02-24 #58546·#58548·#58549 (Custom.jsx, 말 12마리 리소스, A1-2.gltf), 2023-07-19 #71561 (upodium/horse_custom 주소 공유). 실제 업체 계약관계는 미확인."
         }
       ],
       "sourceRepo": "programmer119/react-threejs-charactercustom",
       "verifiedCommitMonths": [
         "2023-07"
       ],
-      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
-      "projectNameVerified": false,
+      "note": "프로젝트명 '말 커스터마이징'은 텔레그램 대화·Git 내 말 리소스 명칭과 일치하고 사용자가 ZeroMax에서 창유 형과 작업했다고 확인. 수행 기간은 2023.07 직접 Git 코드 변경이 확인된 월만 산정. 연결된 ZeroMax/U.Podium은 개발 조직·서비스명이며, 사용자가 회상하는 별도 외주 수주 고객사의 법인명은 아직 증빙 미확보. KOSA 공식 인정기간이 아님.",
+      "projectNameVerified": true,
       "originalUnverifiedLabels": {
         "company": "프리랜서 / React3D 커스터마이저",
         "title": "React·Three.js 3D 캐릭터 커스터마이징"
