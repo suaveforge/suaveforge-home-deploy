@@ -10,7 +10,7 @@ const block=html.match(/<script>\s*([\s\S]*?)<\/script>/);
 assert.ok(block,'Career inline script exists');
 const nodes=new Map();
 const $=id=>{
- if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:'',hidden:false,
+ if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:id==='filter'?'all':'',hidden:false,
   addEventListener(){},querySelectorAll(){return []},setAttribute(){},
   scrollIntoView(){},focus(){}});
  return nodes.get(id);
