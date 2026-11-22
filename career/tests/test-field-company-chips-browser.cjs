@@ -30,7 +30,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     return {
      cards:fields.length,
      allHaveBar:fields.every(card=>card.querySelector('.track .fill')),
-     creditedBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip:not(.pending)').length,0),
+     creditedBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip.credited').length,0),
      pendingBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip.pending').length,0),
      companyShareTracks:fields.filter(card=>card.querySelector('.field-share-track')).length,
      shownShareLabels:fields.reduce((n,card)=>n+card.querySelectorAll('.field-share-percent').length,0),
@@ -51,7 +51,17 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       return a.right>b.right+1||a.left<b.left-1?[card.querySelector('.name')?.textContent]:[];
      }),
      uncreditedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='미반영')).length,
-     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 기간 미확정 · '))),
+     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 해당 분야에 포함, 게이지 미등록 · '))),
+     unrelatedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='해당 X')).length,
+     fullMasterMatrix:fields.every(card=>{
+      const badges=[...card.querySelectorAll('.field-source-chip')];
+      const keys=badges.map(el=>el.dataset.masterCompany);
+      const groups=['credited','pending','unrelated'];
+      const sum=groups.reduce((n,c)=>n+card.querySelectorAll('.field-source-chip.'+c).length,0);
+      return badges.length===13&&new Set(keys).size===13&&keys.every(Boolean)&&sum===13;
+     }),
+     masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).sort().join('|'))
+      .every((keys,_,all)=>keys===all[0]),
      clips:fields.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(el=>{
       const a=el.getBoundingClientRect(),b=card.getBoundingClientRect();
       return a.right>b.right+1 || a.left<b.left-1;
@@ -72,6 +82,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.companyShareCorrect,true,'company share lengths and shown percentages total 100%');
    assert.deepEqual(stats.companySharesOverflow,[],'share bar stays within every card');
    assert.equal(stats.uncreditedRows,9,'all fields visibly show uncredited row');
+   assert.equal(stats.unrelatedRows,9,'all fields show third not-applicable group');
+   assert.equal(stats.fullMasterMatrix,true,'each field contains all 13 base master companies exactly once');
+   assert.equal(stats.masterKeysConsistent,true,'all nine fields enumerate the identical master roster');
    assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
