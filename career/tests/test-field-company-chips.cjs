@@ -59,6 +59,8 @@ setImmediate(()=>{
  assert.ok(web.includes('>위메</span>'),'Wemade unconfirmed period');
  assert.ok(web.includes('<span class="field-source-label">미반영</span>'),'uncredited row is explicitly labeled');
  assert.ok(web.includes('class="field-source-chip pending" data-master-company="온더라이브"'),'OnTheLive is related web work without credited months');
+ assert.ok(web.includes('class="field-source-chip pending" data-master-company="유비펀"'),'self-reported vanilla JS chat front is a web candidate, not a credited month');
+ assert.ok(web.includes('class="field-source-chip pending" data-master-company="유비펀스튜디오"'),'same project continued under studio, but dates remain unconfirmed');
  assert.ok(web.includes('title="온더라이브 · 미반영"'),'OnTheLive remains period-unverified');
  assert.ok(!web.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive must not show as not applicable for web');
  assert.ok(web.includes('98 / 120개월'),'OnTheLive does not fabricate any additional web months');
@@ -100,7 +102,7 @@ setImmediate(()=>{
   assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
  };
  expectStates('PC 응용SW',[4,0,18]);
- expectStates('웹 개발',[8,4,10]);
+ expectStates('웹 개발',[8,6,8]);
  expectStates('AI 개발',[2,2,18]);
  expectStates('블록체인',[0,2,20]);
  for(const f of data.fields)expectStates(f.name,
