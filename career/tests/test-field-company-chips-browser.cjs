@@ -91,9 +91,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      recovery:{
       cards:document.querySelectorAll('#recoveryItems [data-recovery-id]').length,
       actionButtons:document.querySelectorAll('#recoveryItems [data-recovery-project], #recoveryItems [data-recovery-new]').length,
-      source2022:document.querySelector('#recoveryItems [data-recovery-id="MF"]')?.innerText.includes('2022-11'),
-      source2023:document.querySelector('#recoveryItems [data-recovery-id="ZM"]')?.innerText.includes('2023-08'),
-      overlapNoCredit:document.querySelector('#recoveryItems [data-recovery-id="MC"]')?.innerText.includes('수행기간 미확정'),
+      source2022:document.querySelector('#recoveryItems [data-recovery-id="MF"]')?.textContent.includes('2022-11'),
+      source2023:document.querySelector('#recoveryItems [data-recovery-id="ZM"]')?.textContent.includes('2023-08'),
+      overlapNoCredit:document.querySelector('#recoveryItems [data-recovery-id="MC"]')?.textContent.includes('수행기간 미확정'),
       noHorizontalClip:[...document.querySelectorAll('#recoveryItems .recovery-item')].every(e=>{const a=e.getBoundingClientRect(),b=document.querySelector('.recovery').getBoundingClientRect();return a.left>=b.left-1&&a.right<=b.right+1})
      },
      totalOverflow:document.documentElement.scrollWidth>window.innerWidth+1
