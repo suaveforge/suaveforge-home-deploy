@@ -74,6 +74,18 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      gridCols:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
      wrapping:[...document.querySelectorAll('.field-source-tags')].every(el=>getComputedStyle(el).flexWrap==='wrap'),
      pcBadges:[...fields.find(el=>el.querySelector('.name')?.textContent==='PC 응용SW').querySelectorAll('.field-chip-name')].map(el=>el.textContent),
+     timeline:(()=>{
+      const section=document.querySelector('#careerTimeline');
+      const yearRows=[...section.querySelectorAll('.timeline-year')];
+      return {
+       totalMonths:section.querySelectorAll('[data-timeline-month]').length,
+       years:yearRows.length,
+       gapGroups:section.querySelectorAll('[data-gap-start]').length,
+       summary:section.querySelector('#timelineKpis')?.innerText,
+       topOrder:section.getBoundingClientRect().top<document.querySelector('#fields').getBoundingClientRect().top,
+       hasNoHorizontalClip:yearRows.every(el=>{const a=el.getBoundingClientRect(),b=section.getBoundingClientRect();return a.left>=b.left-1&&a.right<=b.right+1})
+      };
+     })(),
      totalOverflow:document.documentElement.scrollWidth>window.innerWidth+1
     };
    });
@@ -97,7 +109,20 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
    assert.ok(stats.wrapping);
-   assert.equal(stats.totalOverflow,false,'no horizontal page overflow');
+   assert.equal(stats.timeline.totalMonths,214,'monthly timeline covers Feb 2009-Nov 2026');
+   assert.equal(stats.timeline.years,18,'2009 to 2026 year grid');
+   assert.equal(stats.timeline.gapGroups,6,'6 unlinked intervals');
+   assert.ok(stats.timeline.summary.includes('184')&&stats.timeline.summary.includes('30'),'184 months linked, 30 need verification');
+   assert.equal(stats.timeline.topOrder,true,'timeline goes before the nine field progress cards');
+   assert.equal(stats.timeline.hasNoHorizontalClip,true,'each year row fits inside timeline card');
+      assert.equal(stats.totalOverflow,false,'no horizontal page overflow');
+   await page.locator('[data-timeline-month="2025-08"]').click();
+   assert.match(await page.locator('#timelineFocus').innerText(),/기간 미연결/);
+   assert.match(await page.locator('#timelineFocus').innerText(),/포트폴리오 표기월 단서/);
+   await page.locator('[data-gap-start="2018-12"]').click();
+   assert.equal(await page.locator('#start').inputValue(),'2018-12','gap shortcut pre-fills start month');
+   assert.equal(await page.locator('#end').inputValue(),'2019-01','gap shortcut pre-fills end month');
+   await page.locator('#cancel').click();
    if(device.name==='mobile')assert.equal(stats.gridCols,1,'mobile uses one-column cards');
    fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});
    const screenshot=path.join(root,'artifacts','career-field-sources-'+device.name+'.png');
