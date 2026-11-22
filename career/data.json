@@ -55,7 +55,7 @@
       "company": "위메이드",
       "title": "미르의전설2",
       "period": "2009.02–2010.06",
-      "work": "PC MMORPG 클라이언트, 개발도구 및 성능 개선",
+      "work": "PC MMORPG 클라이언트, 개발도구 및 성능 개선 · 해외 서비스: 우즈베키스탄·북미 (원본 경력기술서 명시, 구체적인 로컬라이징 구현 범위 추가 확인)",
       "status": "linked",
       "id": "p01",
       "categories": [
@@ -135,7 +135,7 @@
       "company": "엔투스튜디오",
       "title": "모바일 RPG",
       "period": "2016.08–2018.11",
-      "work": "Unity 게임 콘텐츠·빌드 자동화(Jenkins)·보안 적용",
+      "work": "Unity 게임 콘텐츠·빌드 자동화(Jenkins)·보안 적용 · 해외 서비스: 대만 상용화·중국 베타 (원본 경력기술서 명시, 구현 범위 추가 확인)",
       "status": "linked",
       "id": "p07",
       "categories": [
@@ -148,7 +148,7 @@
       "company": "안드로메다게임즈",
       "title": "60초용사 등",
       "period": "2019.02–2021.07",
-      "work": "개발팀 리딩, Unity, Node.js, C++, MySQL",
+      "work": "개발팀 리딩, Unity, Node.js, C++, MySQL · 해외 서비스: 60초용사 모바일을 북미·일본용 글로벌 빌드로 전환하여 출시 (원본 경력기술서 명시)",
       "status": "linked",
       "id": "p08",
       "categories": [
