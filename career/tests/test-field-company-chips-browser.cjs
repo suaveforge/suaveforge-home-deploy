@@ -51,7 +51,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       return a.right>b.right+1||a.left<b.left-1?[card.querySelector('.name')?.textContent]:[];
      }),
      uncreditedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='미반영')).length,
-     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 해당 분야에 포함되지만 개월 미반영 · '))),
+     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.endsWith(' · 미반영'))),
      unrelatedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='해당 X')).length,
      fullMasterMatrix:fields.every(card=>{
       const badges=[...card.querySelectorAll('.field-source-chip')];
