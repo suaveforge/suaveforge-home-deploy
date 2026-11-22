@@ -53,7 +53,7 @@ setImmediate(()=>{
  assert.equal(list.find(x=>x.ym==='2026-11').type,'git');
  for(const m of ['2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'])assert.equal(list.find(x=>x.ym===m).type,'project','actual coded month '+m+' is no longer a red gap');
  for(const m of ['2024-09','2025-08','2025-09','2025-10','2025-11'])assert.equal(list.find(x=>x.ym===m).type,'gap','unproven month '+m+' stays red');
- assert.equal(data.projects.filter(x=>x.verifiedCommitMonths).length,13,'thirteen documented git project segments with exact monthly source');
+ assert.equal(data.projects.filter(x=>x.verifiedCommitMonths).length,17,'seventeen documented git project segments with exact monthly source');
  for(const row of data.projects.filter(x=>x.verifiedCommitMonths))assert.ok(row.evidence?.some(e=>e.url?.startsWith('https://github.com/')),'Git source preserved for '+row.id);
  assert.ok(el('timelineKpis').innerHTML.includes('202'),'202 linked months in summary');
  assert.ok(el('timelineKpis').innerHTML.includes('12'),'12 unlinked months in summary');
