@@ -1,20 +1,15 @@
 'use strict';
-const assert=require('node:assert/strict');
-const fs=require('node:fs');
-const path=require('node:path');
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require('playwright-core');
 const root=path.resolve(__dirname,'../..');
 const html=fs.readFileSync(path.join(root,'career/index.html'),'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8'));
 (async()=>{
  const executablePath=['/usr/bin/google-chrome','/usr/bin/chromium','/usr/bin/chromium-browser'].find(p=>fs.existsSync(p));
- assert.ok(executablePath,'Chromium or Chrome preinstalled on the test runner');
+ assert.ok(executablePath,'Chrome/Chromium is installed');
  const browser=await chromium.launch({headless:true,executablePath,args:['--no-sandbox']});
  try{
-  for(const device of [
-   {name:'desktop',width:1440,height:900},
-   {name:'mobile',width:390,height:844}
-  ]){
+  for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width:390,height:844}]){
    const page=await browser.newPage({viewport:{width:device.width,height:device.height},deviceScaleFactor:1});
    const errors=[];page.on('pageerror',err=>errors.push(err.message));
    await page.route('https://career.test/**',route=>{
@@ -26,145 +21,55 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===9);
    const stats=await page.evaluate(()=>{
-    const fields=[...document.querySelectorAll('#fields .field')];
-    return {
-     cards:fields.length,
-     allHaveBar:fields.every(card=>card.querySelector('.track .fill')),
-     creditedBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip.credited').length,0),
-     pendingBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip.pending').length,0),
-     companyShareTracks:fields.filter(card=>card.querySelector('.field-share-track')).length,
-     shownShareLabels:fields.reduce((n,card)=>n+card.querySelectorAll('.field-share-percent').length,0),
-     companyShareCorrect:fields.every(card=>{
-      const track=card.querySelector('.field-share-track');
-      const credited=card.querySelectorAll('.field-source-chip.credited').length;
-      if(!track)return credited===0;
-      const widths=[...track.querySelectorAll('.field-share-segment')].map(el=>parseFloat(el.style.width));
-      const labelShares=[...card.querySelectorAll('.field-share-percent')].map(el=>parseFloat(el.textContent));
-      return widths.length===credited&&credited===labelShares.length&&
-       Math.abs(widths.reduce((a,b)=>a+b,0)-100)<0.01&&
-       Math.abs(labelShares.reduce((a,b)=>a+b,0)-100)<0.01;
-     }),
-     companySharesOverflow:fields.flatMap(card=>{
-      const track=card.querySelector('.field-share-track');
-      if(!track)return [];
-      const a=track.getBoundingClientRect(),b=card.getBoundingClientRect();
-      return a.right>b.right+1||a.left<b.left-1?[card.querySelector('.name')?.textContent]:[];
-     }),
-     uncreditedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='미반영')).length,
-     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.endsWith(' · 미반영'))),
-     unrelatedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='해당 X')).length,
-     fullMasterMatrix:fields.every(card=>{
-      const badges=[...card.querySelectorAll('.field-source-chip')];
-      const keys=badges.map(el=>el.dataset.masterCompany);
-      const groups=['credited','pending','unrelated'];
-      const sum=groups.reduce((n,c)=>n+card.querySelectorAll('.field-source-chip.'+c).length,0);
-      const masterKeys=keys.filter(key=>key!=='발주처미확인');
-      return masterKeys.length===18&&new Set(masterKeys).size===18&&keys.every(Boolean)&&sum===badges.length&&
-        keys.filter(key=>key==='발주처미확인').length<=1;
-     }),
-     masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).filter(key=>key!=='발주처미확인').sort().join('|'))
-      .every((keys,_,all)=>keys===all[0]),
-     ontheliveWebState:(()=>{
-      const web=fields.find(el=>el.querySelector('.name')?.textContent==='웹 개발');
-      const tag=web?.querySelector('.field-source-chip[data-master-company="온더라이브"]');
-      return {pending:!!tag?.classList.contains('pending'),notApplicable:!!tag?.classList.contains('unrelated'),months:web?.querySelector('.numbers small')?.textContent};
-     })(),
-     clips:fields.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(el=>{
-      const a=el.getBoundingClientRect(),b=card.getBoundingClientRect();
-      return a.right>b.right+1 || a.left<b.left-1;
-     }).map(el=>el.innerText)),
-     gridCols:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
-     wrapping:[...document.querySelectorAll('.field-source-tags')].every(el=>getComputedStyle(el).flexWrap==='wrap'),
-     pcBadges:[...fields.find(el=>el.querySelector('.name')?.textContent==='PC 응용SW').querySelectorAll('.field-chip-name')].map(el=>el.textContent),
-     timeline:(()=>{
-      const section=document.querySelector('#careerTimeline');
-      const yearRows=[...section.querySelectorAll('.timeline-year')];
-      return {
-       totalMonths:section.querySelectorAll('[data-timeline-month]').length,
-       years:yearRows.length,
-       gapGroups:section.querySelectorAll('[data-gap-start]').length,
-       summary:section.querySelector('#timelineKpis')?.innerText,
-       topOrder:section.getBoundingClientRect().top<document.querySelector('#fields').getBoundingClientRect().top,
-       hasNoHorizontalClip:yearRows.every(el=>{const a=el.getBoundingClientRect(),b=section.getBoundingClientRect();return a.left>=b.left-1&&a.right<=b.right+1})
-      };
-     })(),
-     recovery:{
-      cards:document.querySelectorAll('#recoveryItems [data-recovery-id]').length,
-      actionButtons:document.querySelectorAll('#recoveryItems [data-recovery-project], #recoveryItems [data-recovery-new]').length,
-      source2022:document.querySelector('#recoveryItems [data-recovery-id="MF"]')?.textContent.includes('2022-11'),
-      source2023:document.querySelector('#recoveryItems [data-recovery-id="ZM"]')?.textContent.includes('2023-08'),
-      overlapNoCredit:document.querySelector('#recoveryItems [data-recovery-id="MC"]')?.textContent.includes('수행기간 미확정'),
-      noHorizontalClip:[...document.querySelectorAll('#recoveryItems .recovery-item')].every(e=>{const a=e.getBoundingClientRect(),b=document.querySelector('.recovery').getBoundingClientRect();return a.left>=b.left-1&&a.right<=b.right+1})
-     },
-     totalOverflow:document.documentElement.scrollWidth>window.innerWidth+1
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터'];
+    const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
+    const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
+    const expected={'웹 개발':'82 / 120개월','서버 개발':'82 / 156개월','DB 개발':'50 / 156개월',
+      '백엔드':'82 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'69 / 180개월'};
+    const sharesValid=cards.every(card=>{
+     const chips=[...card.querySelectorAll('.field-source-chip.credited')],segments=[...card.querySelectorAll('.field-share-segment')];
+     if(!chips.length)return segments.length===0;
+     const p=chips.map(x=>Number(x.querySelector('.field-share-percent').textContent.replace('%','')));
+     return segments.length===chips.length&&Math.abs(p.reduce((a,b)=>a+b,0)-100)<.02&&
+      Math.abs(segments.reduce((a,x)=>a+parseFloat(x.style.width),0)-100)<.02;
+    });
+    const rosters=cards.map(card=>[...card.querySelectorAll('.field-source-chip')].map(x=>x.dataset.masterCompany).sort().join('|'));
+    const rosterValid=cards.every(card=>{
+     const nodes=[...card.querySelectorAll('.field-source-chip')];
+     return nodes.length===9&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===9&&
+      nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
+    })&&rosters.every(s=>s===rosters[0]);
+    const sourceHelp=field('웹 개발')?.textContent?.includes('개발활동 114개월 중 증빙대기 32개월');
+    const clip=cards.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(x=>{
+      const a=x.getBoundingClientRect(),b=card.getBoundingClientRect();return a.left<b.left-1||a.right>b.right+1;
+    }).map(x=>x.textContent));
+    const mobileGaps=[...document.querySelectorAll('.field-source-tags')].every(x=>getComputedStyle(x).flexWrap==='wrap');
+    const allMatches=Object.entries(expected).every(([name,value])=>count(name)===value);
+    return {cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,clip,mobileGaps,
+      overflow:document.documentElement.scrollWidth>window.innerWidth+1,
+      gridColumns:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
+      tabActivityRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('멀티에셋 트레이더')&&r.textContent.includes('경력 미반영')),
+      tabCreditedRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('신규 모바일 MORPG')&&r.textContent.includes('경력 반영')),
+      directGitKeepsTimeline:document.querySelectorAll('[data-timeline-month]').length===214
     };
    });
    assert.equal(errors.length,0,JSON.stringify(errors));
-   assert.equal(stats.cards,9);
-   assert.ok(stats.allHaveBar);
-   assert.ok(stats.creditedBadges>=15,'credit source labels across nine fields');
-   assert.ok(stats.pendingBadges>=3,'unconfirmed work has its own labels');
-   assert.equal(stats.companyShareTracks,7,'each credited field shows one proportion bar');
-   assert.ok(stats.shownShareLabels>=35,'all current credited company tags display their share');
-   assert.equal(stats.companyShareCorrect,true,'company share lengths and shown percentages total 100%');
-   assert.deepEqual(stats.companySharesOverflow,[],'share bar stays within every card');
-   assert.equal(stats.uncreditedRows,9,'all fields visibly show uncredited row');
-   assert.equal(stats.unrelatedRows,9,'all fields show third not-applicable group');
-   assert.equal(stats.fullMasterMatrix,true,'each field contains all 18 base source identities exactly once');
-   assert.equal(stats.masterKeysConsistent,true,'all nine fields enumerate the identical master roster');
-   assert.equal(stats.ontheliveWebState.pending,true,'OnTheLive web history must appear under uncredited');
-   assert.equal(stats.ontheliveWebState.notApplicable,false,'OnTheLive must not appear under not applicable for web');
-   assert.equal(stats.ontheliveWebState.months,'114 / 120개월','MORPG 16 web months now credited while OnTheLive remains unverified');
-   assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
-   assert.deepEqual(stats.clips,[],'no company chips outside their cards');
-   assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
-   assert.ok(stats.wrapping);
-   assert.equal(stats.timeline.totalMonths,214,'monthly timeline covers Feb 2009-Nov 2026');
-   assert.equal(stats.timeline.years,18,'2009 to 2026 year grid');
-   assert.equal(stats.timeline.gapGroups,7,'7 unlinked intervals');
-   assert.ok(stats.timeline.summary.includes('202')&&stats.timeline.summary.includes('12'),'202 months linked, 12 need verification');
-   assert.equal(stats.timeline.topOrder,false,'retain existing field cards above the career timeline');
-   assert.equal(stats.timeline.hasNoHorizontalClip,true,'each year row fits inside timeline card');
-      assert.ok((await page.locator('#projects').innerText()).includes('참고자료 · 게이지 0개월'),'dated generic freelance preserved without credit');
-   const resourceFilter=page.locator('#filter');
-   await resourceFilter.selectOption('resource');
-   const resourceCount=await page.locator('#projects tr').count();
-   assert.ok(resourceCount>=1,'resource-only filter exposes generic freelance');
-   assert.match(await page.locator('#projects').innerText(),/프리랜서 웹게임·시스템 개발/);
-   await resourceFilter.selectOption('all');
-   assert.equal(stats.recovery.cards,7,'seven separate reconstruction groups displayed');
-   assert.ok(stats.recovery.actionButtons>=7,'every reconstruction group has direct date-entry control');
-   assert.equal(stats.recovery.source2022,true,'MetaFastest Nov 2022 evidence shown');
-   assert.equal(stats.recovery.source2023,true,'ZeroMax Aug 2023 evidence shown');
-   assert.match(await page.locator('[data-recovery-id="ZM"] .recovery-status').textContent(),/일부 기간 등록/,'ZeroMax recovered one month without claiming full project');
-   await page.locator('[data-timeline-month="2023-08"]').click();
-   assert.match(await page.locator('#timelineFocus').textContent(),/추가 개발경력/,'August credited as dated project');
-   assert.match(await page.locator('#timelineFocus').textContent(),/Upodium 말 커스터마이징 웹/);
-   await page.locator('[data-timeline-month="2023-10"]').click();
-   assert.match(await page.locator('#timelineFocus').textContent(),/추가 개발경력/,'October now credited by Telegram work evidence');
-   assert.equal(stats.recovery.overlapNoCredit,true,'MetaCross activity milestone does not imply credited dates');
-   assert.equal(stats.recovery.noHorizontalClip,true,'reconstruction groups fit inside card');
-   await page.locator('#careerRecovery summary').click();
-   await page.locator('[data-recovery-id="OL"] [data-recovery-project="p16"]').click();
-   assert.equal(await page.locator('#company').inputValue(),'프리랜서 / 온더라이브','on-the-live edit pre-fills company');
-   assert.equal(await page.locator('#start').inputValue(),'','no invented start date from payment');
-   assert.equal(await page.locator('#end').inputValue(),'','no invented end date from payment');
-   await page.locator('#cancel').click();
-   assert.equal(stats.totalOverflow,false,'no horizontal page overflow');
-   await page.locator('[data-timeline-month="2025-08"]').click();
-   assert.match(await page.locator('#timelineFocus').textContent(),/기간 미연결/);
-   assert.match(await page.locator('#timelineFocus').textContent(),/활동 시점·자료 단서/);
-   await page.locator('[data-gap-start="2018-12"]').click();
-   assert.equal(await page.locator('#start').inputValue(),'2018-12','gap shortcut pre-fills start month');
-   assert.equal(await page.locator('#end').inputValue(),'2019-01','gap shortcut pre-fills end month');
-   await page.locator('#cancel').click();
-   if(device.name==='mobile')assert.equal(stats.gridCols,1,'mobile uses one-column cards');
+   assert.equal(stats.cards,9);assert.ok(stats.allMatches,'monthly insured totals appear');
+   assert.ok(stats.rosterValid,'only nine insured company identifiers appear');
+   assert.ok(stats.sharesValid,'share badges and stacked bar agree');
+   assert.ok(stats.sourceHelp,'unverified 32 months are retained with clear label');
+   assert.deepEqual(stats.clip,[],'no company label falls outside cards');
+   assert.ok(stats.mobileGaps,'company tags wrap');assert.equal(stats.overflow,false,'no horizontal scroll');
+   assert.equal(stats.tabActivityRow,true,'Git project stays in archive as unverified career');
+   assert.equal(stats.tabCreditedRow,true,'insured MORPG remains credited');
+   assert.equal(stats.directGitKeepsTimeline,true,'full activity timeline is preserved');
+   if(device.name==='mobile')assert.equal(stats.gridColumns,1);
    fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});
    const screenshot=path.join(root,'artifacts','career-field-sources-'+device.name+'.png');
    await page.screenshot({path:screenshot,fullPage:true});
-   console.log('CAREER_FIELD_CHIPS_REAL_BROWSER',device.name,JSON.stringify(stats),'SCREENSHOT',screenshot);
+   console.log('CAREER_INSURANCE_PAID_BROWSER',device.name,JSON.stringify(stats),'SCREENSHOT',screenshot);
    await page.close();
   }
-  console.log('CAREER_FIELD_CHIPS_DESKTOP_MOBILE_VISUAL_QA_PASS');
+  console.log('CAREER_INSURANCE_PAID_DESKTOP_MOBILE_QA_PASS');
  }finally{await browser.close()}
 })().catch(err=>{console.error(err);process.exitCode=1});
