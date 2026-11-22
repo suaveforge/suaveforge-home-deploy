@@ -32,6 +32,24 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      allHaveBar:fields.every(card=>card.querySelector('.track .fill')),
      creditedBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip:not(.pending)').length,0),
      pendingBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip.pending').length,0),
+     companyShareTracks:fields.filter(card=>card.querySelector('.field-share-track')).length,
+     shownShareLabels:fields.reduce((n,card)=>n+card.querySelectorAll('.field-share-percent').length,0),
+     companyShareCorrect:fields.every(card=>{
+      const track=card.querySelector('.field-share-track');
+      const credited=card.querySelectorAll('.field-source-chip.credited').length;
+      if(!track)return credited===0;
+      const widths=[...track.querySelectorAll('.field-share-segment')].map(el=>parseFloat(el.style.width));
+      const labelShares=[...card.querySelectorAll('.field-share-percent')].map(el=>parseFloat(el.textContent));
+      return widths.length===credited&&credited===labelShares.length&&
+       Math.abs(widths.reduce((a,b)=>a+b,0)-100)<0.01&&
+       Math.abs(labelShares.reduce((a,b)=>a+b,0)-100)<0.01;
+     }),
+     companySharesOverflow:fields.flatMap(card=>{
+      const track=card.querySelector('.field-share-track');
+      if(!track)return [];
+      const a=track.getBoundingClientRect(),b=card.getBoundingClientRect();
+      return a.right>b.right+1||a.left<b.left-1?[card.querySelector('.name')?.textContent]:[];
+     }),
      uncreditedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='미반영')).length,
      pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 기간 미확정 · '))),
      clips:fields.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(el=>{
@@ -40,7 +58,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      }).map(el=>el.innerText)),
      gridCols:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
      wrapping:[...document.querySelectorAll('.field-source-tags')].every(el=>getComputedStyle(el).flexWrap==='wrap'),
-     pcBadges:[...fields.find(el=>el.querySelector('.name')?.textContent==='PC 응용SW').querySelectorAll('.field-source-chip')].map(el=>el.textContent),
+     pcBadges:[...fields.find(el=>el.querySelector('.name')?.textContent==='PC 응용SW').querySelectorAll('.field-chip-name')].map(el=>el.textContent),
      totalOverflow:document.documentElement.scrollWidth>window.innerWidth+1
     };
    });
@@ -49,6 +67,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.allHaveBar);
    assert.ok(stats.creditedBadges>=15,'credit source labels across nine fields');
    assert.ok(stats.pendingBadges>=3,'unconfirmed work has its own labels');
+   assert.equal(stats.companyShareTracks,7,'each credited field shows one proportion bar');
+   assert.equal(stats.shownShareLabels,19,'all currently credited company tags display their share');
+   assert.equal(stats.companyShareCorrect,true,'company share lengths and shown percentages total 100%');
+   assert.deepEqual(stats.companySharesOverflow,[],'share bar stays within every card');
    assert.equal(stats.uncreditedRows,9,'all fields visibly show uncredited row');
    assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
