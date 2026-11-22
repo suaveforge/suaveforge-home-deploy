@@ -67,7 +67,7 @@ setImmediate(()=>{
  assert.equal((ai.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,1,'uncredited group exists once per field');
  assert.ok(ai.includes('별도 미반영 작업 1건'),'company with credited and unregistered work keeps pending task visible in tooltip');
  assert.ok(ai.includes('title="반영된 경력 · 테스트회사 · 별도 미반영 작업 1건"'),'credited company is classified once with pending detail');
- assert.equal((ai.match(/>테스<\/span>/g)||[]).length,0,'credited company uses nested label with percentage');
+ assert.equal((ai.match(/>테스<\/span>/g)||[]).length,1,'credited company is labeled once and has a percentage');
  assert.equal((ai.match(/<span class="field-chip-name">테스<\/span>/g)||[]).length,1,'one status per master company in this field');
  assert.ok(!ai.includes('<img src=x onerror=alert(1)>'),'untrusted user text escaped');
  assert.ok(ai.includes('&lt;img src=x onerror=alert(1)&gt;'),'full company escaped in title');
