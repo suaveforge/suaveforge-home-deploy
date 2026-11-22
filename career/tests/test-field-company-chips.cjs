@@ -33,7 +33,9 @@ const ctx={
  setTimeout,clearTimeout,console,URL,Blob,Date,Math,Set,Map,Array,Object,String,Number,
  alert(){},confirm(){return true}
 };
-vm.runInNewContext(block[1],ctx,{timeout:3000,filename:'career/index.html'});
+const instrumented=block[1].replace('main();\n})();','globalThis.__careerShareTest={fieldEmployerContributions,allRows};\nmain();\n})();');
+assert.notEqual(instrumented,block[1],'inject share calculation probes without altering page source');
+vm.runInNewContext(instrumented,ctx,{timeout:3000,filename:'career/index.html'});
 setImmediate(()=>{
  const result=$('fields').innerHTML;
  assert.equal((result.match(/<article class="field">/g)||[]).length,9,'retain all nine field cards');
@@ -68,8 +70,32 @@ setImmediate(()=>{
  assert.equal((ai.match(/>테스<\/span>/g)||[]).length,2,'same employer appears once per status, never dropped');
  assert.ok(!ai.includes('<img src=x onerror=alert(1)>'),'untrusted user text escaped');
  assert.ok(ai.includes('&lt;img src=x onerror=alert(1)&gt;'),'full company escaped in title');
+ const shares=ctx.__careerShareTest;
+ assert.ok(shares,'company share calculations exposed in the test VM');
+ const pcShare=shares.fieldEmployerContributions(shares.allRows(),'PC 응용SW');
+ assert.equal(pcShare.total,69,'PC field unique credited months unchanged');
+ assert.equal(pcShare.entries.length,3,'two employers in NexonGT / UbiFun credited fractionally');
+ assert.deepEqual(pcShare.entries.map(x=>x.percent),[63.8,18.1,18.1]);
+ assert.equal(pcShare.entries.reduce((a,x)=>a+x.percent,0).toFixed(1),'100.0');
+ assert.ok(pc.includes('class="field-share-track"'),'PC shows stacked employer progress');
+ assert.ok(pc.includes('63.8%')&&pc.includes('18.1%'),'employer chips show weighted percentages');
+ assert.ok(pc.includes('중복되는 월은 회사별로 균등 분배'),'overlap policy clearly communicated');
+ const pcWidths=[...pc.matchAll(/class="field-share-segment" style="width:([\d.]+)%/g)]
+  .map(x=>Number(x[1]));
+ assert.equal(pcWidths.length,3);
+ assert.ok(Math.abs(pcWidths.reduce((a,b)=>a+b,0)-100)<0.001,'segments fill exactly the full credited share');
+ const mobileShares=shares.fieldEmployerContributions(shares.allRows(),'모바일 앱');
+ assert.equal(mobileShares.total,95,'existing mobile monthly count preserved');
+ assert.equal(mobileShares.entries.length,7,'all seven mobile employer sources counted');
+ assert.equal(mobileShares.entries.reduce((a,x)=>a+x.percent,0).toFixed(1),'100.0');
+ const aiShare=shares.fieldEmployerContributions(shares.allRows(),'AI 개발');
+ assert.equal(aiShare.total,1,'three local projects in the same month count once');
+ assert.deepEqual(aiShare.entries.map(x=>x.percent),[50,50],'repeated task from one employer does not inflate share');
+ assert.equal(aiShare.entries.reduce((a,x)=>a+x.percent,0),100);
+ assert.ok(ai.includes('50.0%'),'local added work is included in company share bar');
  const blockchain=field('블록체인');
  assert.ok(blockchain.includes('기간 확정 경력 없음'),'empty confirmed category shown honestly');
+ assert.ok(!blockchain.includes('class="field-share-track"'),'no false share visualization when credited months are zero');
  assert.ok(blockchain.includes('title="미반영 · 기간 미확정 · ZeroMax"'));
  assert.ok(blockchain.includes('title="미반영 · 기간 미확정 · MetaCross"'));
  assert.equal((result.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,9,'uncredited group shown in all nine fields, even when empty');
