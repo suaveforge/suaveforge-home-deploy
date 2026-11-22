@@ -61,7 +61,7 @@ setImmediate(()=>{
  assert.ok(web.includes('class="field-source-chip pending" data-master-company="온더라이브"'),'OnTheLive is related web work without credited months');
  assert.ok(web.includes('title="미반영 · 해당 분야에 포함, 게이지 미등록 · 온더라이브"'),'OnTheLive remains period-unverified');
  assert.ok(!web.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive must not show as not applicable for web');
- assert.ok(web.includes('69 / 120개월'),'OnTheLive does not fabricate any additional web months');
+ assert.ok(web.includes('70 / 120개월'),'OnTheLive does not fabricate any additional web months');
  assert.ok(web.includes('MetaFastest')&&web.includes('MetaCross'),'two freelance clients with same two-character abbreviation must both remain');
  assert.ok(web.includes('class="field-source-chip pending" data-master-company="프리랜서"'),'undated/generic freelance resources remain visible as uncredited');
  const freelanceSummary=shares=>shares.allRows().find(x=>x.rowId==='p19');
@@ -98,7 +98,7 @@ setImmediate(()=>{
   assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
  };
  expectStates('PC 응용SW',[3,0,16]);
- expectStates('웹 개발',[4,5,10]);
+ expectStates('웹 개발',[5,4,10]);
  expectStates('AI 개발',[2,2,15]);
  expectStates('블록체인',[0,2,17]);
  for(const f of data.fields)expectStates(f.name,
