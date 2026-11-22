@@ -50,6 +50,11 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .field-source-tags{display:flex;flex-wrap:wrap;gap:5px;min-width:0;flex:1}
 .field-source-chip{display:inline-flex;align-items:center;justify-content:center;min-height:23px;min-width:32px;max-width:100%;padding:2px 7px;border:1px solid #cedee6;border-radius:9px;background:#f1f6f9;color:#24576b;font-size:12px;font-weight:700;line-height:1.2;white-space:nowrap;cursor:help}
 .field-source-chip.pending{border-color:#d7dfe6;background:#f7f8fa;color:#677584}
+.field-source-chip.unrelated{border:1px dashed #dbe2e8;background:#fcfdfe;color:#85929d}
+.field-source-row.unrelated .field-source-label{color:#87939e}
+.field-source-row.unrelated .field-source-tags{gap:4px}
+.field-source-chip.unrelated{min-height:21px;padding:2px 6px;font-weight:600}
+
 .field-source-chip.credited{gap:5px;border-color:#d8e2e7;background:#f9fbfc}
 .field-share-dot{width:8px;height:8px;flex:none;border-radius:50%;display:inline-block}
 .field-chip-name{font-weight:700}
@@ -139,19 +144,43 @@ function careerEmployers(company){
  const parts=String(company||'').split(/\s*\/\s*/).map(x=>x.trim()).filter(Boolean);
  return parts[0]==='프리랜서'&&parts.length>1?parts.slice(1):parts;
 }
-function fieldEmployerSources(rows,category){
- const confirmed=new Map(),pending=new Map();
+function careerCompanyKey(company){
+ return String(company||'').normalize('NFKC').replace(/\s+/g,'').toLowerCase();
+}
+function careerMasterCompanies(rows){
+ // Original and locally added records form the same complete master roster
+ // for every field. Never infer suitability from a company name.
+ const names=new Map();
  for(const row of rows){
-  if(!Array.isArray(row.categories)||!row.categories.includes(category))continue;
-  const destination=inMonths(row)?confirmed:pending;
   for(const employer of careerEmployers(row.company)){
-   const identity=employer.normalize('NFKC').replace(/\s+/g,'').toLowerCase();
-   if(identity&&!destination.has(identity))destination.set(identity,employer);
+   const id=careerCompanyKey(employer);
+   if(id&&!names.has(id))names.set(id,employer);
   }
  }
- // Keep both when this employer has separate credited and uncredited tasks.
- // Deduplicate within each row, not across rows, so no pending work vanishes.
- return {confirmed:[...confirmed.values()],pending:[...pending.values()]};
+ return [...names].map(([id,company])=>({id,company}));
+}
+function fieldEmployerStates(rows,category,master){
+ const byId=new Map(master.map(({id,company})=>[id,{id,company,credited:0,uncredited:0}]));
+ for(const row of rows){
+  if(!Array.isArray(row.categories)||!row.categories.includes(category))continue;
+  for(const employer of careerEmployers(row.company)){
+   const item=byId.get(careerCompanyKey(employer));
+   if(item){
+    if(inMonths(row))item.credited++;
+    else item.uncredited++;
+   }
+  }
+ }
+ // Each master employer has exactly one status in any given field:
+ // credited > uncredited > unrelated. A partially credited company's
+ // outstanding unregistered tasks remain visible in its credited tooltip.
+ const classified={credited:[],uncredited:[],unrelated:[]};
+ for(const item of byId.values()){
+  if(item.credited)classified.credited.push(item);
+  else if(item.uncredited)classified.uncredited.push(item);
+  else classified.unrelated.push(item);
+ }
+ return {...classified,byId,total:master.length};
 }
 // The same project may credit more than one employer, and project periods can
 // overlap. Attribute each *distinct credited month* equally to its employers,
@@ -197,35 +226,43 @@ function fieldEmployerContributions(rows,category){
  }
  return {entries,total};
 }
-function sourceChip(company,pending,share=null,color=''){
+function sourceChip(company,state,share=null,color='',uncreditedCount=0){
  const short=Array.from(company).slice(0,2).join('');
- const title=(pending?'미반영 · 기간 미확정 · ':'반영된 경력 · ')+company;
- const weighted=!pending&&share!==null;
- const content=weighted?'<span class="field-share-dot" style="background:'+color+'"></span>'+
+ const credited=state==='credited',uncredited=state==='uncredited';
+ const detail=credited?'반영된 경력':uncredited?'미반영 · 해당 분야에 포함, 게이지 미등록':'해당 X · 이 분야에 속하지 않음';
+ const outstanding=credited&&uncreditedCount?' · 별도 미반영 작업 '+uncreditedCount+'건':'';
+ const title=detail+' · '+company+outstanding;
+ const content=credited?'<span class="field-share-dot" style="background:'+color+'"></span>'+
   '<span class="field-chip-name">'+escape(short)+'</span>'+
   '<strong class="field-share-percent">'+share.toFixed(1)+'%</strong>':escape(short);
- return '<span class="field-source-chip'+(pending?' pending':' credited')+'" title="'+escape(title)+
-  '" aria-label="'+escape(title+(weighted?' · 기여 비중 '+share.toFixed(1)+'%':''))+
+ return '<span class="field-source-chip '+(credited?'credited':uncredited?'pending':'unrelated')+
+  '" data-master-company="'+escape(careerCompanyKey(company))+
+  '" title="'+escape(title)+'" aria-label="'+escape(title+(credited?' · 기여 비중 '+share.toFixed(1)+'%':''))+
   '" tabindex="0">'+content+'</span>';
 }
 function renderFields(){
- const rows=allRows();
+ const rows=allRows(),master=careerMasterCompanies(rows);
  $('fields').innerHTML=fields.map(f=>{
   const actual=new Set(rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name)&&t.start&&t.end).flatMap(t=>months(t.start,t.end)));
   const total=actual.size,target=Number(f.target),delta=total-Number(f.linked),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
   const diff=delta===0?'기준과 동일':(delta>0?'+':'')+delta+'개월 변화';
-  const sources=fieldEmployerSources(rows,f.name);
+  const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
   const shares=contributions.entries;
-  const confirmed=shares.map((item,i)=>sourceChip(item.company,false,item.percent,FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length])).join('');
-  const pending=sources.pending.map(company=>sourceChip(company,true)).join('');
+  const confirmed=shares.map((item,i)=>{
+   const state=sources.byId.get(item.id);
+   return sourceChip(item.company,'credited',item.percent,FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length],state?.uncredited||0);
+  }).join('');
+  const pending=sources.uncredited.map(item=>sourceChip(item.company,'uncredited')).join('');
+  const unrelated=sources.unrelated.map(item=>sourceChip(item.company,'unrelated')).join('');
   const chart=shares.length?'<div class="field-share-block"><div class="field-share-track" role="img" aria-label="'+
    escape('반영된 경력 '+total+'개월의 회사별 비중 · '+shares.map(x=>x.company+' '+x.percent.toFixed(1)+'%').join(', '))+'">'+
    shares.map((item,i)=>'<span class="field-share-segment" style="width:'+item.share.toFixed(6)+'%;background:'+
      FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length]+'" title="'+escape(item.company+' · '+item.percent.toFixed(1)+'%')+'"></span>').join('')+
    '</div><div class="field-share-help">반영 기간 내 비중 · 중복되는 월은 회사별로 균등 분배</div></div>':'';
   const sourceList='<div class="field-sources"><div class="field-source-row"><span class="field-source-label">반영</span><div class="field-source-tags">'+(confirmed||'<span class="field-source-empty">기간 확정 경력 없음</span>')+'</div></div>'+
-   chart+'<div class="field-source-row"><span class="field-source-label">미반영</span><div class="field-source-tags">'+(pending||'<span class="field-source-empty">미반영 경력 없음</span>')+'</div></div></div>';
+   chart+'<div class="field-source-row"><span class="field-source-label">미반영</span><div class="field-source-tags">'+(pending||'<span class="field-source-empty">미반영 경력 없음</span>')+'</div></div>'+
+   '<div class="field-source-row unrelated"><span class="field-source-label">해당 X</span><div class="field-source-tags">'+(unrelated||'<span class="field-source-empty">해당 X 회사 없음</span>')+'</div></div></div>';
   return '<article class="field"><div class="name">'+escape(f.name)+'</div><div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>'+sourceList+'</article>';
  }).join('');
 }
