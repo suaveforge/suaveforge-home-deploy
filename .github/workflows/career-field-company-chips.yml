@@ -1,0 +1,32 @@
+name: Career field company source tags
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'career/index.html'
+      - 'career/data.json'
+      - 'career/tests/test-field-company-chips.cjs'
+      - '.github/workflows/career-field-company-chips.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'career/index.html'
+      - 'career/data.json'
+      - 'career/tests/test-field-company-chips.cjs'
+      - '.github/workflows/career-field-company-chips.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate career source company badges (no network or data writes)
+        run: |
+          node career/tests/test-field-company-chips.cjs
+          echo CAREER_FIELD_COMPANY_SOURCE_CHIPS_PASS
