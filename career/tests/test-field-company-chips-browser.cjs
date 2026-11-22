@@ -7,7 +7,9 @@ const root=path.resolve(__dirname,'../..');
 const html=fs.readFileSync(path.join(root,'career/index.html'),'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8'));
 (async()=>{
- const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ const executablePath=['/usr/bin/google-chrome','/usr/bin/chromium','/usr/bin/chromium-browser'].find(p=>fs.existsSync(p));
+ assert.ok(executablePath,'Chromium or Chrome preinstalled on the test runner');
+ const browser=await chromium.launch({headless:true,executablePath,args:['--no-sandbox']});
  try{
   for(const device of [
    {name:'desktop',width:1440,height:900},
