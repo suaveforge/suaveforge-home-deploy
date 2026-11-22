@@ -35,6 +35,11 @@ setImmediate(()=>{
  assert.equal(counts.git,3,'KIMSE September-November commit months');
  assert.equal(counts.project,0,'no extra dated rows outside baseline at load');
  assert.equal(counts.gap,49,'49 months without named project or employer');
+ assert.equal(data.timeAxis.reconstructionCandidates.length,7,'seven candidate work streams retained as resources');
+ assert.ok(data.timeAxis.reconstructionCandidates.every(c=>Array.isArray(c.activity)&&c.activity.length>0),'each has evidence checkpoints');
+ assert.equal(data.projects.find(p=>p.id==='p16').start,null,'OnTheLive payment does not invent start date');
+ assert.equal(data.projects.find(p=>p.id==='p12').start,null,'MetaFastest source video does not invent start date');
+ assert.equal(data.projects.find(p=>p.id==='p15').start,null,'MetaCross license does not invent start date');
  assert.equal(list.find(x=>x.ym==='2024-09').type,'gap','umbrella freelance period not counted as dated project');
  assert.equal(list.find(x=>x.ym==='2023-07').type,'gap','freelance 19-month starting month remains unlinked');
  const gaps=api.timelineGroups(list,'gap');
@@ -45,6 +50,10 @@ setImmediate(()=>{
  assert.equal(list.find(x=>x.ym==='2026-11').type,'git');
  assert.ok(el('timelineKpis').innerHTML.includes('165'),'165 linked months in summary');
  assert.ok(el('timelineKpis').innerHTML.includes('49'),'49 unlinked months in summary');
+ assert.equal((el('recoveryItems').innerHTML.match(/data-recovery-id=/g)||[]).length,7,'all recovery cards rendered');
+ assert.ok(el('recoveryItems').innerHTML.includes('2022-11'),'MetaFastest first material date displayed');
+ assert.ok(el('recoveryItems').innerHTML.includes('2023-08'),'ZeroMax task date displayed');
+ assert.ok(el('recoveryItems').innerHTML.includes('2023-10'),'MetaCross invitation date displayed');
  assert.equal((el('timelineYearList').innerHTML.match(/class="timeline-year"/g)||[]).length,18);
  assert.equal((el('timelineYearList').innerHTML.match(/data-timeline-month=/g)||[]).length,214);
  assert.equal((el('timelineGapList').innerHTML.match(/data-gap-start=/g)||[]).length,4);
