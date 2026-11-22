@@ -58,9 +58,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       const keys=badges.map(el=>el.dataset.masterCompany);
       const groups=['credited','pending','unrelated'];
       const sum=groups.reduce((n,c)=>n+card.querySelectorAll('.field-source-chip.'+c).length,0);
-      return badges.length===18&&new Set(keys).size===18&&keys.every(Boolean)&&sum===18;
+      const masterKeys=keys.filter(key=>key!=='발주처미확인');
+      return masterKeys.length===18&&new Set(masterKeys).size===18&&keys.every(Boolean)&&sum===badges.length&&
+        keys.filter(key=>key==='발주처미확인').length<=1;
      }),
-     masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).sort().join('|'))
+     masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).filter(key=>key!=='발주처미확인').sort().join('|'))
       .every((keys,_,all)=>keys===all[0]),
      ontheliveWebState:(()=>{
       const web=fields.find(el=>el.querySelector('.name')?.textContent==='웹 개발');

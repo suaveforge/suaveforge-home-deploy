@@ -91,8 +91,10 @@ setImmediate(()=>{
    counts.join(','),'every company classified once across three states in '+fieldName);
   const markup=field(fieldName);
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(m=>m[1]);
-  assert.equal(ids.length,roster.length,'every master employer displayed, '+fieldName);
-  assert.equal(new Set(ids).size,roster.length,'no repeated employer in three groups, '+fieldName);
+  const rosterKeys=new Set(roster.map(item=>item.id));
+  assert.ok([...rosterKeys].every(id=>ids.includes(id)),'every master employer displayed, '+fieldName);
+  assert.equal(new Set(ids).size,ids.length,'no repeated source in three groups, '+fieldName);
+  assert.ok(ids.filter(id=>!rosterKeys.has(id)).every(id=>id==='발주처미확인'),'only unknown-customer Git contributions may add a non-master source');
   assert.ok(markup.includes('<span class="field-source-label">해당 X</span>'));
   assert.ok(markup.includes('<span class="field-source-label">반영</span>'));
   assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
