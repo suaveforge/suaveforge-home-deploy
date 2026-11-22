@@ -1,8 +1,8 @@
 {
-  "version": 9,
+  "version": 10,
   "updatedAt": "2026-11-22",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
-  "notice": "회사·프로젝트명은 증빙된 명칭만 사용하며 React Three Fiber(R3F) 등 기술명은 별도 작업내용에 표시합니다. 발주처/프로젝트명 미확인 Git 활동은 검증된 직접 코드 월만 내부 개발활동 기간에 잠정 반영하며 유상 수행 또는 KOSA 공식 인정경력으로 주장하지 않습니다.",
+  "notice": "검증된 Git 및 Telegram 실제 개발 작업 월만 내부 경력 게이지에 잠정 연결합니다. U.Podium 등 서비스명과 법적 고용·발주처는 별개이며 KOSA 공식 인정기간이 아닙니다. private Telegram 원문·비밀번호·키는 공개하지 않습니다.",
   "fields": [
     {
       "name": "웹 개발",
@@ -913,8 +913,8 @@
     },
     {
       "id": "p39",
-      "title": "3D 말 모델·텍스처 제어 구현 (프로젝트명 미확인)",
-      "company": "발주처 미확인",
+      "title": "내말커스텀 — 3D 말 모델·텍스처 웹 개발",
+      "company": "ZeroMax",
       "period": "2023.02",
       "start": "2023-02",
       "end": "2023-02",
@@ -928,13 +928,17 @@
           "type": "git_direct_code_commit",
           "url": "https://github.com/programmer119/react-fiber-test1/commit/3b1f4b641668",
           "note": "코드·파일 변경 원본 커밋 확인; 개인 저장소 개발 기록이며 계약·납품증명과 별개"
+        },
+        {
+          "type": "telegram_project_context",
+          "note": "2023-01 ZeroMax 프로그램팀, 2023-02 ZM_DEV 내말커스텀 Custom.jsx (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
         }
       ],
       "sourceRepo": "programmer119/react-fiber-test1",
       "verifiedCommitMonths": [
         "2023-02"
       ],
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존. Telegram 상 내말커스텀과 ZeroMax 프로그램팀 정황은 확인. 2023-02 개인 Git 저장소가 당시 납품 저장소와 동일한지는 미확정.",
       "projectNameVerified": false,
       "originalUnverifiedLabels": {
         "company": "GitHub 개인 연구",
@@ -1001,8 +1005,8 @@
     },
     {
       "id": "p42",
-      "title": "3D 경마 말 이동·경로 로직 개발 (프로젝트명 미확인)",
-      "company": "발주처 미확인",
+      "title": "원형경기 / 내말커스텀 — Unity 말 이동·경로 로직",
+      "company": "ZeroMax",
       "period": "2023.03",
       "start": "2023-03",
       "end": "2023-03",
@@ -1016,13 +1020,17 @@
           "type": "git_direct_code_commit",
           "url": "https://github.com/programmer119/HorseRacing-Circle/commit/d0129b1dc162",
           "note": "코드·파일 변경 원본 커밋 확인; 개인 저장소 개발 기록이며 계약·납품증명과 별개"
+        },
+        {
+          "type": "telegram_project_context",
+          "note": "2023-03-17 ZM_DEV 원형경기/내말커스텀 명명, 2023-03-21 Unity 코드 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
         }
       ],
       "sourceRepo": "programmer119/HorseRacing-Circle",
       "verifiedCommitMonths": [
         "2023-03"
       ],
-      "note": "2023.03.21 C# 구현 코드는 직접 확인. MetaFastest 등 발주처 관계와 원본 공개 허용범위 미확정. PC 응용SW 카테고리는 잠정 분류이며 KOSA 승인과 다름. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "note": "2023.03.21 C# 구현 코드는 직접 확인. MetaFastest 등 발주처 관계와 원본 공개 허용범위 미확정. PC 응용SW 카테고리는 잠정 분류이며 KOSA 승인과 다름. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존. 개발방에 원형경기/내말커스텀 이름이 명시되어 있고 Unity C# 직접 Git 변경 월과 부합. 실제 계약기간·KOSA 증빙과는 별개.",
       "projectNameVerified": false,
       "originalUnverifiedLabels": {
         "company": "GitHub 개인 연구",
@@ -1162,6 +1170,108 @@
         }
       ],
       "note": "확정 경력월 0개월, 이후 원문 검증 및 편집 필요."
+    },
+    {
+      "id": "p48",
+      "company": "ZeroMax",
+      "title": "3D 경마 게임 Unity WebGL·웹 프론트 개발",
+      "start": "2023-05",
+      "end": "2023-07",
+      "period": "2023.05 ~ 2023.07",
+      "categories": [
+        "웹 개발"
+      ],
+      "status": "linked",
+      "work": "2023.05~07 ZM_DEV 직접 Git 수정·Unity 빌드 보고: 경마 카메라/애니메이션/UI, 모바일 발열·프레임 최적화, 다국어 전환 및 웹 클라이언트 연동. 5월·6월·7월 각각 작업이 확인되며 정식 고용·계약 기간은 별도.",
+      "evidence": [
+        {
+          "type": "telegram_dated_work",
+          "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
+        }
+      ],
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음."
+    },
+    {
+      "id": "p49",
+      "company": "발주처 미확인",
+      "title": "U.Podium 레이싱·파워볼·릴게임 웹 개발·운영",
+      "start": "2023-09",
+      "end": "2024-06",
+      "period": "2023.09 ~ 2024.06",
+      "categories": [
+        "웹 개발"
+      ],
+      "status": "linked",
+      "work": "유포디움 개발/외부팀 대화에서 2023.09~2024.06 매월 직접 수정·테스트·배포 보고 확인. 레이싱 마굿간·베팅·랭킹 UI, 파워볼, 릴게임, Spine 리소스, 사운드, 반응형, 중국어 등 서비스 기능 개발. U.Podium은 확인된 서비스명이지만 법적 발주처·MetaCross와의 계약관계는 미확정. 2023.12 별도 R3F 연구 저장소의 동일 프로젝트 귀속도 미확정.",
+      "evidence": [
+        {
+          "type": "telegram_dated_work",
+          "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
+        }
+      ],
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음."
+    },
+    {
+      "id": "p50",
+      "company": "발주처 미확인",
+      "title": "U.Podium 레이싱 라이브 패킷 점검 (2024.09)",
+      "start": "",
+      "end": "",
+      "period": "기간 미확정",
+      "categories": [
+        "웹 개발",
+        "서버 개발"
+      ],
+      "status": "review",
+      "resourceOnly": true,
+      "work": "2024.09.24 racedetail 개발/라이브 패킷 비교 후 말 이름·텍스처 응답 누락 문제를 진단한 기록 확인. 해당 일의 문제 분석은 확인되지만 소스 수정·연속 수행기간 미확인이라 2024.09 경력 월은 미가산.",
+      "evidence": [
+        {
+          "type": "telegram_dated_work",
+          "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
+        }
+      ],
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음."
+    },
+    {
+      "id": "p51",
+      "company": "ZeroMax",
+      "title": "프로그램팀 소속 확인 단서 (2023.01)",
+      "start": "",
+      "end": "",
+      "period": "기간 미확정",
+      "categories": [],
+      "status": "review",
+      "resourceOnly": true,
+      "work": "2023.01.27 Zeromax Korea 방에서 프로그램팀이라고 직접 소개. 소속·역할 맥락은 확인됐지만 2023.01 개별 개발 작업과 근로계약/공식 재직기간이 확정되지 않아 미가산.",
+      "evidence": [
+        {
+          "type": "telegram_dated_work",
+          "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
+        }
+      ],
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음."
+    },
+    {
+      "id": "p52",
+      "company": "ZeroMax",
+      "title": "3D 경마 Unity 개발 계획·UI 협의 (2023.04)",
+      "start": "",
+      "end": "",
+      "period": "기간 미확정",
+      "categories": [
+        "웹 개발"
+      ],
+      "status": "review",
+      "resourceOnly": true,
+      "work": "2023.04.04~05 ZM_DEV에서 스타트게이트·주로·피니시 구조물·UI·말/기수 애니메이션 등 개발 작업 지시·계획을 확인. 특정 직접 코드 커밋이 이 대화만으로는 확인되지 않아 미가산.",
+      "evidence": [
+        {
+          "type": "telegram_dated_work",
+          "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
+        }
+      ],
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음."
     }
   ],
   "baselineRanges": {
@@ -1320,7 +1430,8 @@
         "month": "2023-01",
         "names": [
           "MetaFastest (메타페스트) · Metafastest Leader·Arena 영상 자료 보관",
-          "React Fiber CRA 초기 템플릿 생성 (경력 미가산)"
+          "React Fiber CRA 초기 템플릿 생성 (경력 미가산)",
+          "ZeroMax 프로그램팀 소속 소개 확인(개발 수행월 미확정)"
         ]
       },
       {
@@ -1336,16 +1447,30 @@
         ]
       },
       {
+        "month": "2023-04",
+        "names": [
+          "ZeroMax 3D 경마 개발 계획·UI 협의(소스 커밋 미확정)"
+        ]
+      },
+      {
         "month": "2023-05",
         "names": [
-          "ZeroMax (제로맥스) · zeromax_brazil 저장소 이전 알림(5월 1일 현지)"
+          "ZeroMax (제로맥스) · zeromax_brazil 저장소 이전 알림(5월 1일 현지)",
+          "ZeroMax Unity 경마 게임 직접 Git 업데이트 보고"
+        ]
+      },
+      {
+        "month": "2023-06",
+        "names": [
+          "ZeroMax Unity 경마 게임 직접 Git 업데이트 보고"
         ]
       },
       {
         "month": "2023-07",
         "names": [
           "MetaFastest (메타페스트) · metaf-racing GitHub 저장소 이전 알림(7월 19일)",
-          "직접 Git 코드: React·Three.js 3D 캐릭터 커스터마이징"
+          "직접 Git 코드: React·Three.js 3D 캐릭터 커스터마이징",
+          "ZeroMax 경마 웹·Unity 직접 개발 및 빌드 보고"
         ]
       },
       {
@@ -1364,7 +1489,8 @@
         "month": "2023-10",
         "names": [
           "MetaCross (메타크로스) · MetaCrossDev/upodium-dev 협업 저장소 초대(10월 29일 현지)",
-          "R3F 화면 캡처 초기 업로드(외부 포크 여부 검토)"
+          "R3F 화면 캡처 초기 업로드(외부 포크 여부 검토)",
+          "U.Podium 레이싱 마굿간·베팅·랭킹 UI 직접 수정"
         ]
       },
       {
@@ -1376,7 +1502,8 @@
       {
         "month": "2023-12",
         "names": [
-          "직접 Git 코드: React Three Fiber·Spine 머티리얼 실험"
+          "직접 Git 코드: React Three Fiber·Spine 머티리얼 실험",
+          "U.Podium 파워볼·릴게임 개발 진행; R3F 연구 저장소 일치 여부 미확정"
         ]
       },
       {
@@ -1386,10 +1513,17 @@
         ]
       },
       {
+        "month": "2024-02",
+        "names": [
+          "U.Podium 릴게임 실제 개발 및 Git·배포 보고"
+        ]
+      },
+      {
         "month": "2024-03",
         "names": [
           "MetaCross (메타크로스) · MetaCross_01 Unity Pro 최초 구매 메일(3월 14일)",
-          "SvelteKit·Bevy 초기 저장소 자료(직접 구현 미확정)"
+          "SvelteKit·Bevy 초기 저장소 자료(직접 구현 미확정)",
+          "U.Podium 릴게임·사운드·QA 작업 보고"
         ]
       },
       {
@@ -1429,7 +1563,8 @@
       {
         "month": "2024-09",
         "names": [
-          "온더라이브 · 2024.09.13 3.3% 원천징수 후 1,000만 원 수령(본인 진술, 계약 대응 검증 전)"
+          "온더라이브 · 2024.09.13 3.3% 원천징수 후 1,000만 원 수령(본인 진술, 계약 대응 검증 전)",
+          "U.Podium racedetail 패킷 원인 진단(코드 수정·계약 미확정)"
         ]
       },
       {
