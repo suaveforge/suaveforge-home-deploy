@@ -33,7 +33,7 @@ const ctx={
  setTimeout,clearTimeout,console,URL,Blob,Date,Math,Set,Map,Array,Object,String,Number,
  alert(){},confirm(){return true}
 };
-const instrumented=block[1].replace('main();\n})();','globalThis.__careerShareTest={fieldEmployerContributions,allRows};\nmain();\n})();');
+const instrumented=block[1].replace('main();\n})();','globalThis.__careerShareTest={fieldEmployerContributions,careerMasterCompanies,fieldEmployerStates,allRows};\nmain();\n})();');
 assert.notEqual(instrumented,block[1],'inject share calculation probes without altering page source');
 vm.runInNewContext(instrumented,ctx,{timeout:3000,filename:'career/index.html'});
 setImmediate(()=>{
@@ -65,13 +65,39 @@ setImmediate(()=>{
  assert.ok(ai.includes('1 / 60개월'),'overlapping months not counted twice');
  assert.ok(ai.includes('>검토</span>'),'uncredited source displayed');
  assert.equal((ai.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,1,'uncredited group exists once per field');
- assert.ok(ai.includes('title="미반영 · 기간 미확정 · 테스트회사"'),'same employer remains represented as uncredited for different projects');
- assert.ok(ai.includes('title="반영된 경력 · 테스트회사"'),'same employer still retains credited status');
- assert.equal((ai.match(/>테스<\/span>/g)||[]).length,2,'same employer appears once per status, never dropped');
+ assert.ok(ai.includes('별도 미반영 작업 1건'),'company with credited and unregistered work keeps pending task visible in tooltip');
+ assert.ok(ai.includes('title="반영된 경력 · 테스트회사 · 별도 미반영 작업 1건"'),'credited company is classified once with pending detail');
+ assert.equal((ai.match(/>테스<\/span>/g)||[]).length,0,'credited company uses nested label with percentage');
+ assert.equal((ai.match(/<span class="field-chip-name">테스<\/span>/g)||[]).length,1,'one status per master company in this field');
  assert.ok(!ai.includes('<img src=x onerror=alert(1)>'),'untrusted user text escaped');
  assert.ok(ai.includes('&lt;img src=x onerror=alert(1)&gt;'),'full company escaped in title');
  const shares=ctx.__careerShareTest;
  assert.ok(shares,'company share calculations exposed in the test VM');
+ const roster=shares.careerMasterCompanies(shares.allRows());
+ assert.equal(roster.length,17,'13 original master companies plus 4 locally added companies');
+ const expectStates=(fieldName,counts)=>{
+  const status=shares.fieldEmployerStates(shares.allRows(),fieldName,roster);
+  assert.equal(status.total,17);
+  assert.deepEqual(
+   [status.credited.length,status.uncredited.length,status.unrelated.length].join(','),
+   counts.join(','),'every company classified once across three states in '+fieldName);
+  const markup=field(fieldName);
+  const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(m=>m[1]);
+  assert.equal(ids.length,roster.length,'every master employer displayed, '+fieldName);
+  assert.equal(new Set(ids).size,roster.length,'no repeated employer in three groups, '+fieldName);
+  assert.ok(markup.includes('<span class="field-source-label">해당 X</span>'));
+  assert.ok(markup.includes('<span class="field-source-label">반영</span>'));
+  assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
+ };
+ expectStates('PC 응용SW',[3,0,14]);
+ expectStates('웹 개발',[1,4,12]);
+ expectStates('AI 개발',[2,2,13]);
+ expectStates('블록체인',[0,2,15]);
+ for(const f of data.fields)expectStates(f.name,
+  [shares.fieldEmployerStates(shares.allRows(),f.name,roster).credited.length,
+   shares.fieldEmployerStates(shares.allRows(),f.name,roster).uncredited.length,
+   shares.fieldEmployerStates(shares.allRows(),f.name,roster).unrelated.length]);
+ assert.ok(pc.includes('data-master-company="온더라이브"'),'company with no classified field is shown as 해당 X');
  const pcShare=shares.fieldEmployerContributions(shares.allRows(),'PC 응용SW');
  assert.equal(pcShare.total,69,'PC field unique credited months unchanged');
  assert.equal(pcShare.entries.length,3,'two employers in NexonGT / UbiFun credited fractionally');
@@ -96,8 +122,8 @@ setImmediate(()=>{
  const blockchain=field('블록체인');
  assert.ok(blockchain.includes('기간 확정 경력 없음'),'empty confirmed category shown honestly');
  assert.ok(!blockchain.includes('class="field-share-track"'),'no false share visualization when credited months are zero');
- assert.ok(blockchain.includes('title="미반영 · 기간 미확정 · ZeroMax"'));
- assert.ok(blockchain.includes('title="미반영 · 기간 미확정 · MetaCross"'));
+ assert.ok(blockchain.includes('title="미반영 · 해당 분야에 포함, 게이지 미등록 · ZeroMax"'));
+ assert.ok(blockchain.includes('title="미반영 · 해당 분야에 포함, 게이지 미등록 · MetaCross"'));
  assert.equal((result.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,9,'uncredited group shown in all nine fields, even when empty');
  assert.ok(pc.includes('미반영 경력 없음'),'no fabricated uncredited companies');
  assert.ok(html.includes('.field-source-tags{display:flex;flex-wrap:wrap'),'multiple badges wrap on narrow screens');
