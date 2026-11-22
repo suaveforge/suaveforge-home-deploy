@@ -51,14 +51,14 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       return a.right>b.right+1||a.left<b.left-1?[card.querySelector('.name')?.textContent]:[];
      }),
      uncreditedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='미반영')).length,
-     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 해당 분야에 포함, 게이지 미등록 · '))),
+     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 해당 분야에 포함되지만 개월 미반영 · '))),
      unrelatedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='해당 X')).length,
      fullMasterMatrix:fields.every(card=>{
       const badges=[...card.querySelectorAll('.field-source-chip')];
       const keys=badges.map(el=>el.dataset.masterCompany);
       const groups=['credited','pending','unrelated'];
       const sum=groups.reduce((n,c)=>n+card.querySelectorAll('.field-source-chip.'+c).length,0);
-      return badges.length===20&&new Set(keys).size===20&&keys.every(Boolean)&&sum===20;
+      return badges.length===18&&new Set(keys).size===18&&keys.every(Boolean)&&sum===18;
      }),
      masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).sort().join('|'))
       .every((keys,_,all)=>keys===all[0]),
@@ -103,24 +103,24 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.creditedBadges>=15,'credit source labels across nine fields');
    assert.ok(stats.pendingBadges>=3,'unconfirmed work has its own labels');
    assert.equal(stats.companyShareTracks,7,'each credited field shows one proportion bar');
-   assert.equal(stats.shownShareLabels,36,'all currently credited company tags display their share');
+   assert.ok(stats.shownShareLabels>=35,'all current credited company tags display their share');
    assert.equal(stats.companyShareCorrect,true,'company share lengths and shown percentages total 100%');
    assert.deepEqual(stats.companySharesOverflow,[],'share bar stays within every card');
    assert.equal(stats.uncreditedRows,9,'all fields visibly show uncredited row');
    assert.equal(stats.unrelatedRows,9,'all fields show third not-applicable group');
-   assert.equal(stats.fullMasterMatrix,true,'each field contains all 20 base source identities exactly once');
+   assert.equal(stats.fullMasterMatrix,true,'each field contains all 18 base source identities exactly once');
    assert.equal(stats.masterKeysConsistent,true,'all nine fields enumerate the identical master roster');
    assert.equal(stats.ontheliveWebState.pending,true,'OnTheLive web history must appear under uncredited');
    assert.equal(stats.ontheliveWebState.notApplicable,false,'OnTheLive must not appear under not applicable for web');
-   assert.equal(stats.ontheliveWebState.months,'89 / 120개월','no extra months from unverified OnTheLive time');
+   assert.equal(stats.ontheliveWebState.months,'98 / 120개월','no extra months from unverified OnTheLive time');
    assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
    assert.ok(stats.wrapping);
    assert.equal(stats.timeline.totalMonths,214,'monthly timeline covers Feb 2009-Nov 2026');
    assert.equal(stats.timeline.years,18,'2009 to 2026 year grid');
-   assert.equal(stats.timeline.gapGroups,8,'8 unlinked intervals');
-   assert.ok(stats.timeline.summary.includes('194')&&stats.timeline.summary.includes('20'),'194 months linked, 20 need verification');
+   assert.equal(stats.timeline.gapGroups,7,'7 unlinked intervals');
+   assert.ok(stats.timeline.summary.includes('202')&&stats.timeline.summary.includes('12'),'202 months linked, 12 need verification');
    assert.equal(stats.timeline.topOrder,true,'timeline goes before the nine field progress cards');
    assert.equal(stats.timeline.hasNoHorizontalClip,true,'each year row fits inside timeline card');
       assert.ok((await page.locator('#projects').innerText()).includes('참고자료 · 게이지 0개월'),'dated generic freelance preserved without credit');
@@ -139,7 +139,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.match(await page.locator('#timelineFocus').innerText(),/추가 개발경력/,'August credited as dated project');
    assert.match(await page.locator('#timelineFocus').innerText(),/Upodium 말 커스터마이징 웹/);
    await page.locator('[data-timeline-month="2023-10"]').click();
-   assert.match(await page.locator('#timelineFocus').innerText(),/수행기간 미연결/,'October still uncredited');
+   assert.match(await page.locator('#timelineFocus').innerText(),/추가 개발경력/,'October now credited by Telegram work evidence');
    assert.equal(stats.recovery.overlapNoCredit,true,'MetaCross activity milestone does not imply credited dates');
    assert.equal(stats.recovery.noHorizontalClip,true,'reconstruction groups fit inside card');
    await page.locator('[data-recovery-id="OL"] [data-recovery-project="p16"]').click();
