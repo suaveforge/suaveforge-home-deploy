@@ -58,7 +58,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      }).map(el=>el.innerText)),
      gridCols:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
      wrapping:[...document.querySelectorAll('.field-source-tags')].every(el=>getComputedStyle(el).flexWrap==='wrap'),
-     pcBadges:[...fields.find(el=>el.querySelector('.name')?.textContent==='PC 응용SW').querySelectorAll('.field-source-chip')].map(el=>el.textContent),
+     pcBadges:[...fields.find(el=>el.querySelector('.name')?.textContent==='PC 응용SW').querySelectorAll('.field-chip-name')].map(el=>el.textContent),
      totalOverflow:document.documentElement.scrollWidth>window.innerWidth+1
     };
    });
