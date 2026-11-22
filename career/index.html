@@ -68,11 +68,68 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 @media(max-width:750px){.editgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:540px){.editgrid{grid-template-columns:1fr}.wrap{padding:16px 12px}.btn{font-size:12px}.controls{gap:7px}}
 </style>
+
+<style>
+.timeline-section{background:#fff;border:1px solid #dee8ef;border-radius:13px;padding:22px 24px;margin:24px 0 30px}
+.timeline-header{display:flex;align-items:start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.timeline-header h2{font-size:20px;letter-spacing:-.02em;margin:0 0 6px}
+.timeline-caption{font-size:12px;color:#687c8a;margin:0;line-height:1.6}
+.timeline-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 13px}
+.timeline-kpi{border:1px solid #edf1f4;border-radius:9px;padding:13px 15px;background:#fafcfd}
+.timeline-kpi .k-label{font-size:12px;color:#627382}
+.timeline-kpi strong{display:block;margin:6px 0 3px;font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.timeline-kpi .k-foot{font-size:11px;color:#7d8d99}
+.timeline-kpi.is-gap strong{color:#c64d4d}.timeline-kpi.is-known strong{color:#247d70}
+.timeline-progress{display:flex;width:100%;height:14px;border-radius:99px;overflow:hidden;background:#e4eaee}
+.timeline-progress span{height:100%;min-width:0;display:block}
+.timeline-legend{display:flex;gap:9px 17px;flex-wrap:wrap;margin:11px 0 20px;font-size:12px;color:#546877}
+.timeline-legend i{width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:5px;vertical-align:baseline}
+.timeline-legend .ins{background:#2b8073}.timeline-legend .free{background:#668fb7}.timeline-legend .git{background:#9078b6}.timeline-legend .other{background:#8aabb4}.timeline-legend .gap{background:#ce6660}
+.timeline-year-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 19px}
+.timeline-year{display:flex;align-items:center;gap:12px;min-width:0;padding:7px 8px;border:1px solid #edf1f4;border-radius:7px;background:#fbfcfd}
+.timeline-year-label{font-size:12px;font-weight:800;width:38px;flex:none;color:#35495a;font-variant-numeric:tabular-nums}
+.timeline-months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;flex:1;min-width:0}
+.timeline-month{border:0;min-width:0;width:100%;height:17px;padding:0;border-radius:3px;position:relative;cursor:pointer}
+.timeline-month.insurance{background:#2b8073}.timeline-month.freelance{background:#668fb7}.timeline-month.git{background:#9078b6}
+.timeline-month.project{background:#8aabb4}.timeline-month.gap{background:#d76d65}
+.timeline-month.void{visibility:hidden;pointer-events:none}
+.timeline-month.hint:after{content:'';width:5px;height:5px;position:absolute;top:1px;right:1px;background:#fff8e7;border:1px solid #a87b34;border-radius:50%;box-sizing:border-box}
+.timeline-month:focus-visible{outline:2px solid #172d41;outline-offset:2px}
+.timeline-year-foot{font-size:10px;color:#82919c;min-width:53px;text-align:right;font-variant-numeric:tabular-nums}
+.timeline-focus{font-size:12px;color:#425b6a;border:1px solid #edf0f4;border-radius:7px;background:#f5f8fa;margin:11px 0 0;padding:10px 12px;line-height:1.6}
+.timeline-gaps{margin-top:19px;border-top:1px solid #edf1f4;padding-top:16px}
+.timeline-gaps h3{font-size:15px;margin:0 0 10px}
+.timeline-gap-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.timeline-gap{border:1px solid #f0dddd;border-radius:8px;background:#fffafa;padding:11px}
+.timeline-gap strong{font-size:13px;display:block}.timeline-gap span{font-size:11px;color:#936b6b;display:block;margin:4px 0 7px}
+.timeline-gap button{border:0;border-radius:5px;background:#f4e7e7;color:#853b3b;padding:5px 9px;cursor:pointer;font-size:11px;font-weight:700}
+.timeline-gap button:hover{background:#ead5d5}.timeline-gap button:focus-visible{outline:2px solid #923e3b}
+.timeline-method{font-size:11px;color:#748592;line-height:1.65;margin:13px 0 0}
+@media(max-width:760px){.timeline-section{padding:16px 13px}.timeline-year-list{grid-template-columns:1fr}.timeline-kpi strong{font-size:21px}.timeline-gap-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.timeline-kpis{gap:6px}.timeline-kpi{padding:11px 8px}.timeline-kpi strong{font-size:18px}.timeline-kpi .k-label{font-size:10px}.timeline-year{gap:6px;padding:7px 4px}.timeline-months{gap:2px}.timeline-month{height:15px}.timeline-year-foot{min-width:44px}.timeline-gap-list{grid-template-columns:1fr}}
+</style>
 </head><body><div class="wrap"><header class="top"><div class="logo"><a href="/">SUAVEFORGE</a> <span style="font-weight:400;color:#89939e">/ CAREER</span></div><div class="meta" id="updated">데이터 확인 중</div></header>
 <h1>개발 경력 현황</h1><p>회사·프로젝트별 작업과 분야별 경력기간 복원 진행도</p>
 <div class="notice" id="notice">경력 기준을 불러오는 중입니다.</div>
+
+<section class="timeline-section" id="careerTimeline" aria-labelledby="timelineTitle">
+<div class="timeline-header"><div><h2 id="timelineTitle">전체 경력 · 공백 점검</h2>
+<p class="timeline-caption" id="timelinePeriod">2009.02부터 현재까지, 겹치는 달은 한 번만 계산</p></div>
+<a href="#projectsTitle" style="font-size:12px;color:#27697c;text-decoration:none;font-weight:700">아래에서 작업 추가·수정</a></div>
+<div class="timeline-kpis" id="timelineKpis"></div>
+<div class="timeline-progress" id="timelineProgress" role="img" aria-label="전체 기간별 근거 연결 현황"></div>
+<div class="timeline-legend">
+<span><i class="ins"></i>건강보험 재직</span><span><i class="free"></i>프리랜서 통합 수행</span>
+<span><i class="git"></i>개발 커밋 확인</span><span><i class="other"></i>추가 작업 기록</span>
+<span><i class="gap"></i>기간 미확인</span><span>◦ 표기월 단서 (개월 수 미반영)</span>
+</div>
+<div class="timeline-year-list" id="timelineYearList" aria-label="2009년부터 현재까지 월별 연결 현황"></div>
+<div class="timeline-focus" id="timelineFocus" role="status">색상으로 월별 기록 유형을 구분해. 한 달을 누르면 근거와 작업 내역을 볼 수 있어.</div>
+<div class="timeline-gaps"><h3 id="timelineGapTitle">추가 확인할 공백</h3><div class="timeline-gap-list" id="timelineGapList"></div></div>
+<p class="timeline-method" id="timelineMethod">월 단위 확인 현황. 보험 취득·상실일과 수행기록을 대조하지만 일부만 해당해도 그 달을 1개월로 표시하므로 실제 고용일수·KOSA 승인기간과 다릅니다. 이력이 미연결되었다고 실제 무직이었다는 뜻은 아닙니다.</p>
+</section>
 <section class="section"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
-<section class="section"><h2>회사·프로젝트별 작업</h2>
+<section class="section"><h2 id="projectsTitle">회사·프로젝트별 작업</h2>
 <div class="controls"><button id="addProject" class="btn" type="button">+ 작업 추가</button>
 <button id="backup" class="btn secondary" type="button">내 입력 백업</button>
 <button id="restore" class="btn secondary" type="button">백업 불러오기</button>
@@ -106,7 +163,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 const $=id=>document.getElementById(id);
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LEGACY='suaveforge:career:tasks:v1',STORAGE='suaveforge:career:state:v2';
-let base=[],fields=[],tasks=[],overrides={},editId=null,editBaseId=null;
+let base=[],fields=[],tasks=[],overrides={},editId=null,editBaseId=null,axis={},timelineMonths=[];
 const monthId=s=>{if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(s||''))return null;return Number(s.slice(0,4))*12+Number(s.slice(5))-1};
 function months(a,b){let x=monthId(a),y=monthId(b);if(x===null||y===null||y<x||y-x>600)return [];return Array.from({length:y-x+1},(_,i)=>x+i)}
 function inMonths(t){return Boolean(t.start&&t.end&&months(t.start,t.end).length)}
@@ -240,6 +297,86 @@ function sourceChip(company,state,share=null,color='',uncreditedCount=0){
   '" title="'+escape(title)+'" aria-label="'+escape(title+(credited?' · 기여 비중 '+share.toFixed(1)+'%':''))+
   '" tabindex="0">'+content+'</span>';
 }
+
+function currentSeoulMonth(){
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit'}).formatToParts(new Date());
+ const y=parts.find(p=>p.type==='year').value,m=parts.find(p=>p.type==='month').value;
+ return y+'-'+m;
+}
+function ymFromNumber(n){return String(Math.floor(n/12)).padStart(4,'0')+'-'+String(n%12+1).padStart(2,'0')}
+function timelineBuild(){
+ const start=monthId(axis.startMonth||'2009-02'),end=monthId(currentSeoulMonth());
+ if(start===null||end===null||start>end)return [];
+ const work=allRows().filter(p=>p.start&&p.end&&Array.isArray(p.categories)&&p.categories.length&&months(p.start,p.end).length);
+ const clues=new Map((axis.portfolioClues||[]).map(c=>[c.month,c.names||[]]));
+ const items=[];
+ for(let n=start;n<=end;n++){
+  const ym=ymFromNumber(n);
+  const ins=(axis.insurance||[]).filter(s=>s.start.slice(0,7)<=ym&&s.end.slice(0,7)>=ym);
+  const matching=work.filter(s=>monthId(s.start)<=n&&monthId(s.end)>=n);
+  let type='gap';
+  if(ins.length)type='insurance';
+  else if(matching.some(p=>p.rowId==='p19'))type='freelance';
+  else if(matching.some(p=>p.rowId==='p20'))type='git';
+  else if(matching.length)type='project';
+  items.push({ym,n,type,insurance:ins,projects:matching,hints:clues.get(ym)||[]});
+ }
+ return items;
+}
+function timelineGroups(items,mode){
+ const chunks=[];let group=null;
+ for(const item of items){
+  if(item.type!==mode){group=null;continue}
+  if(!group){group={start:item.ym,end:item.ym,length:0,clues:[]};chunks.push(group)}
+  group.end=item.ym;group.length++;
+  if(item.hints.length)group.clues.push(item.ym);
+ }
+ return chunks;
+}
+function timelineDetails(item){
+ const names=[...new Set(item.insurance.map(s=>s.company))];
+ const projects=[...new Set(item.projects.map(p=>p.company+' · '+p.title))];
+ const source=item.type==='insurance'?'건강보험 재직':item.type==='freelance'?'프리랜서 수행기록':item.type==='git'?'직접 개발 커밋':item.type==='project'?'추가 개발경력':'수행기간 미연결';
+ const lines=[item.ym+' · '+source];
+ if(names.length)lines.push('보험: '+names.join(' / '));
+ if(projects.length)lines.push('작업: '+projects.slice(0,4).join(' / ')+(projects.length>4?' 외 '+(projects.length-4)+'건':''));
+ if(item.hints.length)lines.push('포트폴리오 표기월 단서: '+item.hints.join(' / ')+' (기간 미산정)');
+ if(item.type==='gap')lines.push('이 달 수행 사실이 없다는 뜻은 아니며, 작업기간을 더 연결해야 합니다.');
+ return lines.join(' · ');
+}
+function renderTimeline(){
+ const monthsList=timelineBuild();timelineMonths=monthsList;if(!monthsList.length)return;
+ const counts={insurance:0,freelance:0,git:0,project:0,gap:0};
+ monthsList.forEach(x=>counts[x.type]++);
+ const total=monthsList.length,known=total-counts.gap,pct=known/total*100;
+ const end=monthsList[monthsList.length-1].ym;
+ $('timelinePeriod').textContent='2009.02 ~ '+end+' · '+total+'개월 / 같은 달 중복 제외';
+ $('timelineKpis').innerHTML=
+  '<div class="timeline-kpi"><span class="k-label">전체 조회기간</span><strong>'+total+'<small style="font-size:13px">개월</small></strong><span class="k-foot">2009년 2월부터 현재까지</span></div>'+
+  '<div class="timeline-kpi is-known"><span class="k-label">기간 근거 연결</span><strong>'+known+'<small style="font-size:13px">개월</small></strong><span class="k-foot">'+pct.toFixed(1)+'% 연결 · 겹침 제외</span></div>'+
+  '<div class="timeline-kpi is-gap"><span class="k-label">추가 확인 필요</span><strong>'+counts.gap+'<small style="font-size:13px">개월</small></strong><span class="k-foot">'+(timelineGroups(monthsList,'gap').length)+'개 구간</span></div>';
+ const colors={insurance:'#2b8073',freelance:'#668fb7',git:'#9078b6',project:'#8aabb4',gap:'#d76d65'};
+ $('timelineProgress').innerHTML=['insurance','freelance','git','project','gap'].map(type=>'<span style="width:'+(counts[type]/total*100).toFixed(4)+'%;background:'+colors[type]+'" title="'+escape(type+': '+counts[type]+'개월')+'"></span>').join('');
+ const map=new Map(monthsList.map(x=>[x.ym,x]));
+ const years=[...new Set(monthsList.map(x=>x.ym.slice(0,4)))];
+ $('timelineYearList').innerHTML=years.map(year=>{
+  let checked=0;const cells=Array.from({length:12},(_,i)=>{
+   const ym=year+'-'+String(i+1).padStart(2,'0'),item=map.get(ym);
+   if(!item)return '<span class="timeline-month void" aria-hidden="true"></span>';
+   if(item.type!=='gap')checked++;
+   return '<button type="button" class="timeline-month '+item.type+(item.hints.length?' hint':'')+'" data-timeline-month="'+ym+'" title="'+escape(timelineDetails(item))+'" aria-label="'+escape(timelineDetails(item))+'"></button>';
+  }).join('');
+  return '<div class="timeline-year"><span class="timeline-year-label">'+year+'</span><div class="timeline-months">'+cells+'</div><span class="timeline-year-foot">'+checked+'개월</span></div>';
+ }).join('');
+ const gapGroups=timelineGroups(monthsList,'gap');
+ $('timelineGapTitle').textContent='추가 확인할 공백 · '+gapGroups.length+'개 구간';
+ $('timelineGapList').innerHTML=gapGroups.length?gapGroups.map(g=>
+  '<div class="timeline-gap"><strong>'+g.start+(g.end!==g.start?' ~ '+g.end:'')+'</strong>'+
+  '<span>'+g.length+'개월 · '+(g.clues.length?'작업물 날짜 단서 '+g.clues.length+'개월':'수행기간 근거 미연결')+'</span>'+
+  '<button type="button" data-gap-start="'+g.start+'" data-gap-end="'+g.end+'">이 기간 작업 기록</button></div>'
+ ).join(''):'<div class="timeline-gap"><strong>현재 미연결 월 없음</strong><span>전체 조회기간에 수행월 기록이 있습니다.</span></div>';
+}
+
 function renderFields(){
  const rows=allRows(),master=careerMasterCompanies(rows);
  $('fields').innerHTML=fields.map(f=>{
@@ -280,7 +417,7 @@ function renderTable(){
   return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status==='review'?'review':'')+'">'+(p.status==='review'?'기간 미확정':'기간 입력')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
  }).join(''):'<tr><td colspan="6" class="empty">검색 결과가 없습니다.</td></tr>';
 }
-function redraw(){renderFields();renderTable()}
+function redraw(){renderTimeline();renderFields();renderTable()}
 
 function close(){editId=null;editBaseId=null;$('editor').hidden=true;$('taskForm').reset();$('formMsg').textContent=''}
 function openEdit(t,baseId=null){
@@ -346,6 +483,8 @@ async function restore(file){
  }catch(e){alert('불러오기 실패: '+e.message)}finally{$('restoreFile').value=''}
 }
 function setup(){
+ $('timelineYearList').addEventListener('click',e=>{const b=e.target.closest('[data-timeline-month]');if(!b)return;const item=timelineMonths.find(x=>x.ym===b.dataset.timelineMonth);if(item)$('timelineFocus').textContent=timelineDetails(item)});
+ $('timelineGapList').addEventListener('click',e=>{const b=e.target.closest('[data-gap-start]');if(!b)return;openEdit({start:b.dataset.gapStart,end:b.dataset.gapEnd,categories:[]})});
  $('categories').innerHTML=fields.map((f,i)=>'<label><input type="checkbox" value="'+escape(f.name)+'">'+escape(f.name)+'</label>').join('');
  $('companyOptions').innerHTML=[...new Set(base.map(p=>p.company))].map(s=>'<option value="'+escape(s)+'"></option>').join('');
  $('projectOptions').innerHTML=[...new Set(base.map(p=>p.title))].map(s=>'<option value="'+escape(s)+'"></option>').join('');
@@ -368,7 +507,7 @@ function setup(){
 async function main(){
  try{
  const r=await fetch('./data.json',{cache:'no-store'});if(!r.ok)throw Error('데이터 HTTP '+r.status);
- const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];
+ const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];axis=data.timeAxis||{};
  $('updated').textContent='기준 데이터 '+escape(data.updatedAt||'');
  $('notice').textContent='기존 프로젝트 수정과 신규 작업 입력으로 변경된 수행월을 중복 제외해 계산합니다. 이 브라우저에서만 저장되는 비공식 경력표입니다.';
  const state=stored();tasks=state.tasks;overrides=state.overrides;setup();redraw();
