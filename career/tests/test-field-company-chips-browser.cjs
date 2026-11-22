@@ -136,12 +136,12 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.recovery.actionButtons>=7,'every reconstruction group has direct date-entry control');
    assert.equal(stats.recovery.source2022,true,'MetaFastest Nov 2022 evidence shown');
    assert.equal(stats.recovery.source2023,true,'ZeroMax Aug 2023 evidence shown');
-   assert.match(await page.locator('[data-recovery-id="ZM"] .recovery-status').innerText(),/일부 기간 등록/,'ZeroMax recovered one month without claiming full project');
+   assert.match(await page.locator('[data-recovery-id="ZM"] .recovery-status').textContent(),/일부 기간 등록/,'ZeroMax recovered one month without claiming full project');
    await page.locator('[data-timeline-month="2023-08"]').click();
-   assert.match(await page.locator('#timelineFocus').innerText(),/추가 개발경력/,'August credited as dated project');
-   assert.match(await page.locator('#timelineFocus').innerText(),/Upodium 말 커스터마이징 웹/);
+   assert.match(await page.locator('#timelineFocus').textContent(),/추가 개발경력/,'August credited as dated project');
+   assert.match(await page.locator('#timelineFocus').textContent(),/Upodium 말 커스터마이징 웹/);
    await page.locator('[data-timeline-month="2023-10"]').click();
-   assert.match(await page.locator('#timelineFocus').innerText(),/추가 개발경력/,'October now credited by Telegram work evidence');
+   assert.match(await page.locator('#timelineFocus').textContent(),/추가 개발경력/,'October now credited by Telegram work evidence');
    assert.equal(stats.recovery.overlapNoCredit,true,'MetaCross activity milestone does not imply credited dates');
    assert.equal(stats.recovery.noHorizontalClip,true,'reconstruction groups fit inside card');
    await page.locator('[data-recovery-id="OL"] [data-recovery-project="p16"]').click();
@@ -151,8 +151,8 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.locator('#cancel').click();
    assert.equal(stats.totalOverflow,false,'no horizontal page overflow');
    await page.locator('[data-timeline-month="2025-08"]').click();
-   assert.match(await page.locator('#timelineFocus').innerText(),/기간 미연결/);
-   assert.match(await page.locator('#timelineFocus').innerText(),/활동 시점·자료 단서/);
+   assert.match(await page.locator('#timelineFocus').textContent(),/기간 미연결/);
+   assert.match(await page.locator('#timelineFocus').textContent(),/활동 시점·자료 단서/);
    await page.locator('[data-gap-start="2018-12"]').click();
    assert.equal(await page.locator('#start').inputValue(),'2018-12','gap shortcut pre-fills start month');
    assert.equal(await page.locator('#end').inputValue(),'2019-01','gap shortcut pre-fills end month');
