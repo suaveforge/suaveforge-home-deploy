@@ -1,8 +1,8 @@
 {
-  "version": 8,
+  "version": 9,
   "updatedAt": "2026-11-22",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
-  "notice": "2023년 2·3·11월 직접 수정된 Git 코드 월만 내부 경력월로 잠정 연결. 초기 템플릿·빌드 산출물·외부 예제·지원 메일은 근거 자료로 보관하고 수행기간 확정 전 가산하지 않음. 공식 KOSA 승인과 별개.",
+  "notice": "회사·프로젝트명은 증빙된 명칭만 사용하며 React Three Fiber(R3F) 등 기술명은 별도 작업내용에 표시합니다. 발주처/프로젝트명 미확인 Git 활동은 검증된 직접 코드 월만 내부 개발활동 기간에 잠정 반영하며 유상 수행 또는 KOSA 공식 인정경력으로 주장하지 않습니다.",
   "fields": [
     {
       "name": "웹 개발",
@@ -521,15 +521,15 @@
     },
     {
       "id": "p25",
-      "company": "프리랜서 / React3D 커스터마이저",
-      "title": "React·Three.js 3D 캐릭터 커스터마이징",
+      "company": "발주처 미확인",
+      "title": "3D 캐릭터 커스터마이징 웹 기능 개발 (프로젝트명 미확인)",
       "period": "2023-07",
       "start": "2023-07",
       "end": "2023-07",
       "categories": [
         "웹 개발"
       ],
-      "work": "React·Three.js 캐릭터 모델 커스터마이징 프론트엔드 구현 및 미사용 리소스 제거; 본인 기존 경력기술서의 React Fiber 웹 커스터마이저 작업과 코드 기록을 연결",
+      "work": "React·Three.js 캐릭터 모델 커스터마이징 프론트엔드 구현 및 미사용 리소스 제거; 본인 기존 경력기술서의 React Fiber 웹 커스터마이저 작업과 코드 기록을 연결 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "linked",
       "evidence": [
         {
@@ -542,7 +542,12 @@
       "verifiedCommitMonths": [
         "2023-07"
       ],
-      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "프리랜서 / React3D 커스터마이저",
+        "title": "React·Three.js 3D 캐릭터 커스터마이징"
+      }
     },
     {
       "id": "p26",
@@ -571,15 +576,15 @@
     },
     {
       "id": "p27",
-      "company": "프리랜서 / R3F 3D R&D",
-      "title": "React Three Fiber·Spine 머티리얼 실험",
+      "company": "발주처 미확인",
+      "title": "3D 렌더링·재질 표현 기술검증 (프로젝트명 미확인)",
       "period": "2023-12",
       "start": "2023-12",
       "end": "2023-12",
       "categories": [
         "웹 개발"
       ],
-      "work": "React Three Fiber 3D 렌더타깃·평면 표현 및 Spine 결합 머티리얼 테스트 코드; 개인 기술 R&D 기록이며 납품 실적 주장하지 않음",
+      "work": "React Three Fiber 3D 렌더타깃·평면 표현 및 Spine 결합 머티리얼 테스트 코드; 개인 기술 R&D 기록이며 납품 실적 주장하지 않음 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "linked",
       "evidence": [
         {
@@ -592,7 +597,12 @@
       "verifiedCommitMonths": [
         "2023-12"
       ],
-      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "프리랜서 / R3F 3D R&D",
+        "title": "React Three Fiber·Spine 머티리얼 실험"
+      }
     },
     {
       "id": "p28",
@@ -875,15 +885,15 @@
     },
     {
       "id": "p38",
-      "title": "React Fiber 초기 프로젝트 생성",
-      "company": "GitHub 개인 연구",
+      "title": "웹 프론트엔드 초기 환경 구성 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "기간 미확정",
       "start": "",
       "end": "",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.01.30 React 프로젝트 초기 생성 기록. Create React App 기본 템플릿이어서 실개발월 미가산.",
+      "work": "2023.01.30 React 프로젝트 초기 생성 기록. Create React App 기본 템플릿이어서 실개발월 미가산. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "review",
       "resourceOnly": true,
       "evidence": [
@@ -894,19 +904,24 @@
         }
       ],
       "sourceRepo": "programmer119/react-fiber-test1",
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "React Fiber 초기 프로젝트 생성"
+      }
     },
     {
       "id": "p39",
-      "title": "React Three Fiber 말 모델·텍스처 제어",
-      "company": "GitHub 개인 연구",
+      "title": "3D 말 모델·텍스처 제어 구현 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "2023.02",
       "start": "2023-02",
       "end": "2023-02",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.02.02 React Three Fiber src/App.js FBX 모델·TextureLoader·useTexture와 재질 처리 코드를 직접 수정. 해당 활동월만 잠정 반영.",
+      "work": "2023.02.02 React Three Fiber src/App.js FBX 모델·TextureLoader·useTexture와 재질 처리 코드를 직접 수정. 해당 활동월만 잠정 반영. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "linked",
       "evidence": [
         {
@@ -919,19 +934,24 @@
       "verifiedCommitMonths": [
         "2023-02"
       ],
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "React Three Fiber 말 모델·텍스처 제어"
+      }
     },
     {
       "id": "p40",
-      "title": "Unity WebGL 시간 동기화 빌드",
-      "company": "GitHub 개인 연구",
+      "title": "웹게임 시간 동기화 빌드 확인 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "기간 미확정",
       "start": "",
       "end": "",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.02.15 timesync 커밋의 WebGL HTML·빌드 산출물 확인. 원본 작성 코드 범위 확인 전 미가산.",
+      "work": "2023.02.15 timesync 커밋의 WebGL HTML·빌드 산출물 확인. 원본 작성 코드 범위 확인 전 미가산. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "review",
       "resourceOnly": true,
       "evidence": [
@@ -942,19 +962,24 @@
         }
       ],
       "sourceRepo": "programmer119/unitywebgl2",
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "Unity WebGL 시간 동기화 빌드"
+      }
     },
     {
       "id": "p41",
-      "title": "Svelte 로그인·서버 데이터 연동 화면",
-      "company": "GitHub 개인 연구",
+      "title": "로그인·서버 연동 화면 구현 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "2023.03",
       "start": "2023-03",
       "end": "2023-03",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.03.15 '서버/디비 연동' 커밋의 src/component/sign/sign.svelte 등 직접 수정 확인. 프론트엔드 활동 1개월만 연결. 서버·DB 분야는 미가산.",
+      "work": "2023.03.15 '서버/디비 연동' 커밋의 src/component/sign/sign.svelte 등 직접 수정 확인. 프론트엔드 활동 1개월만 연결. 서버·DB 분야는 미가산. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "linked",
       "evidence": [
         {
@@ -967,19 +992,24 @@
       "verifiedCommitMonths": [
         "2023-03"
       ],
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "Svelte 로그인·서버 데이터 연동 화면"
+      }
     },
     {
       "id": "p42",
-      "title": "Unity 3D 말 이동·경로 처리",
-      "company": "GitHub 개인 연구",
+      "title": "3D 경마 말 이동·경로 로직 개발 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "2023.03",
       "start": "2023-03",
       "end": "2023-03",
       "categories": [
         "PC 응용SW"
       ],
-      "work": "2023.03.21 HorseRacing-Circle에서 GameManagerCustom.cs, GameManagerCustomPath.cs, HorseRoot.cs 등 Unity C# 이동 경로 구현. PC 응용SW 분류는 임시이며 플랫폼이 확인되면 편집 필요.",
+      "work": "2023.03.21 HorseRacing-Circle에서 GameManagerCustom.cs, GameManagerCustomPath.cs, HorseRoot.cs 등 Unity C# 이동 경로 구현. PC 응용SW 분류는 임시이며 플랫폼이 확인되면 편집 필요. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "linked",
       "evidence": [
         {
@@ -992,19 +1022,24 @@
       "verifiedCommitMonths": [
         "2023-03"
       ],
-      "note": "2023.03.21 C# 구현 코드는 직접 확인. MetaFastest 등 발주처 관계와 원본 공개 허용범위 미확정. PC 응용SW 카테고리는 잠정 분류이며 KOSA 승인과 다름."
+      "note": "2023.03.21 C# 구현 코드는 직접 확인. MetaFastest 등 발주처 관계와 원본 공개 허용범위 미확정. PC 응용SW 카테고리는 잠정 분류이며 KOSA 승인과 다름. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "Unity 3D 말 이동·경로 처리"
+      }
     },
     {
       "id": "p43",
-      "title": "React Three Fiber 화면 캡처 초기 업로드",
-      "company": "GitHub 개인 연구",
+      "title": "3D 웹 화면 캡처 기능 검토 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "기간 미확정",
       "start": "",
       "end": "",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.10.10 R3F Canvas toDataURL 화면 캡처 코드 업로드 확인. 프로젝트 폴더의 forked 표기 때문에 원 작성 범위 확인 전 실개발 기간 미가산.",
+      "work": "2023.10.10 R3F Canvas toDataURL 화면 캡처 코드 업로드 확인. 프로젝트 폴더의 forked 표기 때문에 원 작성 범위 확인 전 실개발 기간 미가산. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "review",
       "resourceOnly": true,
       "evidence": [
@@ -1015,19 +1050,24 @@
         }
       ],
       "sourceRepo": "programmer119/r3f-screencapture",
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "React Three Fiber 화면 캡처 초기 업로드"
+      }
     },
     {
       "id": "p44",
-      "title": "React Router·Analytics 웹 라우팅",
-      "company": "GitHub 개인 연구",
+      "title": "웹 화면 라우팅·방문 통계 연동 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "2023.11",
       "start": "2023-11",
       "end": "2023-11",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.11.08 React Router의 BrowserRouter, Layout, Home·Blogs·Contact·404 라우트 소스 직접 변경 및 Analytics 태그 설정 확인. 11월 활동 1개월만 잠정 연결.",
+      "work": "2023.11.08 React Router의 BrowserRouter, Layout, Home·Blogs·Contact·404 라우트 소스 직접 변경 및 Analytics 태그 설정 확인. 11월 활동 1개월만 잠정 연결. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "linked",
       "evidence": [
         {
@@ -1040,19 +1080,24 @@
       "verifiedCommitMonths": [
         "2023-11"
       ],
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "React Router·Analytics 웹 라우팅"
+      }
     },
     {
       "id": "p45",
-      "title": "React Lottie 예제 보관",
-      "company": "GitHub 개인 연구",
+      "title": "웹 애니메이션 예제 보관 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "기간 미확정",
       "start": "",
       "end": "",
       "categories": [
         "웹 개발"
       ],
-      "work": "2023.11.17 React Lottie 샘플 업로드. README가 외부 원저작자·CodeSandbox를 명시하므로 직접 개발 실적으로 분류하지 않음.",
+      "work": "2023.11.17 React Lottie 샘플 업로드. README가 외부 원저작자·CodeSandbox를 명시하므로 직접 개발 실적으로 분류하지 않음. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "review",
       "resourceOnly": true,
       "evidence": [
@@ -1063,12 +1108,17 @@
         }
       ],
       "sourceRepo": "programmer119/lottie-animation-react-web",
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "React Lottie 예제 보관"
+      }
     },
     {
       "id": "p46",
-      "title": "SvelteKit·Bevy 초기 프로젝트 자료",
-      "company": "GitHub 개인 연구",
+      "title": "웹·게임 프레임워크 초기 환경 구성 (프로젝트명 미확인)",
+      "company": "발주처 미확인",
       "period": "기간 미확정",
       "start": "",
       "end": "",
@@ -1076,7 +1126,7 @@
         "웹 개발",
         "PC 응용SW"
       ],
-      "work": "2024.03.25 SvelteKit·Bevy 관련 프로젝트 초기 업로드 확인. 다수 자동 생성 파일/node_modules가 포함되므로 직접 구현 범위 확정 전 미가산.",
+      "work": "2024.03.25 SvelteKit·Bevy 관련 프로젝트 초기 업로드 확인. 다수 자동 생성 파일/node_modules가 포함되므로 직접 구현 범위 확정 전 미가산. 기술명은 프로젝트명이 아님; 회사·고유 프로젝트명은 확인 전.",
       "status": "review",
       "resourceOnly": true,
       "evidence": [
@@ -1087,7 +1137,12 @@
         }
       ],
       "sourceRepo": "programmer119/my-sveltekit-project",
-      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정."
+      "note": "직접 확인된 월만 내부 경력 데이터로 잠정 연결. 고객·회사 소속, 연속 수행기간, KOSA 공식 인정은 미확정. / 회사·발주처와 고유 프로젝트명은 현재 원본 근거로 확인되지 않음. 기술명(R3F=React Three Fiber 등)을 회사·프로젝트로 취급하지 않고 기능/활동명으로 기재. Git 커밋 월 및 증거 링크는 보존.",
+      "projectNameVerified": false,
+      "originalUnverifiedLabels": {
+        "company": "GitHub 개인 연구",
+        "title": "SvelteKit·Bevy 초기 프로젝트 자료"
+      }
     },
     {
       "id": "p47",
