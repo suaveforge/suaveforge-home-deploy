@@ -104,11 +104,11 @@ setImmediate(()=>{
  assert.ok(pc.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive stays unrelated in PC unless specifically classified');
  const pcShare=shares.fieldEmployerContributions(shares.allRows(),'PC 응용SW');
  assert.equal(pcShare.total,69,'PC field unique credited months unchanged');
- assert.equal(pcShare.entries.length,3,'two employers in NexonGT / UbiFun credited fractionally');
- assert.equal(Array.from(pcShare.entries,x=>x.percent).join(','),'63.8,18.1,18.1');
+ assert.equal(pcShare.entries.length,3,'NexonGT and UbiFun credited by correct separate employment months');
+ assert.equal(Array.from(pcShare.entries,x=>x.percent).join(','),'63.8,34,2.2');
  assert.equal(pcShare.entries.reduce((a,x)=>a+x.percent,0).toFixed(1),'100.0');
  assert.ok(pc.includes('class="field-share-track"'),'PC shows stacked employer progress');
- assert.ok(pc.includes('63.8%')&&pc.includes('18.1%'),'employer chips show weighted percentages');
+ assert.ok(pc.includes('63.8%')&&pc.includes('34.0%')&&pc.includes('2.2%'),'employer chips show weighted percentages');
  assert.ok(pc.includes('중복되는 월은 회사별로 균등 분배'),'overlap policy clearly communicated');
  const pcWidths=[...pc.matchAll(/class="field-share-segment" style="width:([\d.]+)%/g)]
   .map(x=>Number(x[1]));
@@ -116,7 +116,7 @@ setImmediate(()=>{
  assert.ok(Math.abs(pcWidths.reduce((a,b)=>a+b,0)-100)<0.001,'segments fill exactly the full credited share');
  const mobileShares=shares.fieldEmployerContributions(shares.allRows(),'모바일 앱');
  assert.equal(mobileShares.total,95,'existing mobile monthly count preserved');
- assert.equal(mobileShares.entries.length,7,'all seven mobile employer sources counted');
+ assert.equal(mobileShares.entries.length,8,'eight mobile employer sources include separate UbiFun and UbiFunStudio periods');
  assert.equal(mobileShares.entries.reduce((a,x)=>a+x.percent,0).toFixed(1),'100.0');
  const aiShare=shares.fieldEmployerContributions(shares.allRows(),'AI 개발');
  assert.equal(aiShare.total,1,'three local projects in the same month count once');
