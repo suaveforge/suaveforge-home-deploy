@@ -91,7 +91,7 @@ setImmediate(()=>{
    counts.join(','),'every company classified once across three states in '+fieldName);
   const markup=field(fieldName);
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(m=>m[1]);
-  const rosterKeys=new Set(roster.map(item=>item.id));
+  const rosterKeys=new Set(roster.map(item=>item.id.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))));
   assert.ok([...rosterKeys].every(id=>ids.includes(id)),'every master employer displayed, '+fieldName);
   assert.equal(new Set(ids).size,ids.length,'no repeated source in three groups, '+fieldName);
   assert.ok(ids.filter(id=>!rosterKeys.has(id)).every(id=>id==='발주처미확인'),'only unknown-customer Git contributions may add a non-master source');
