@@ -75,7 +75,7 @@ setImmediate(()=>{
  const pcShare=shares.fieldEmployerContributions(shares.allRows(),'PC 응용SW');
  assert.equal(pcShare.total,69,'PC field unique credited months unchanged');
  assert.equal(pcShare.entries.length,3,'two employers in NexonGT / UbiFun credited fractionally');
- assert.deepEqual(pcShare.entries.map(x=>x.percent),[63.8,18.1,18.1]);
+ assert.equal(Array.from(pcShare.entries,x=>x.percent).join(','),'63.8,18.1,18.1');
  assert.equal(pcShare.entries.reduce((a,x)=>a+x.percent,0).toFixed(1),'100.0');
  assert.ok(pc.includes('class="field-share-track"'),'PC shows stacked employer progress');
  assert.ok(pc.includes('63.8%')&&pc.includes('18.1%'),'employer chips show weighted percentages');
@@ -90,7 +90,7 @@ setImmediate(()=>{
  assert.equal(mobileShares.entries.reduce((a,x)=>a+x.percent,0).toFixed(1),'100.0');
  const aiShare=shares.fieldEmployerContributions(shares.allRows(),'AI 개발');
  assert.equal(aiShare.total,1,'three local projects in the same month count once');
- assert.deepEqual(aiShare.entries.map(x=>x.percent),[50,50],'repeated task from one employer does not inflate share');
+ assert.equal(Array.from(aiShare.entries,x=>x.percent).join(','),'50,50','repeated task from one employer does not inflate share');
  assert.equal(aiShare.entries.reduce((a,x)=>a+x.percent,0),100);
  assert.ok(ai.includes('50.0%'),'local added work is included in company share bar');
  const blockchain=field('블록체인');
