@@ -144,6 +144,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.match(await page.locator('#timelineFocus').textContent(),/추가 개발경력/,'October now credited by Telegram work evidence');
    assert.equal(stats.recovery.overlapNoCredit,true,'MetaCross activity milestone does not imply credited dates');
    assert.equal(stats.recovery.noHorizontalClip,true,'reconstruction groups fit inside card');
+   await page.locator('#careerRecovery summary').click();
    await page.locator('[data-recovery-id="OL"] [data-recovery-project="p16"]').click();
    assert.equal(await page.locator('#company').inputValue(),'프리랜서 / 온더라이브','on-the-live edit pre-fills company');
    assert.equal(await page.locator('#start').inputValue(),'','no invented start date from payment');
