@@ -129,7 +129,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <h1>개발 경력 현황</h1><p>회사·프로젝트별 작업과 분야별 경력기간 복원 진행도</p>
 <div class="notice" id="notice">경력 기준을 불러오는 중입니다.</div>
 
-<section class="section" id="careerFields"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
+<section class="section" id="careerFields"><h2>분야별 경력 복원</h2><p class="note">건강보험 재직·유상 수행이 확인된 월만 경력 게이지에 반영합니다. Git 개발활동 기록은 별도 보존합니다.</p><div class="grid" id="fields"></div></section>
 <section class="timeline-section" id="careerTimeline" aria-labelledby="timelineTitle">
 <div class="timeline-header"><div><h2 id="timelineTitle">전체 경력 · 공백 점검</h2>
 <p class="timeline-caption" id="timelinePeriod">2009.02부터 현재까지, 겹치는 달은 한 번만 계산</p></div>
@@ -174,10 +174,10 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 </form>
 </div>
 <div class="controls"><input id="search" type="search" class="field-input" style="max-width:310px" placeholder="회사·프로젝트·기술 검색" aria-label="검색">
-<select class="field-input" id="filter" style="max-width:175px" aria-label="기간 상태"><option value="all">전체</option><option value="linked">기간 입력</option><option value="review">기간 미확정</option><option value="resource">참고자료(미반영)</option></select></div>
+<select class="field-input" id="filter" style="max-width:175px" aria-label="기간 상태"><option value="all">전체</option><option value="linked">기간 입력</option><option value="review">기간 미확정</option><option value="resource">증빙대기·참고자료</option></select></div>
 <div class="tablebox"><table><thead><tr><th>회사·발주처</th><th>프로젝트명·수행작업</th><th>기간</th><th>작업 내용 / 경력분야</th><th>상태</th><th>작업 추가·편집</th></tr></thead>
 <tbody id="projects"><tr><td colspan="6" class="empty">데이터를 불러오는 중입니다.</td></tr></tbody></table></div>
-<p class="note">입력 내용은 이 브라우저에만 저장되며 자동 동기화되지 않습니다. 발주처·프로젝트명이 확인되지 않은 단서는 참고자료이며, 별도로 검증한 직접 Git 코드 활동월은 내부 개발활동으로 잠정 반영합니다. 기술명은 회사·고유 프로젝트명이 아닙니다. KOSA 공식 인정경력과는 별개입니다.</p>
+<p class="note">입력 내용은 이 브라우저에만 저장됩니다. Git 커밋이나 프로젝트명만으로는 회사·유급 경력이 되지 않으며, 개발활동 증거는 별도로 보존합니다. 건강보험·유상 수행 증빙이 연결된 월만 경력 게이지에 반영합니다. KOSA 공식 인정경력과는 별개입니다.</p>
 </section><div class="footer">SuaveForge Career · 신고 목표 대비 경력 복원 현황</div></div>
 <script>
 "use strict";
@@ -205,7 +205,7 @@ function hasVerifiedGitActivity(row){
 function isCreditable(row){
  return inMonths(row)&&(hasSpecificIdentity(row)||hasVerifiedGitActivity(row))&&!(row.resourceOnly&&!row.edited);
 }
-function status(t){return isCreditable(t)?'linked':inMonths(t)?'resource':'review'}
+function status(t){return careerStatus(t)}
 
 function stored(){
  try{
@@ -221,7 +221,7 @@ function stored(){
 }
 function persist(){try{localStorage.setItem(STORAGE,JSON.stringify({tasks,overrides}));return true}catch{return false}}
 function baseRow(p){
- const x=overrides[p.id];if(!x)return {...p,kind:'base',rowId:p.id,edited:false};
+ const x=overrides[p.id];if(!x)return {...p,kind:'base',rowId:p.id,edited:false,status:careerStatus(p)};
  const start=x.start||'',end=x.end||'';
  const row={...p,company:x.company,title:x.project,work:x.work,start,end,categories:x.categories,
   kind:'base',rowId:p.id,edited:true};
@@ -244,16 +244,48 @@ function careerEmployers(company){
 function careerCompanyKey(company){
  return String(company||'').normalize('NFKC').replace(/\s+/g,'').toLowerCase();
 }
+// Only insured employer months or proven paid engagements can fill the
+// professional-career gauge. Git activity remains in the separate activity timeline.
+function isVerifiedEmployerMonth(company,n){
+ const id=careerCompanyKey(company);
+ const insured=(axis.insurance||[]).some(item=>
+  careerCompanyKey(item.company)===id&&
+  monthId(String(item.start||'').slice(0,7))!==null&&
+  monthId(String(item.end||'').slice(0,7))!==null&&
+  n>=monthId(String(item.start).slice(0,7))&&n<=monthId(String(item.end).slice(0,7)));
+ if(insured)return true;
+ return (axis.verifiedPaidEngagements||[]).some(item=>
+  item.verified===true&&item.proofType==='paid_contract_or_payment'&&
+  careerCompanyKey(item.company)===id&&
+  monthId(item.start)!==null&&monthId(item.end)!==null&&
+  n>=monthId(item.start)&&n<=monthId(item.end));
+}
+function eligibleEmployersInMonth(row,n){
+ if(!isCreditable(row))return [];
+ return [...new Set(careerEmployers(row.company))]
+  .filter(company=>isVerifiedEmployerMonth(company,n));
+}
+function careerCreditedMonths(row){
+ return isCreditable(row)?months(row.start,row.end)
+  .filter(n=>eligibleEmployersInMonth(row,n).length>0):[];
+}
+function careerStatus(row){
+ if(careerCreditedMonths(row).length)return 'linked';
+ if(isCreditable(row)||inMonths(row))return 'resource';
+ return 'review';
+}
 function careerMasterCompanies(rows){
- // Original and locally added records form the same complete master roster
- // for every field. Never infer suitability from a company name.
+ // The roster is real employers + separately verified paying clients,
+ // never arbitrary Git project labels or unknown customer placeholders.
  const names=new Map();
- for(const row of rows){
-  for(const employer of careerEmployers(row.company)){
-   const id=careerCompanyKey(employer);
-   if(['발주처미확인','github개인연구','외주지원·포트폴리오기록'].includes(id))continue;
-   if(id&&!names.has(id))names.set(id,employer);
-  }
+ for(const employer of axis.insurance||[]){
+  const id=careerCompanyKey(employer.company);
+  if(id&&!names.has(id))names.set(id,employer.company);
+ }
+ for(const payer of axis.verifiedPaidEngagements||[]){
+  if(payer.verified!==true||payer.proofType!=='paid_contract_or_payment')continue;
+  const id=careerCompanyKey(payer.company);
+  if(id&&!names.has(id))names.set(id,payer.company);
  }
  return [...names].map(([id,company])=>({id,company}));
 }
@@ -264,7 +296,7 @@ function fieldEmployerStates(rows,category,master){
   for(const employer of careerEmployers(row.company)){
    const item=byId.get(careerCompanyKey(employer));
    if(item){
-    if(isCreditable(row))item.credited++;
+    if(careerCreditedMonths(row).length&&careerCreditedMonths(row).some(n=>isVerifiedEmployerMonth(employer,n)))item.credited++;
     else item.uncredited++;
    }
   }
@@ -287,18 +319,15 @@ const FIELD_SHARE_COLORS=['#337e98','#5b9d80','#b48a50','#8278b2','#af768e','#60
 function fieldEmployerContributions(rows,category){
  const names=new Map(),byMonth=new Map();
  for(const row of rows){
-  if(!Array.isArray(row.categories)||!row.categories.includes(category)||!isCreditable(row))continue;
+  if(!Array.isArray(row.categories)||!row.categories.includes(category)||!careerCreditedMonths(row).length)continue;
   const employers=careerEmployers(row.company);
-  for(const employer of employers){
-   const identity=employer.normalize('NFKC').replace(/\s+/g,'').toLowerCase();
-   if(identity&&!names.has(identity))names.set(identity,employer);
-  }
-  for(const month of months(row.start,row.end)){
+  for(const month of careerCreditedMonths(row)){
+   const verified=eligibleEmployersInMonth(row,month);
    let active=byMonth.get(month);
    if(!active){active=new Set();byMonth.set(month,active)}
-   for(const employer of employers){
-    const identity=employer.normalize('NFKC').replace(/\s+/g,'').toLowerCase();
-    if(identity)active.add(identity);
+   for(const employer of verified){
+    const identity=careerCompanyKey(employer);
+    if(identity){active.add(identity);if(!names.has(identity))names.set(identity,employer)}
    }
   }
  }
@@ -443,9 +472,12 @@ function renderTimeline(){
 function renderFields(){
  const rows=allRows(),master=careerMasterCompanies(rows);
  $('fields').innerHTML=fields.map(f=>{
-  const actual=new Set(rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name)&&isCreditable(t)).flatMap(t=>months(t.start,t.end)));
-  const total=actual.size,target=Number(f.target),delta=total-Number(f.linked),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
-  const diff=delta===0?'기준과 동일':(delta>0?'+':'')+delta+'개월 변화';
+  const related=rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name));
+  const actual=new Set(related.flatMap(careerCreditedMonths));
+  const activity=new Set(related.filter(isCreditable).flatMap(t=>months(t.start,t.end)));
+  const total=actual.size,activityMonths=activity.size,waiting=activityMonths-total;
+  const target=Number(f.target),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
+  const diff=waiting>0?'개발활동 '+activityMonths+'개월 중 증빙대기 '+waiting+'개월':'검토대기 개발활동 없음';
   const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
   const shares=contributions.entries;
@@ -477,12 +509,12 @@ function renderTable(){
  $('count').textContent=rows.length+'건';
  $('projects').innerHTML=rows.length?rows.map(p=>{
   const local=p.kind==='local',cats=p.categories?.length?'<div class="work-entry">'+p.categories.map(escape).join(' · ')+'</div>':'';
-  const label=p.status==='resource'?'<span class="saved-tag">참고자료 · 게이지 0개월</span>':
+  const label=p.status==='resource'?'<span class="saved-tag">'+(isCreditable(p)?'개발활동 확인 · 경력 증빙 대기':'참고자료 · 게이지 0개월')+'</span>':
    local?'<span class="saved-tag">내 입력</span>':p.edited?'<span class="saved-tag">원본 수정</span>':'';
   const id=escape(p.rowId);
   const buttons=local?'<button class="btn secondary tiny" data-action="edit" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="delete" data-id="'+id+'">삭제</button>'
    :'<button class="btn secondary tiny" data-action="editbase" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="add" data-id="'+id+'">+ 작업 추가</button>'+(p.edited?' <button class="btn secondary tiny" data-action="resetbase" data-id="'+id+'">원본 복원</button>':'');
-  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+evidenceMarkup(p)+'</td><td><span class="pill '+(p.status!=='linked'?'review':'')+'">'+(p.status==='linked'?'반영':p.status==='resource'?'자료 보관 · 미반영':'기간 미확정')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
+  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+evidenceMarkup(p)+'</td><td><span class="pill '+(p.status!=='linked'?'review':'')+'">'+(p.status==='linked'?'경력 반영':p.status==='resource'?'경력 미반영 · 증빙대기':'기간 미확정')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
  }).join(''):'<tr><td colspan="6" class="empty">검색 결과가 없습니다.</td></tr>';
 }
 function redraw(){renderRecovery();renderTimeline();renderFields();renderTable()}
@@ -588,7 +620,7 @@ async function main(){
  const r=await fetch('./data.json',{cache:'no-store'});if(!r.ok)throw Error('데이터 HTTP '+r.status);
  const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];axis=data.timeAxis||{};
  $('updated').textContent='기준 데이터 '+escape(data.updatedAt||'');
- $('notice').textContent='기술명과 회사·프로젝트명을 구분합니다. 발주처 미확인인 경우 명칭을 임의로 만들지 않으며, 직접 검증된 Git 코드 활동월은 내부 개발활동으로만 잠정 연결합니다. KOSA 공식 승인경력은 아닙니다. 개인 수정사항은 현재 브라우저에 별도 보관됩니다.';
+ $('notice').textContent=data.notice||'건강보험 재직·유상 수행이 확인된 월만 분야별 경력 게이지에 반영하고, Git 개발활동은 경력과 분리하여 증빙 대기 자료로 보관합니다.';
  const state=stored();tasks=state.tasks;overrides=state.overrides;setup();redraw();
  }catch(e){$('projects').innerHTML='<tr><td colspan="6" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';$('notice').textContent=e.message}
 }

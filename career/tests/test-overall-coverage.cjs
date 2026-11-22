@@ -66,6 +66,6 @@ setImmediate(()=>{
  assert.equal((el('timelineGapList').innerHTML.match(/data-gap-start=/g)||[]).length,7);
  assert.ok(el('timelineYearList').innerHTML.indexOf('data-timeline-month="2009-02"')<el('timelineYearList').innerHTML.indexOf('data-timeline-month="2026-11"'));
  assert.equal((el('fields').innerHTML.match(/<article class="field">/g)||[]).length,9,'unchanged field cards');
- assert.ok(el('fields').innerHTML.includes('114 / 120개월'),'full MORPG 16 months included in web progress');
+ assert.ok(el('fields').innerHTML.includes('82 / 120개월'),'only insured and paid-verified web work fills career progress');
  console.log('CAREER_OVERALL_TIMELINE_214_MONTHS_194_LINKED_20_UNLINKED_8_GROUPS_PASS');
 });

@@ -1,8 +1,8 @@
 {
-  "version": 13,
+  "version": 14,
   "updatedAt": "2026-11-22",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
-  "notice": "검증된 Git 및 Telegram 실제 개발 작업 월만 내부 경력 게이지에 잠정 연결합니다. U.Podium 등 서비스명과 법적 고용·발주처는 별개이며 KOSA 공식 인정기간이 아닙니다. private Telegram 원문·비밀번호·키는 공개하지 않습니다.",
+  "notice": "분야별 경력 게이지는 건강보험 재직 회사의 실제 재직월과 유상 수행 증빙이 확인된 거래처만 계산합니다. Git 커밋·개인 프로젝트·발주처 미확인 개발활동은 삭제하지 않고 증빙 대기 자료로 별도 보존합니다. KOSA 공식 승인경력과는 별개입니다.",
   "fields": [
     {
       "name": "웹 개발",
@@ -407,7 +407,7 @@
       "company": "SuaveForge",
       "title": "KIMSE 웹 MVP·Evidence 페이지",
       "period": "2026.09–2026.11",
-      "work": "KIMSE 웹 MVP와 Evidence 데이터·근거 페이지 직접 구현. GitHub suaveforge/kimse에서 2026년 9·10·11월 개발 커밋 확인. 웹 분야의 월별 활동 3개월 잠정 반영.",
+      "work": "KIMSE 웹 MVP와 Evidence 데이터·근거 페이지 직접 구현. GitHub suaveforge/kimse에서 2026년 9·10·11월 개발 커밋 확인. 웹 개발활동 3개월 확인. 유상 수행·고용 증빙 미연결이므로 경력 게이지에서는 제외.",
       "status": "linked",
       "id": "p20",
       "categories": [
@@ -2038,6 +2038,13 @@
         "note": "포트폴리오 게시월은 제작기간이 아님. 개별 저장소/프로젝트별 날짜를 우선 복원하고, 기존 KIMSE 월과 중복 가산 금지."
       }
     ],
-    "reconstructionDisclaimer": "GitHub 작성·커밋 일자가 모두 맞고 식별되는 코드·프로젝트가 있는 활동월만 내부 복원(중간 무커밋월 미산정). MetaFastest 사건 관련 추가 공개·경력가산은 보류. 정확한 계약일/사업소속/KOSA 공식 인정은 별도."
+    "reconstructionDisclaimer": "GitHub 작성·커밋 일자가 모두 맞고 식별되는 코드·프로젝트가 있는 활동월만 내부 복원(중간 무커밋월 미산정). MetaFastest 사건 관련 추가 공개·경력가산은 보류. 정확한 계약일/사업소속/KOSA 공식 인정은 별도.",
+    "verifiedPaidEngagements": []
+  },
+  "careerSourcePolicy": {
+    "counted": "건강보험 재직으로 입증된 해당 월 또는 유상 수행 증빙이 확인된 계약월만 분야별 경력 게이지에 산정",
+    "uncounted": "Git 커밋·개인 프로젝트·조직명 미확인·증빙 전 외주 활동월은 개발활동 기록으로 보존하고 경력 게이지에서 제외",
+    "proofTypes": "건강보험 자격득실, 계약·용역확인, 입금·원천징수·세금계산서 등 근거와 사업별 업무기간",
+    "caveat": "소프트웨어기술자 경력신고 인정과 별개의 내부 증빙 정리; 자료가 없는 것을 무급·미수행으로 판정하지 않음"
   }
 }
