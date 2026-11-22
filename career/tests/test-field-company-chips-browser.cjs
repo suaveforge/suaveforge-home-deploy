@@ -123,7 +123,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.timeline.years,18,'2009 to 2026 year grid');
    assert.equal(stats.timeline.gapGroups,7,'7 unlinked intervals');
    assert.ok(stats.timeline.summary.includes('202')&&stats.timeline.summary.includes('12'),'202 months linked, 12 need verification');
-   assert.equal(stats.timeline.topOrder,true,'timeline goes before the nine field progress cards');
+   assert.equal(stats.timeline.topOrder,false,'retain existing field cards above the career timeline');
    assert.equal(stats.timeline.hasNoHorizontalClip,true,'each year row fits inside timeline card');
       assert.ok((await page.locator('#projects').innerText()).includes('참고자료 · 게이지 0개월'),'dated generic freelance preserved without credit');
    const resourceFilter=page.locator('#filter');
