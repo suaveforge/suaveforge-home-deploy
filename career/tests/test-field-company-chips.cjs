@@ -61,7 +61,7 @@ setImmediate(()=>{
  assert.ok(web.includes('MetaFastest')&&web.includes('MetaCross'),'two freelance clients with same two-character abbreviation must both remain');
  const ai=field('AI 개발');
  assert.ok(ai.includes('>테스</span>')&&ai.includes('>알파</span>'),'dynamic local tasks displayed');
- assert.equal((ai.match(/title="반영된 경력 · 테스트회사"/g)||[]).length,1,'same company appears once within credited row');
+ assert.equal((ai.match(/title="반영된 경력 · 테스트회사 · 별도 미반영 작업 1건"/g)||[]).length,1,'same company appears once within credited row');
  assert.ok(ai.includes('1 / 60개월'),'overlapping months not counted twice');
  assert.ok(ai.includes('>검토</span>'),'uncredited source displayed');
  assert.equal((ai.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,1,'uncredited group exists once per field');
