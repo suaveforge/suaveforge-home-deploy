@@ -7,6 +7,7 @@ on:
       - 'career/data.json'
       - 'career/tests/test-field-company-chips.cjs'
       - 'career/tests/test-field-company-chips-browser.cjs'
+      - 'career/tests/test-overall-coverage.cjs'
       - '.github/workflows/career-field-company-chips.yml'
   pull_request:
     branches: [main]
@@ -15,6 +16,7 @@ on:
       - 'career/data.json'
       - 'career/tests/test-field-company-chips.cjs'
       - 'career/tests/test-field-company-chips-browser.cjs'
+      - 'career/tests/test-overall-coverage.cjs'
       - '.github/workflows/career-field-company-chips.yml'
   workflow_dispatch:
 permissions:
@@ -32,6 +34,10 @@ jobs:
         run: |
           node career/tests/test-field-company-chips.cjs
           echo CAREER_FIELD_COMPANY_SOURCE_CHIPS_PASS
+      - name: Validate 2009-to-current overall career coverage and missing intervals
+        run: |
+          node career/tests/test-overall-coverage.cjs
+          echo CAREER_OVERALL_COVERAGE_PASS
       - name: Real Chrome desktop/mobile source chip visual check
         run: |
           npm install --prefix "$RUNNER_TEMP/career-chip-qa" --no-save --no-package-lock --ignore-scripts playwright-core@1.56.1
