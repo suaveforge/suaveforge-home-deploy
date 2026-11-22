@@ -114,7 +114,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.masterKeysConsistent,true,'all nine fields enumerate the identical master roster');
    assert.equal(stats.ontheliveWebState.pending,true,'OnTheLive web history must appear under uncredited');
    assert.equal(stats.ontheliveWebState.notApplicable,false,'OnTheLive must not appear under not applicable for web');
-   assert.equal(stats.ontheliveWebState.months,'98 / 120개월','no extra months from unverified OnTheLive time');
+   assert.equal(stats.ontheliveWebState.months,'114 / 120개월','MORPG 16 web months now credited while OnTheLive remains unverified');
    assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));

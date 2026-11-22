@@ -59,16 +59,23 @@ setImmediate(()=>{
  assert.ok(web.includes('>위메</span>'),'Wemade unconfirmed period');
  assert.ok(web.includes('<span class="field-source-label">미반영</span>'),'uncredited row is explicitly labeled');
  assert.ok(web.includes('class="field-source-chip pending" data-master-company="온더라이브"'),'OnTheLive is related web work without credited months');
- assert.ok(web.includes('class="field-source-chip pending" data-master-company="유비펀"'),'self-reported vanilla JS chat front is a web candidate, not a credited month');
- assert.ok(web.includes('class="field-source-chip pending" data-master-company="유비펀스튜디오"'),'same project continued under studio, but dates remain unconfirmed');
+ assert.ok(web.includes('class="field-source-chip credited" data-master-company="유비펀"'),'Node.js and vanilla JS development from 2015.05 to 2016.01 is credited');
+ assert.ok(web.includes('class="field-source-chip credited" data-master-company="유비펀스튜디오"'),'same project credited for 2016.02 to 2016.08');
  assert.ok(web.includes('title="온더라이브 · 미반영"'),'OnTheLive remains period-unverified');
  assert.ok(!web.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive must not show as not applicable for web');
- assert.ok(web.includes('98 / 120개월'),'OnTheLive does not fabricate any additional web months');
+ assert.ok(web.includes('114 / 120개월'),'MORPG Node and vanilla JS work adds 16 credited web months without fabricating OnTheLive months');
  assert.ok(web.includes('MetaFastest')&&web.includes('MetaCross'),'two freelance clients with same two-character abbreviation must both remain');
  assert.ok(web.includes('class="field-source-chip pending" data-master-company="프리랜서"'),'undated/generic freelance resources remain visible as uncredited');
  const freelanceSummary=shares=>shares.allRows().find(x=>x.rowId==='p19');
  assert.equal((ctx.__careerShareTest?.allRows?.()||[]).find(x=>x.rowId==='p19')?.status,'resource','generic 19 months kept as resource');
  assert.ok($('projects').innerHTML.includes('참고자료 · 게이지 0개월'),'project table explicitly marks excluded 19-month umbrella');
+ for(const [cat,total] of [['서버 개발',83],['DB 개발',51],['백엔드',103]]){
+  const markup=field(cat);
+  assert.ok(markup.includes(total+' / '+(cat==='백엔드'?120:156)+'개월'),'credited 16 extra MORPG months in '+cat);
+  assert.ok(markup.includes('title="유비펀 · 9개월"')&&markup.includes('title="유비펀스튜디오 · 7개월"'),'correct employer split for '+cat);
+ }
+ assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),'web months split 9 + 7');
+ assert.equal((ctx.__careerShareTest?.allRows?.()||[]).filter(p=>['p53','p54'].includes(p.rowId)).length,2,'both company periods separately tracked');
  const ai=field('AI 개발');
  assert.ok(ai.includes('>테스</span>')&&ai.includes('>알파</span>'),'dynamic local tasks displayed');
  assert.equal((ai.match(/title="테스트회사 · 1개월"/g)||[]).length,2,'badge and stacked chart both show concise credited months');
@@ -102,7 +109,7 @@ setImmediate(()=>{
   assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
  };
  expectStates('PC 응용SW',[4,0,18]);
- expectStates('웹 개발',[8,6,8]);
+ expectStates('웹 개발',[10,4,8]);
  expectStates('AI 개발',[2,2,18]);
  expectStates('블록체인',[0,2,20]);
  for(const f of data.fields)expectStates(f.name,
