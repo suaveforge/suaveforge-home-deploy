@@ -58,7 +58,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       const keys=badges.map(el=>el.dataset.masterCompany);
       const groups=['credited','pending','unrelated'];
       const sum=groups.reduce((n,c)=>n+card.querySelectorAll('.field-source-chip.'+c).length,0);
-      return badges.length===13&&new Set(keys).size===13&&keys.every(Boolean)&&sum===13;
+      return badges.length===15&&new Set(keys).size===15&&keys.every(Boolean)&&sum===15;
      }),
      masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).sort().join('|'))
       .every((keys,_,all)=>keys===all[0]),
@@ -83,16 +83,16 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.creditedBadges>=15,'credit source labels across nine fields');
    assert.ok(stats.pendingBadges>=3,'unconfirmed work has its own labels');
    assert.equal(stats.companyShareTracks,7,'each credited field shows one proportion bar');
-   assert.equal(stats.shownShareLabels,19,'all currently credited company tags display their share');
+   assert.equal(stats.shownShareLabels,31,'all currently credited company tags display their share');
    assert.equal(stats.companyShareCorrect,true,'company share lengths and shown percentages total 100%');
    assert.deepEqual(stats.companySharesOverflow,[],'share bar stays within every card');
    assert.equal(stats.uncreditedRows,9,'all fields visibly show uncredited row');
    assert.equal(stats.unrelatedRows,9,'all fields show third not-applicable group');
-   assert.equal(stats.fullMasterMatrix,true,'each field contains all 13 base master companies exactly once');
+   assert.equal(stats.fullMasterMatrix,true,'each field contains all 15 base master companies exactly once');
    assert.equal(stats.masterKeysConsistent,true,'all nine fields enumerate the identical master roster');
    assert.equal(stats.ontheliveWebState.pending,true,'OnTheLive web history must appear under uncredited');
    assert.equal(stats.ontheliveWebState.notApplicable,false,'OnTheLive must not appear under not applicable for web');
-   assert.equal(stats.ontheliveWebState.months,'4 / 120개월','no extra months from unverified OnTheLive time');
+   assert.equal(stats.ontheliveWebState.months,'88 / 120개월','no extra months from unverified OnTheLive time');
    assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
