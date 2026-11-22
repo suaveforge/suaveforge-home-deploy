@@ -107,6 +107,22 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .timeline-method{font-size:11px;color:#748592;line-height:1.65;margin:13px 0 0}
 @media(max-width:760px){.timeline-section{padding:16px 13px}.timeline-year-list{grid-template-columns:1fr}.timeline-kpi strong{font-size:21px}.timeline-gap-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.timeline-kpis{gap:6px}.timeline-kpi{padding:11px 8px}.timeline-kpi strong{font-size:18px}.timeline-kpi .k-label{font-size:10px}.timeline-year{gap:6px;padding:7px 4px}.timeline-months{gap:2px}.timeline-month{height:15px}.timeline-year-foot{min-width:44px}.timeline-gap-list{grid-template-columns:1fr}}
+
+.recovery{margin:18px 0 24px;border-top:1px solid #e4eaef;padding-top:18px}
+.recovery h3{font-size:17px;margin:0 0 7px}
+.recovery>p{font-size:12px;line-height:1.65;margin:0 0 12px}
+.recovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.recovery-item{border:1px solid #e1e8ed;border-radius:9px;background:#fbfcfd;padding:14px 15px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.recovery-head{display:flex;justify-content:space-between;align-items:start;gap:8px}
+.recovery-head strong{font-size:14px}.recovery-status{font-size:11px;white-space:nowrap;color:#ad6135;background:#fff2e7;padding:3px 6px;border-radius:4px}
+.recovery-kind{color:#536b7c;font-size:12px}.recovery-work{font-size:12px;color:#344d5d;line-height:1.55}
+.recovery-milestones{display:flex;gap:5px;flex-wrap:wrap}
+.recovery-milestones span{font-size:11px;padding:4px 7px;background:#eef3f7;border:1px solid #dfe8ef;border-radius:5px;color:#526979}
+.recovery-evidence{font-size:11px;color:#748391;line-height:1.55}
+.recovery-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:4px}
+.recovery-actions button{border:1px solid #bad2dc;background:#e7f4f7;border-radius:6px;padding:7px 9px;font-size:12px;font-weight:700;color:#27677b;cursor:pointer}
+.recovery-actions button:hover{background:#d9edf1}.recovery-actions button:focus-visible{outline:2px solid #27677b}
+@media(max-width:760px){.recovery-grid{grid-template-columns:1fr}}
 </style>
 </head><body><div class="wrap"><header class="top"><div class="logo"><a href="/">SUAVEFORGE</a> <span style="font-weight:400;color:#89939e">/ CAREER</span></div><div class="meta" id="updated">데이터 확인 중</div></header>
 <h1>개발 경력 현황</h1><p>회사·프로젝트별 작업과 분야별 경력기간 복원 진행도</p>
@@ -121,8 +137,11 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <div class="timeline-legend">
 <span><i class="ins"></i>건강보험 재직</span><span><i class="free"></i>개별 프로젝트 수행</span>
 <span><i class="git"></i>개발 커밋 확인</span><span><i class="other"></i>추가 작업 기록</span>
-<span><i class="gap"></i>기간 미확인</span><span>◦ 표기월 단서 (개월 수 미반영)</span>
+<span><i class="gap"></i>기간 미확인</span><span>◦ 활동 시점 단서 (개월 수 미반영)</span>
 </div>
+<div class="recovery" id="careerRecovery"><h3>2022년 이후 · 프로젝트별 기간 복원</h3>
+<p>남아 있는 메일·영상·Git 기록의 <strong>활동 시점</strong>을 먼저 정리했어. 시작월과 종료월이 확정되기 전에는 게이지 0개월이야. 아래에서 개별 프로젝트의 실제 수행기간을 입력해 연결할 수 있어.</p>
+<div id="recoveryItems" class="recovery-grid"></div></div>
 <div class="timeline-year-list" id="timelineYearList" aria-label="2009년부터 현재까지 월별 연결 현황"></div>
 <div class="timeline-focus" id="timelineFocus" role="status">색상으로 월별 기록 유형을 구분해. 한 달을 누르면 근거와 작업 내역을 볼 수 있어.</div>
 <div class="timeline-gaps"><h3 id="timelineGapTitle">추가 확인할 공백</h3><div class="timeline-gap-list" id="timelineGapList"></div></div>
@@ -351,10 +370,33 @@ function timelineDetails(item){
  const lines=[item.ym+' · '+source];
  if(names.length)lines.push('보험: '+names.join(' / '));
  if(projects.length)lines.push('작업: '+projects.slice(0,4).join(' / ')+(projects.length>4?' 외 '+(projects.length-4)+'건':''));
- if(item.hints.length)lines.push('포트폴리오 표기월 단서: '+item.hints.join(' / ')+' (기간 미산정)');
+ if(item.hints.length)lines.push('활동 시점·자료 단서: '+item.hints.join(' / ')+' (기간 미산정)');
  if(item.type==='gap')lines.push('이 달 수행 사실이 없다는 뜻은 아니며, 작업기간을 더 연결해야 합니다.');
  return lines.join(' · ');
 }
+
+function renderRecovery(){
+ const candidates=Array.isArray(axis.reconstructionCandidates)?axis.reconstructionCandidates:[];
+ $('recoveryItems').innerHTML=candidates.map(c=>{
+  const rows=(c.relatedProjects||[]).map(id=>base.find(x=>x.id===id)).filter(Boolean).map(baseRow);
+  const dated=rows.filter(x=>isCreditable(x));
+  const state=dated.length?(dated.length===rows.length?'수행기간 등록':'일부 기간 등록'):'수행기간 미확정';
+  const first=c.activity?.[0]?.month||'자료 확인 중';
+  const last=c.activity?.[c.activity.length-1]?.month||first;
+  const months=(c.activity||[]).map(a=>'<span title="'+escape(a.evidence+' · '+a.desc+' · 개발기간 확정 아님')+'">'+escape(a.month)+'</span>').join('');
+  const buttons=rows.length?
+   rows.map(row=>'<button type="button" data-recovery-project="'+escape(row.rowId)+'">기간 입력 · '+escape(row.title.length>20?row.title.slice(0,20)+'…':row.title)+'</button>').join(''):
+   '<button type="button" data-recovery-new="'+escape(c.id)+'">+ 수행기간 기록</button>';
+  return '<article class="recovery-item" data-recovery-id="'+escape(c.id)+'">'+
+   '<div class="recovery-head"><strong>'+escape(c.label)+'</strong><span class="recovery-status">'+state+'</span></div>'+
+   '<div class="recovery-kind">'+escape(c.kind)+'</div>'+
+   '<div class="recovery-work">'+escape(c.work)+'</div>'+
+   '<div class="recovery-milestones">'+months+'</div>'+
+   '<div class="recovery-evidence">'+escape((c.activity||[]).map(a=>a.month+' '+a.desc).join(' / '))+'</div>'+
+   '<div class="recovery-actions">'+buttons+'</div></article>';
+ }).join('');
+}
+
 function renderTimeline(){
  const monthsList=timelineBuild();timelineMonths=monthsList;if(!monthsList.length)return;
  const counts={insurance:0,freelance:0,git:0,project:0,gap:0};
@@ -383,7 +425,7 @@ function renderTimeline(){
  $('timelineGapTitle').textContent='추가 확인할 공백 · '+gapGroups.length+'개 구간';
  $('timelineGapList').innerHTML=gapGroups.length?gapGroups.map(g=>
   '<div class="timeline-gap"><strong>'+g.start+(g.end!==g.start?' ~ '+g.end:'')+'</strong>'+
-  '<span>'+g.length+'개월 · '+(g.clues.length?'작업물 날짜 단서 '+g.clues.length+'개월':'수행기간 근거 미연결')+'</span>'+
+  '<span>'+g.length+'개월 · '+(g.clues.length?'활동자료 단서 '+g.clues.length+'개월':'수행기간 근거 미연결')+'</span>'+
   '<button type="button" data-gap-start="'+g.start+'" data-gap-end="'+g.end+'">이 기간 작업 기록</button></div>'
  ).join(''):'<div class="timeline-gap"><strong>현재 미연결 월 없음</strong><span>전체 조회기간에 수행월 기록이 있습니다.</span></div>';
 }
@@ -429,7 +471,7 @@ function renderTable(){
   return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status!=='linked'?'review':'')+'">'+(p.status==='linked'?'반영':p.status==='resource'?'자료 보관 · 미반영':'기간 미확정')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
  }).join(''):'<tr><td colspan="6" class="empty">검색 결과가 없습니다.</td></tr>';
 }
-function redraw(){renderTimeline();renderFields();renderTable()}
+function redraw(){renderRecovery();renderTimeline();renderFields();renderTable()}
 
 function close(){editId=null;editBaseId=null;$('editor').hidden=true;$('taskForm').reset();$('formMsg').textContent=''}
 function openEdit(t,baseId=null){
@@ -495,6 +537,17 @@ async function restore(file){
  }catch(e){alert('불러오기 실패: '+e.message)}finally{$('restoreFile').value=''}
 }
 function setup(){
+ $('recoveryItems').addEventListener('click',e=>{
+  const project=e.target.closest('[data-recovery-project]');
+  if(project){editBase(project.dataset.recoveryProject);return}
+  const more=e.target.closest('[data-recovery-new]');
+  if(!more)return;
+  const c=(axis.reconstructionCandidates||[]).find(x=>x.id===more.dataset.recoveryNew);
+  if(!c)return;
+  const company=c.id==='SC'||c.id==='SG'||c.id==='SF'?'SuaveForge':c.label;
+  const projectName=c.id==='SC'?'창컴 협업 · WORKLINK':c.id==='SG'?'기쁜사이 협업 · Reverse Age Journal':c.id==='SF'?'SuaveForge 자체개발 · 세부 프로젝트명 입력':c.label;
+  openEdit({company,project:projectName,work:c.work,categories:[]});
+ });
  $('timelineYearList').addEventListener('click',e=>{const b=e.target.closest('[data-timeline-month]');if(!b)return;const item=timelineMonths.find(x=>x.ym===b.dataset.timelineMonth);if(item)$('timelineFocus').textContent=timelineDetails(item)});
  $('timelineGapList').addEventListener('click',e=>{const b=e.target.closest('[data-gap-start]');if(!b)return;openEdit({start:b.dataset.gapStart,end:b.dataset.gapEnd,categories:[]})});
  $('categories').innerHTML=fields.map((f,i)=>'<label><input type="checkbox" value="'+escape(f.name)+'">'+escape(f.name)+'</label>').join('');
