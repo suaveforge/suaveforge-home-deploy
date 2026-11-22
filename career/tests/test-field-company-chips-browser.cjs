@@ -86,6 +86,14 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        hasNoHorizontalClip:yearRows.every(el=>{const a=el.getBoundingClientRect(),b=section.getBoundingClientRect();return a.left>=b.left-1&&a.right<=b.right+1})
       };
      })(),
+     recovery:{
+      cards:document.querySelectorAll('#recoveryItems [data-recovery-id]').length,
+      actionButtons:document.querySelectorAll('#recoveryItems [data-recovery-project], #recoveryItems [data-recovery-new]').length,
+      source2022:document.querySelector('#recoveryItems [data-recovery-id="MF"]')?.innerText.includes('2022-11'),
+      source2023:document.querySelector('#recoveryItems [data-recovery-id="ZM"]')?.innerText.includes('2023-08'),
+      overlapNoCredit:document.querySelector('#recoveryItems [data-recovery-id="MC"]')?.innerText.includes('수행기간 미확정'),
+      noHorizontalClip:[...document.querySelectorAll('#recoveryItems .recovery-item')].every(e=>{const a=e.getBoundingClientRect(),b=document.querySelector('.recovery').getBoundingClientRect();return a.left>=b.left-1&&a.right<=b.right+1})
+     },
      totalOverflow:document.documentElement.scrollWidth>window.innerWidth+1
     };
    });
@@ -122,10 +130,21 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(resourceCount>=1,'resource-only filter exposes generic freelance');
    assert.match(await page.locator('#projects').innerText(),/프리랜서 웹게임·시스템 개발/);
    await resourceFilter.selectOption('all');
+   assert.equal(stats.recovery.cards,7,'seven separate reconstruction groups displayed');
+   assert.ok(stats.recovery.actionButtons>=7,'every reconstruction group has direct date-entry control');
+   assert.equal(stats.recovery.source2022,true,'MetaFastest Nov 2022 evidence shown');
+   assert.equal(stats.recovery.source2023,true,'ZeroMax Aug 2023 evidence shown');
+   assert.equal(stats.recovery.overlapNoCredit,true,'MetaCross activity milestone does not imply credited dates');
+   assert.equal(stats.recovery.noHorizontalClip,true,'reconstruction groups fit inside card');
+   await page.locator('[data-recovery-id="OL"] [data-recovery-project="p16"]').click();
+   assert.equal(await page.locator('#company').inputValue(),'프리랜서 / 온더라이브','on-the-live edit pre-fills company');
+   assert.equal(await page.locator('#start').inputValue(),'','no invented start date from payment');
+   assert.equal(await page.locator('#end').inputValue(),'','no invented end date from payment');
+   await page.locator('#cancel').click();
    assert.equal(stats.totalOverflow,false,'no horizontal page overflow');
    await page.locator('[data-timeline-month="2025-08"]').click();
    assert.match(await page.locator('#timelineFocus').innerText(),/기간 미연결/);
-   assert.match(await page.locator('#timelineFocus').innerText(),/포트폴리오 표기월 단서/);
+   assert.match(await page.locator('#timelineFocus').innerText(),/활동 시점·자료 단서/);
    await page.locator('[data-gap-start="2018-12"]').click();
    assert.equal(await page.locator('#start').inputValue(),'2018-12','gap shortcut pre-fills start month');
    assert.equal(await page.locator('#end').inputValue(),'2019-01','gap shortcut pre-fills end month');
