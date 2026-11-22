@@ -61,7 +61,7 @@ setImmediate(()=>{
  assert.ok(web.includes('class="field-source-chip pending" data-master-company="온더라이브"'),'OnTheLive is related web work without credited months');
  assert.ok(web.includes('title="미반영 · 해당 분야에 포함, 게이지 미등록 · 온더라이브"'),'OnTheLive remains period-unverified');
  assert.ok(!web.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive must not show as not applicable for web');
- assert.ok(web.includes('4 / 120개월'),'OnTheLive does not fabricate any additional web months');
+ assert.ok(web.includes('88 / 120개월'),'OnTheLive does not fabricate any additional web months');
  assert.ok(web.includes('MetaFastest')&&web.includes('MetaCross'),'two freelance clients with same two-character abbreviation must both remain');
  const ai=field('AI 개발');
  assert.ok(ai.includes('>테스</span>')&&ai.includes('>알파</span>'),'dynamic local tasks displayed');
@@ -78,10 +78,10 @@ setImmediate(()=>{
  const shares=ctx.__careerShareTest;
  assert.ok(shares,'company share calculations exposed in the test VM');
  const roster=shares.careerMasterCompanies(shares.allRows());
- assert.equal(roster.length,17,'13 original master companies plus 4 locally added companies');
+ assert.equal(roster.length,19,'15 original master companies plus 4 locally added companies');
  const expectStates=(fieldName,counts)=>{
   const status=shares.fieldEmployerStates(shares.allRows(),fieldName,roster);
-  assert.equal(status.total,17);
+  assert.equal(status.total,19);
   assert.deepEqual(
    [status.credited.length,status.uncredited.length,status.unrelated.length].join(','),
    counts.join(','),'every company classified once across three states in '+fieldName);
@@ -93,10 +93,10 @@ setImmediate(()=>{
   assert.ok(markup.includes('<span class="field-source-label">반영</span>'));
   assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
  };
- expectStates('PC 응용SW',[3,0,14]);
- expectStates('웹 개발',[1,5,11]);
- expectStates('AI 개발',[2,2,13]);
- expectStates('블록체인',[0,2,15]);
+ expectStates('PC 응용SW',[3,0,16]);
+ expectStates('웹 개발',[5,4,10]);
+ expectStates('AI 개발',[2,2,15]);
+ expectStates('블록체인',[0,2,17]);
  for(const f of data.fields)expectStates(f.name,
   [shares.fieldEmployerStates(shares.allRows(),f.name,roster).credited.length,
    shares.fieldEmployerStates(shares.allRows(),f.name,roster).uncredited.length,
