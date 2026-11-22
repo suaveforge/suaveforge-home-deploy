@@ -45,7 +45,21 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     }).map(x=>x.textContent));
     const mobileGaps=[...document.querySelectorAll('.field-source-tags')].every(x=>getComputedStyle(x).flexWrap==='wrap');
     const allMatches=Object.entries(expected).every(([name,value])=>count(name)===value);
-    return {cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,clip,mobileGaps,
+    return {gantt:(()=>{
+      const sec=document.querySelector('#careerGantt'),fieldSec=document.querySelector('#careerFields'),timeline=document.querySelector('#careerTimeline');
+      const rows=[...sec.querySelectorAll('[data-gantt-company]')],boxes=rows.map(x=>x.querySelector('.cg-bar').getBoundingClientRect());
+      const rails=rows.map(x=>x.querySelector('.cg-rail').getBoundingClientRect());
+      const s=document.querySelector('#ganttScroll');
+      return {position:fieldSec.getBoundingClientRect().bottom<sec.getBoundingClientRect().top+2&&
+        sec.getBoundingClientRect().bottom<timeline.getBoundingClientRect().top+2,
+       rows:rows.length,first:rows[0]?.dataset.ganttCompany,last:rows[rows.length-1]?.dataset.ganttCompany,
+       metrics:document.querySelector('#ganttKpis')?.textContent,
+       overlap:document.querySelector('#ganttCaption')?.textContent?.includes('실제 날짜 겹침 0구간'),
+       sameMonth:document.querySelector('#ganttCaption')?.textContent?.includes('같은 달에 회사가 바뀐 사례 3개월'),
+       gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
+       railContained:boxes.every((x,i)=>x.left>=rails[i].left-2&&x.right<=rails[i].right+2),
+       scrollable:s.scrollWidth>=s.clientWidth};
+     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,clip,mobileGaps,
       overflow:document.documentElement.scrollWidth>window.innerWidth+1,
       gridColumns:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
       tabActivityRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('멀티에셋 트레이더')&&r.textContent.includes('경력 미반영')),
@@ -54,6 +68,16 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     };
    });
    assert.equal(errors.length,0,JSON.stringify(errors));
+      assert.ok(stats.gantt.position,'Gantt is between category cards and overall timeline');
+   assert.equal(stats.gantt.rows,9,'nine companies on dated Gantt');
+   assert.equal(stats.gantt.first,'위메이드');assert.equal(stats.gantt.last,'버드레터');
+   assert.ok(stats.gantt.metrics.includes('162개월'),'162 unique insured months');
+   assert.ok(stats.gantt.overlap,'no false overlapping dates');
+   assert.ok(stats.gantt.sameMonth,'three same-month employer transfers');
+   assert.equal(stats.gantt.gaps,7,'date-level gaps include before and after insured dates');
+   assert.ok(stats.gantt.twoDays,'two-day gap appears in gap list');
+   assert.ok(stats.gantt.railContained,'Gantt bars remain inside timeline rails');
+   assert.ok(stats.gantt.scrollable,'horizontal scroll available when needed');
    assert.equal(stats.cards,9);assert.ok(stats.allMatches,'monthly insured totals appear');
    assert.ok(stats.rosterValid,'only nine insured company identifiers appear');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');

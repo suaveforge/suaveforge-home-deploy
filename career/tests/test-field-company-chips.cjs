@@ -48,6 +48,17 @@ setImmediate(()=>{
    assert.ok(Math.abs(chart.entries.reduce((n,x)=>n+x.percent,0)-100)<0.00001);
   }
  }
+ const gh=el('ganttBoard').innerHTML;
+ assert.equal((gh.match(/data-gantt-company=/g)||[]).length,9,'all nine insured companies in the Gantt');
+ assert.ok(gh.includes('2009.02.16 ~ 2013.04.30'),'Wemade exact dates');
+ assert.ok(gh.includes('2016.08.19')&&gh.includes('2016.08.22'),'Studio/N2 exact transition');
+ assert.ok(el('ganttKpis').innerHTML.includes('162개월'),'monthly overlap deduplicated');
+ assert.ok(el('ganttCaption').textContent.includes('실제 날짜 겹침 0구간'),'no fabricated overlapping days');
+ assert.ok(el('ganttCaption').textContent.includes('같은 달에 회사가 바뀐 사례 3개월'),'three calendar-month transitions');
+ assert.ok(el('ganttCaption').textContent.includes('회사 사이 날짜 공백 5구간'),'five exact company-to-company gaps');
+ assert.ok(el('ganttGaps').innerHTML.includes('2016.08.20 ~ 2016.08.21'),'2-day gap not lost in monthly buckets');
+ assert.ok(el('ganttGaps').innerHTML.includes('2018.11.17 ~ 2019.02.17'),'93-day break');
+ assert.equal((el('ganttGaps').innerHTML.match(/class="cg-gap"/g)||[]).length,7,'initial, interim and final uncovered slices');
  const web=field('웹 개발');
  assert.ok(web.includes('개발활동 114개월 중 증빙대기 32개월'),'retains 32 project development months outside career count');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','zeromax','테스트회사'])
