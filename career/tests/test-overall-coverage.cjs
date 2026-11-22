@@ -34,7 +34,7 @@ setImmediate(()=>{
  assert.equal(counts.freelance,19,'self-attested freelance 19 months');
  assert.equal(counts.git,3,'KIMSE September-November commit months');
  assert.equal(counts.project,0,'no extra dated rows outside baseline at load');
- assert.equal(counts.gap,30,'six gap groups total 30 months');
+ assert.equal(counts.gap,30,'five gap groups total 30 months');
  const gaps=api.timelineGroups(list,'gap');
  assert.equal(gaps.map(x=>x.start+'~'+x.end+':'+x.length).join('|'),
   '2018-12~2019-01:2|2021-08~2021-08:1|2022-05~2022-06:2|2023-01~2023-06:6|2025-02~2026-08:19');
@@ -45,9 +45,9 @@ setImmediate(()=>{
  assert.ok(el('timelineKpis').innerHTML.includes('30'),'30 unlinked months in summary');
  assert.equal((el('timelineYearList').innerHTML.match(/class="timeline-year"/g)||[]).length,18);
  assert.equal((el('timelineYearList').innerHTML.match(/data-timeline-month=/g)||[]).length,214);
- assert.equal((el('timelineGapList').innerHTML.match(/data-gap-start=/g)||[]).length,6);
+ assert.equal((el('timelineGapList').innerHTML.match(/data-gap-start=/g)||[]).length,5);
  assert.ok(el('timelineYearList').innerHTML.indexOf('data-timeline-month="2009-02"')<el('timelineYearList').innerHTML.indexOf('data-timeline-month="2026-11"'));
  assert.equal((el('fields').innerHTML.match(/<article class="field">/g)||[]).length,9,'unchanged field cards');
  assert.ok(el('fields').innerHTML.includes('88 / 120개월'),'web progress remains intact');
- console.log('CAREER_OVERALL_TIMELINE_214_MONTHS_184_LINKED_30_UNLINKED_6_GROUPS_PASS');
+ console.log('CAREER_OVERALL_TIMELINE_214_MONTHS_184_LINKED_30_UNLINKED_5_GROUPS_PASS');
 });
