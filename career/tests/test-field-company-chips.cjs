@@ -21,7 +21,8 @@ const state={
   {id:'test-2',company:'테스트회사',project:'중복 기간',work:'검증',categories:['AI 개발'],start:'2026-10',end:'2026-10'},
   {id:'test-3',company:'알파회사',project:'같은 기간',work:'검증',categories:['AI 개발'],start:'2026-10',end:'2026-10'},
   {id:'test-4',company:'검토회사',project:'기간 확인중',work:'검증',categories:['AI 개발'],start:'',end:''},
-  {id:'test-5',company:'<img src=x onerror=alert(1)>',project:'HTML 주입',work:'검증',categories:['AI 개발'],start:'',end:''}
+  {id:'test-5',company:'<img src=x onerror=alert(1)>',project:'HTML 주입',work:'검증',categories:['AI 개발'],start:'',end:''},
+  {id:'test-6',company:'테스트회사',project:'별도 미반영 AI 작업',work:'검증',categories:['AI 개발'],start:'',end:''}
  ],
  overrides:{}
 };
@@ -54,19 +55,25 @@ setImmediate(()=>{
  const web=field('웹 개발');
  assert.ok(web.includes('>넥스</span>'),'confirmed Nexter');
  assert.ok(web.includes('>위메</span>'),'Wemade unconfirmed period');
- assert.ok(web.includes('확인 중'),'unconfirmed sources are distinguished');
+ assert.ok(web.includes('<span class="field-source-label">미반영</span>'),'uncredited row is explicitly labeled');
  assert.ok(web.includes('MetaFastest')&&web.includes('MetaCross'),'two freelance clients with same two-character abbreviation must both remain');
  const ai=field('AI 개발');
  assert.ok(ai.includes('>테스</span>')&&ai.includes('>알파</span>'),'dynamic local tasks displayed');
- assert.equal((ai.match(/>테스<\/span>/g)||[]).length,1,'same company only one badge');
+ assert.equal((ai.match(/title="반영된 경력 · 테스트회사"/g)||[]).length,1,'same company appears once within credited row');
  assert.ok(ai.includes('1 / 60개월'),'overlapping months not counted twice');
- assert.ok(ai.includes('>검토</span>'),'pending source displayed');
+ assert.ok(ai.includes('>검토</span>'),'uncredited source displayed');
+ assert.equal((ai.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,1,'uncredited group exists once per field');
+ assert.ok(ai.includes('title="미반영 · 기간 미확정 · 테스트회사"'),'same employer remains represented as uncredited for different projects');
+ assert.ok(ai.includes('title="반영된 경력 · 테스트회사"'),'same employer still retains credited status');
+ assert.equal((ai.match(/>테스<\/span>/g)||[]).length,2,'same employer appears once per status, never dropped');
  assert.ok(!ai.includes('<img src=x onerror=alert(1)>'),'untrusted user text escaped');
  assert.ok(ai.includes('&lt;img src=x onerror=alert(1)&gt;'),'full company escaped in title');
  const blockchain=field('블록체인');
  assert.ok(blockchain.includes('기간 확정 경력 없음'),'empty confirmed category shown honestly');
- assert.ok(blockchain.includes('title="기간 미확정 · ZeroMax"'));
- assert.ok(blockchain.includes('title="기간 미확정 · MetaCross"'));
+ assert.ok(blockchain.includes('title="미반영 · 기간 미확정 · ZeroMax"'));
+ assert.ok(blockchain.includes('title="미반영 · 기간 미확정 · MetaCross"'));
+ assert.equal((result.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,9,'uncredited group shown in all nine fields, even when empty');
+ assert.ok(pc.includes('미반영 경력 없음'),'no fabricated uncredited companies');
  assert.ok(html.includes('.field-source-tags{display:flex;flex-wrap:wrap'),'multiple badges wrap on narrow screens');
  console.log('CAREER_FIELD_SOURCE_CHIPS_9_FIELDS_MULTIPLE_EMPLOYERS_LOCAL_OVERRIDES_PASS');
 });
