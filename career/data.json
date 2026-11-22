@@ -1,13 +1,13 @@
 {
-  "version": 6,
+  "version": 7,
   "updatedAt": "2026-11-22",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
-  "notice": "경력 게이지 계산은 시작월·종료월과 식별 가능한 회사 또는 구체적인 프로젝트가 모두 있는 기록만 사용합니다. 프리랜서 통합경력 2023.07~2025.01의 19개월은 참고자료이며 어느 분야에도 반영하지 않습니다. 같은 분야·월 중복 제거. KOSA 공식 인정기간이 아닙니다.",
+  "notice": "직접 확인한 Git 커밋 월과 구체 프로젝트를 연결하여 내부 경력월을 잠정 산정합니다. 2023년 ZeroMax Upodium 8월 및 2024~2026 코드 활동월만 개별 반영. Git 무활동월·포괄 프리랜서 기간·홍보자료 날짜는 산정하지 않고 KOSA 공식 승인과 별개로 둡니다.",
   "fields": [
     {
       "name": "웹 개발",
       "target": 120,
-      "linked": 70
+      "linked": 89
     },
     {
       "name": "모바일 앱",
@@ -22,17 +22,17 @@
     {
       "name": "서버 개발",
       "target": 156,
-      "linked": 66
+      "linked": 67
     },
     {
       "name": "DB 개발",
       "target": 156,
-      "linked": 34
+      "linked": 35
     },
     {
       "name": "백엔드",
       "target": 120,
-      "linked": 66
+      "linked": 87
     },
     {
       "name": "AI 개발",
@@ -518,6 +518,360 @@
           "note": "2023-05-02 upodium 조직이 zeromax_brazil 저장소 인수, 발주 법인명 확정 증거 아님"
         }
       ]
+    },
+    {
+      "id": "p25",
+      "company": "프리랜서 / React3D 커스터마이저",
+      "title": "React·Three.js 3D 캐릭터 커스터마이징",
+      "period": "2023-07",
+      "start": "2023-07",
+      "end": "2023-07",
+      "categories": [
+        "웹 개발"
+      ],
+      "work": "React·Three.js 캐릭터 모델 커스터마이징 프론트엔드 구현 및 미사용 리소스 제거; 본인 기존 경력기술서의 React Fiber 웹 커스터마이저 작업과 코드 기록을 연결",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/react-threejs-charactercustom",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2023-07 / example 710545f90e7de00b240873c8b8885f2fef85dd0d"
+        }
+      ],
+      "sourceRepo": "programmer119/react-threejs-charactercustom",
+      "verifiedCommitMonths": [
+        "2023-07"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p26",
+      "company": "프리랜서 / Upodium 아트테스트",
+      "title": "Upodium Unity WebGL 3D 아트테스트",
+      "period": "2023-09",
+      "start": "2023-09",
+      "end": "2023-09",
+      "categories": [
+        "웹 개발"
+      ],
+      "work": "Unity WebGL 3D 에셋·번들 기반 빌드와 브라우저 표시 검증, 저장소 업로드. Upodium GitHub 프로젝트명 확인; 공식 발주법인/계약기간은 미확정",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/upodium-arttest",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2023-09 / example 117daf0cb5e31efb0df8f748d16c139c02d97f09"
+        }
+      ],
+      "sourceRepo": "programmer119/upodium-arttest",
+      "verifiedCommitMonths": [
+        "2023-09"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p27",
+      "company": "프리랜서 / R3F 3D R&D",
+      "title": "React Three Fiber·Spine 머티리얼 실험",
+      "period": "2023-12",
+      "start": "2023-12",
+      "end": "2023-12",
+      "categories": [
+        "웹 개발"
+      ],
+      "work": "React Three Fiber 3D 렌더타깃·평면 표현 및 Spine 결합 머티리얼 테스트 코드; 개인 기술 R&D 기록이며 납품 실적 주장하지 않음",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/react-r3f-physicsmaterial",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2023-12 / example a2316bdb877d1f1f568122701420c0c9d1d2670c"
+        }
+      ],
+      "sourceRepo": "programmer119/react-r3f-physicsmaterial",
+      "verifiedCommitMonths": [
+        "2023-12"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p28",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "Python 자산 데이터 수집·API 서버 (2024.01)",
+      "period": "2024-01",
+      "start": "2024-01",
+      "end": "2024-01",
+      "categories": [
+        "백엔드"
+      ],
+      "work": "Python 거래/시장정보 수집 코드·Flask API 기반 멀티에셋 트레이딩 백엔드 프로젝트 초기 개발",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/python-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2024-01 / example 314c336c5765"
+        }
+      ],
+      "sourceRepo": "programmer119/python-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2024-01"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p29",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
+      "period": "2024-04~2024-08",
+      "start": "2024-04",
+      "end": "2024-08",
+      "categories": [
+        "웹 개발"
+      ],
+      "work": "React 웹 트레이딩 화면·실시간 거래/시뮬레이션 UI·트레이딩 로직, 관련 Express Node.js 서버 소스 포함. 각 월 직접 코드 커밋 확인. 서버 직무 개월은 보수적으로 별도 미반영.",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/react-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2024-04, 2024-05, 2024-06, 2024-07, 2024-08 / example f5cfc756692d"
+        }
+      ],
+      "sourceRepo": "programmer119/react-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p30",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+      "period": "2024-10~2025-06",
+      "start": "2024-10",
+      "end": "2025-06",
+      "categories": [
+        "웹 개발"
+      ],
+      "work": "실시간 거래·차트·시뮬레이션 React 화면, 트레이딩 로직, 안정성·유지관리 개발. 연속 9개 활동월에 본인 직접 커밋 확인, 서버/DB 분야 별도기간 미확정.",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/react-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2024-10, 2024-11, 2024-12, 2025-01, 2025-02, 2025-03, 2025-04, 2025-05, 2025-06"
+        }
+      ],
+      "sourceRepo": "programmer119/react-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p31",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "Python 멀티에셋 데이터·API (2024.04~07)",
+      "period": "2024-04~2024-07",
+      "start": "2024-04",
+      "end": "2024-07",
+      "categories": [
+        "백엔드"
+      ],
+      "work": "Python 시장데이터 수집·거래 대상 종목 처리·Flask API 백엔드, 실제 Git 수정월만 연결",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/python-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2024-04, 2024-05, 2024-06, 2024-07"
+        }
+      ],
+      "sourceRepo": "programmer119/python-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p32",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "Python 멀티에셋 데이터·API (2024.10~2025.04)",
+      "period": "2024-10~2025-04",
+      "start": "2024-10",
+      "end": "2025-04",
+      "categories": [
+        "백엔드"
+      ],
+      "work": "Python 금융정보 조회·주기적 수집·종목 필터링·Flask API 백엔드. 해당 7개 월 모두 본인 직접 코드 커밋 확인.",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/python-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2024-10, 2024-11, 2024-12, 2025-01, 2025-02, 2025-03, 2025-04"
+        }
+      ],
+      "sourceRepo": "programmer119/python-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p33",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "Python 멀티에셋 데이터 수집 (2025.07)",
+      "period": "2025-07",
+      "start": "2025-07",
+      "end": "2025-07",
+      "categories": [
+        "백엔드"
+      ],
+      "work": "미국·나스닥 종목/금융정보 수집 로직, 관련 Python 스크립트 업데이트(2025.07 Git 8커밋)",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/python-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2025-07 / example 38c12b76b075"
+        }
+      ],
+      "sourceRepo": "programmer119/python-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2025-07"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p34",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "Python 자산 데이터·API 유지개발 (2025.12~2026.05)",
+      "period": "2025-12~2026-05",
+      "start": "2025-12",
+      "end": "2026-05",
+      "categories": [
+        "백엔드"
+      ],
+      "work": "Python ETF·주식 데이터수집/매매시간·시세·공시 정보 처리 작업. 해당 연속 6개월 Git에서 본인 개발 커밋 확인.",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/python-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2025-12, 2026-01, 2026-02, 2026-03, 2026-04, 2026-05 / example 1a53a0145c60"
+        }
+      ],
+      "sourceRepo": "programmer119/python-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p35",
+      "company": "프리랜서 / 투자전략 대시보드",
+      "title": "투자전략·KRX 투자주체 시각화 대시보드",
+      "period": "2026-06",
+      "start": "2026-06",
+      "end": "2026-06",
+      "categories": [
+        "웹 개발"
+      ],
+      "work": "JavaScript KOSPI 투자자 대시보드·데이터 분석/그래프 및 원격 배포 구성(2026.06.22~23 Git 직접 개발). 납품계약 여부 미확정.",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/halbae-strategy-designer",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2026-06 / example 1304bd1f54d7"
+        }
+      ],
+      "sourceRepo": "programmer119/halbae-strategy-designer",
+      "verifiedCommitMonths": [
+        "2026-06"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p36",
+      "company": "프리랜서 / 멀티에셋 트레이더",
+      "title": "Python 멀티에셋 수집·갱신 (2026.07)",
+      "period": "2026-07",
+      "start": "2026-07",
+      "end": "2026-07",
+      "categories": [
+        "백엔드"
+      ],
+      "work": "한국투자 연동·시세 과거 데이터 갱신 등 Python 수집 스크립트 수정(2026.07 Git 코드 수정).",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/python-multiasset-trader",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2026-07"
+        }
+      ],
+      "sourceRepo": "programmer119/python-multiasset-trader",
+      "verifiedCommitMonths": [
+        "2026-07"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
+    },
+    {
+      "id": "p37",
+      "company": "SuaveForge",
+      "title": "U2LINK 검사 연동 웹·서버 시스템",
+      "period": "2026-08",
+      "start": "2026-08",
+      "end": "2026-08",
+      "categories": [
+        "웹 개발",
+        "서버 개발",
+        "DB 개발",
+        "백엔드"
+      ],
+      "work": "Vue 3 웹 프론트엔드, Java 17/Spring Boot REST/JWT 서버, MariaDB/JPA/Flyway 데이터 구조 구축 및 U2LINK v4 배포(2026.08.09 authored commit). 전체 프로젝트 기간은 미확정.",
+      "status": "linked",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/suaveforge/u2link",
+          "note": "programmer119 authored=committed 월별 실코드 활동 확인: 2026-08 / example 8034f31e4260"
+        }
+      ],
+      "sourceRepo": "suaveforge/u2link",
+      "verifiedCommitMonths": [
+        "2026-08"
+      ],
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도."
     }
   ],
   "baselineRanges": {
@@ -687,7 +1041,8 @@
       {
         "month": "2023-07",
         "names": [
-          "MetaFastest (메타페스트) · metaf-racing GitHub 저장소 이전 알림(7월 19일)"
+          "MetaFastest (메타페스트) · metaf-racing GitHub 저장소 이전 알림(7월 19일)",
+          "직접 Git 코드: React·Three.js 3D 캐릭터 커스터마이징"
         ]
       },
       {
@@ -697,9 +1052,27 @@
         ]
       },
       {
+        "month": "2023-09",
+        "names": [
+          "직접 Git 코드: Upodium Unity WebGL 3D 아트테스트"
+        ]
+      },
+      {
         "month": "2023-10",
         "names": [
           "MetaCross (메타크로스) · MetaCrossDev/upodium-dev 협업 저장소 초대(10월 29일 현지)"
+        ]
+      },
+      {
+        "month": "2023-12",
+        "names": [
+          "직접 Git 코드: React Three Fiber·Spine 머티리얼 실험"
+        ]
+      },
+      {
+        "month": "2024-01",
+        "names": [
+          "직접 Git 코드: Python 자산 데이터 수집·API 서버 (2024.01)"
         ]
       },
       {
@@ -709,22 +1082,113 @@
         ]
       },
       {
+        "month": "2024-04",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)"
+        ]
+      },
+      {
+        "month": "2024-05",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)"
+        ]
+      },
+      {
+        "month": "2024-06",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)"
+        ]
+      },
+      {
+        "month": "2024-07",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)"
+        ]
+      },
+      {
+        "month": "2024-08",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)"
+        ]
+      },
+      {
         "month": "2024-09",
         "names": [
           "온더라이브 · 2024.09.13 3.3% 원천징수 후 1,000만 원 수령(본인 진술, 계약 대응 검증 전)"
         ]
       },
       {
+        "month": "2024-10",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
+        "month": "2024-11",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
+        "month": "2024-12",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
+        "month": "2025-01",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
+        "month": "2025-02",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
         "month": "2025-03",
         "names": [
-          "MetaCross (메타크로스) · Unity Pro 갱신 안내(개발기간 증거 아님)"
+          "MetaCross (메타크로스) · Unity Pro 갱신 안내(개발기간 증거 아님)",
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
+        "month": "2025-04",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)",
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.10~2025.04)"
+        ]
+      },
+      {
+        "month": "2025-05",
+        "names": [
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)"
         ]
       },
       {
         "month": "2025-06",
         "names": [
           "의료기기 재고·발주 관리",
-          "SuaveForge 자체 서비스·시제품 · SuaveForge 포트폴리오 2025년 6월 항목"
+          "SuaveForge 자체 서비스·시제품 · SuaveForge 포트폴리오 2025년 6월 항목",
+          "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.10~2025.06)"
+        ]
+      },
+      {
+        "month": "2025-07",
+        "names": [
+          "직접 Git 코드: Python 멀티에셋 데이터 수집 (2025.07)"
         ]
       },
       {
@@ -748,23 +1212,50 @@
         ]
       },
       {
+        "month": "2025-12",
+        "names": [
+          "직접 Git 코드: Python 자산 데이터·API 유지개발 (2025.12~2026.05)"
+        ]
+      },
+      {
         "month": "2026-01",
         "names": [
-          "모아페스타 데모"
+          "모아페스타 데모",
+          "직접 Git 코드: Python 자산 데이터·API 유지개발 (2025.12~2026.05)"
+        ]
+      },
+      {
+        "month": "2026-02",
+        "names": [
+          "직접 Git 코드: Python 자산 데이터·API 유지개발 (2025.12~2026.05)"
         ]
       },
       {
         "month": "2026-03",
         "names": [
           "농장 방역 시뮬레이터",
-          "특허 SaaS"
+          "특허 SaaS",
+          "직접 Git 코드: Python 자산 데이터·API 유지개발 (2025.12~2026.05)"
         ]
       },
       {
         "month": "2026-04",
         "names": [
           "AI 키오스크",
-          "MCX 데모"
+          "MCX 데모",
+          "직접 Git 코드: Python 자산 데이터·API 유지개발 (2025.12~2026.05)"
+        ]
+      },
+      {
+        "month": "2026-05",
+        "names": [
+          "직접 Git 코드: Python 자산 데이터·API 유지개발 (2025.12~2026.05)"
+        ]
+      },
+      {
+        "month": "2026-06",
+        "names": [
+          "직접 Git 코드: 투자전략·KRX 투자주체 시각화 대시보드"
         ]
       },
       {
@@ -774,7 +1265,8 @@
           "DICOM 뷰어",
           "이미지 수집도구",
           "FoxPro 모듈",
-          "기질검사 자동화"
+          "기질검사 자동화",
+          "직접 Git 코드: Python 멀티에셋 수집·갱신 (2026.07)"
         ]
       },
       {
@@ -785,7 +1277,8 @@
           "온톡 상담 시스템",
           "U2LINK 검사 시스템",
           "IDHAIR 설문 시스템",
-          "SuaveForge 자체 서비스·시제품 · U2LINK 등 2026년 8월 포트폴리오 자료"
+          "SuaveForge 자체 서비스·시제품 · U2LINK 등 2026년 8월 포트폴리오 자료",
+          "직접 Git 코드: U2LINK 검사 연동 웹·서버 시스템"
         ]
       },
       {
@@ -1033,6 +1526,6 @@
         "note": "포트폴리오 게시월은 제작기간이 아님. 개별 저장소/프로젝트별 날짜를 우선 복원하고, 기존 KIMSE 월과 중복 가산 금지."
       }
     ],
-    "reconstructionDisclaimer": "활동월 기록은 개발 시작·종료일 전체를 뜻하지 않습니다. 프로젝트명·업무·해당 월을 함께 입증한 ZeroMax/Upodium 2023.08 웹 1개월만 잠정 반영하고 다른 영상·메일·Git 시점은 참고자료로 둡니다. KOSA 승인과 별개."
+    "reconstructionDisclaimer": "GitHub 작성·커밋 일자가 모두 맞고 식별되는 코드·프로젝트가 있는 활동월만 내부 복원(중간 무커밋월 미산정). MetaFastest 사건 관련 추가 공개·경력가산은 보류. 정확한 계약일/사업소속/KOSA 공식 인정은 별도."
   }
 }
