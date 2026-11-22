@@ -178,14 +178,40 @@
       "company": "넥스터",
       "title": "메타버스 개발",
       "period": "2022.01–2022.04",
-      "work": "메타버스 프로그램팀 리딩 (실제 세부 업무·증빙 별도 보완)",
+      "work": "메타버스 시스템·프레임워크 직접 개발 및 사내 개발자 인계(사용자 진술). 프로그램팀 약 7명 리딩. 자체 서버 네트워크 대응(2022.04.01 팀 회의록에서 본인 담당으로 명시). 외부 클라우드 업체·Unity 기술팀 기술 미팅. 회의록상 Unity/C# 클라이언트 구조·성능 최적화·웹소켓·ProudNet 등 논의. 단, 타 팀원 배정 항목과 실제 본인 구현 범위는 구분 필요.",
       "status": "linked",
       "id": "p10",
       "categories": [
         "PM / 조직 리딩"
       ],
       "start": "2022-01",
-      "end": "2022-04"
+      "end": "2022-04",
+      "evidence": [
+        {
+          "type": "user_statement",
+          "note": "2026.08.12 사용자 설명: 7명 리딩·시스템과 프레임워크 직접 제작·인계·클라우드/Unity 기술 미팅"
+        },
+        {
+          "type": "company_minutes",
+          "url": "https://docs.google.com/document/d/1a9DuP2frM36aPG2Q6jeIQYJ0VGQA6plHmS-kW0EpNWY/edit",
+          "note": "2022.04.01 '상현 자체서버 네트워크 대응'; 2022.03.18~04.08 프로그램팀 회의"
+        },
+        {
+          "type": "coding_guideline",
+          "url": "https://docs.google.com/document/d/1ffwQybHorrJ6fkbKESa_U0PSAx25hyMLcEujxnVnK20/edit",
+          "note": "C# 엔지니어 코드 컨벤션"
+        },
+        {
+          "type": "employment",
+          "note": "건강보험 재직 2022.01.24~2022.04.22"
+        }
+      ],
+      "candidateCategories": [
+        "모바일 앱",
+        "서버 개발",
+        "백엔드"
+      ],
+      "note": "PM 이외 직접 개발 업무는 누락 복원. 클라이언트/서버 실제 수행 개월 수와 범위 검증 후 분야 집계 반영."
     },
     {
       "company": "버드레터",
