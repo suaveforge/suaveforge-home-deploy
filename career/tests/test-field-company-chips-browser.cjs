@@ -32,6 +32,8 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      allHaveBar:fields.every(card=>card.querySelector('.track .fill')),
      creditedBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip:not(.pending)').length,0),
      pendingBadges:fields.reduce((a,card)=>a+card.querySelectorAll('.field-source-chip.pending').length,0),
+     uncreditedRows:fields.filter(card=>[...card.querySelectorAll('.field-source-label')].some(el=>el.textContent==='미반영')).length,
+     pendingTitlesValid:fields.every(card=>[...card.querySelectorAll('.field-source-chip.pending')].every(el=>el.title.startsWith('미반영 · 기간 미확정 · '))),
      clips:fields.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(el=>{
       const a=el.getBoundingClientRect(),b=card.getBoundingClientRect();
       return a.right>b.right+1 || a.left<b.left-1;
@@ -47,6 +49,8 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.allHaveBar);
    assert.ok(stats.creditedBadges>=15,'credit source labels across nine fields');
    assert.ok(stats.pendingBadges>=3,'unconfirmed work has its own labels');
+   assert.equal(stats.uncreditedRows,9,'all fields visibly show uncredited row');
+   assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
    assert.ok(stats.wrapping);
