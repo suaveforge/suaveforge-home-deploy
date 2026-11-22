@@ -21,6 +21,7 @@ td:nth-child(2){font-weight:700}td:nth-child(4){min-width:260px}.pill{display:in
 .empty{text-align:center;color:#687989;padding:28px}.footer{margin-top:27px;font-size:12px;color:#718090}
 @media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:20px 13px}.top{align-items:start}h1{font-size:25px}}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.actions input,.actions select{width:100%}}
+.recovery-archive{margin-top:28px;background:#fff;border:1px solid #dfe8ee;border-radius:11px;padding:13px 17px}.recovery-archive>summary{cursor:pointer;font-size:14px;font-weight:700;color:#345466;padding:5px 0}.recovery-archive[open]>summary{margin-bottom:12px}.recovery-archive>p{margin:0 0 13px}
 </style>
 <style>
 .controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:13px}
@@ -128,6 +129,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <h1>개발 경력 현황</h1><p>회사·프로젝트별 작업과 분야별 경력기간 복원 진행도</p>
 <div class="notice" id="notice">경력 기준을 불러오는 중입니다.</div>
 
+<section class="section" id="careerFields"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
 <section class="timeline-section" id="careerTimeline" aria-labelledby="timelineTitle">
 <div class="timeline-header"><div><h2 id="timelineTitle">전체 경력 · 공백 점검</h2>
 <p class="timeline-caption" id="timelinePeriod">2009.02부터 현재까지, 겹치는 달은 한 번만 계산</p></div>
@@ -139,15 +141,16 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <span><i class="git"></i>개발 커밋 확인</span><span><i class="other"></i>추가 작업 기록</span>
 <span><i class="gap"></i>기간 미확인</span><span>◦ 활동 시점 단서 (개월 수 미반영)</span>
 </div>
-<div class="recovery" id="careerRecovery"><h3>2022년 이후 · 프로젝트별 기간 복원</h3>
+
 <p>남아 있는 메일·영상·Git 기록의 <strong>활동 시점</strong>을 먼저 정리했어. 시작월과 종료월이 확정되기 전에는 게이지 0개월이야. 아래에서 개별 프로젝트의 실제 수행기간을 입력해 연결할 수 있어.</p>
-<div id="recoveryItems" class="recovery-grid"></div></div>
+
 <div class="timeline-year-list" id="timelineYearList" aria-label="2009년부터 현재까지 월별 연결 현황"></div>
 <div class="timeline-focus" id="timelineFocus" role="status">색상으로 월별 기록 유형을 구분해. 한 달을 누르면 근거와 작업 내역을 볼 수 있어.</div>
 <div class="timeline-gaps"><h3 id="timelineGapTitle">추가 확인할 공백</h3><div class="timeline-gap-list" id="timelineGapList"></div></div>
 <p class="timeline-method" id="timelineMethod">월 단위 확인 현황. 보험 취득·상실일과 수행기록을 대조하지만 일부만 해당해도 그 달을 1개월로 표시하므로 실제 고용일수·KOSA 승인기간과 다릅니다. 이력이 미연결되었다고 실제 무직이었다는 뜻은 아닙니다.</p>
 </section>
-<section class="section"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
+
+<details class="recovery recovery-archive" id="careerRecovery"><summary>2022년 이후 · 프로젝트별 기간 복원 자료 (펼쳐서 확인)</summary><p>활동 증거와 수행기간 미확정 프로젝트를 모아둔 보조 영역입니다. 각 항목의 기간 입력 버튼으로 수정할 수 있습니다.</p><div id="recoveryItems" class="recovery-grid"></div></details>
 <section class="section"><h2 id="projectsTitle">회사·프로젝트별 작업</h2>
 <div class="controls"><button id="addProject" class="btn" type="button">+ 작업 추가</button>
 <button id="backup" class="btn secondary" type="button">내 입력 백업</button>
