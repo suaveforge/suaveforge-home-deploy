@@ -119,7 +119,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <div class="timeline-kpis" id="timelineKpis"></div>
 <div class="timeline-progress" id="timelineProgress" role="img" aria-label="전체 기간별 근거 연결 현황"></div>
 <div class="timeline-legend">
-<span><i class="ins"></i>건강보험 재직</span><span><i class="free"></i>프리랜서 통합 수행</span>
+<span><i class="ins"></i>건강보험 재직</span><span><i class="free"></i>개별 프로젝트 수행</span>
 <span><i class="git"></i>개발 커밋 확인</span><span><i class="other"></i>추가 작업 기록</span>
 <span><i class="gap"></i>기간 미확인</span><span>◦ 표기월 단서 (개월 수 미반영)</span>
 </div>
@@ -137,7 +137,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <span class="meta" id="count"></span></div>
 <div class="editor" id="editor" hidden>
 <h3 id="editorTitle">작업 추가</h3>
-<p class="help">실제로 수행한 업무를 적고 경력분야를 선택하세요. 저장 즉시 위 경력 게이지에 반영됩니다.</p>
+<p class="help">업무와 경력분야를 입력하세요. 수행기간과 식별 가능한 회사 또는 구체적인 프로젝트가 함께 있을 때만 게이지에 반영됩니다.</p>
 <form id="taskForm">
 <div class="editgrid">
 <label>회사·발주처<input class="field-input" id="company" required maxlength="160" list="companyOptions"><datalist id="companyOptions"></datalist></label>
@@ -152,10 +152,10 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 </form>
 </div>
 <div class="controls"><input id="search" type="search" class="field-input" style="max-width:310px" placeholder="회사·프로젝트·기술 검색" aria-label="검색">
-<select class="field-input" id="filter" style="max-width:175px" aria-label="기간 상태"><option value="all">전체</option><option value="linked">기간 입력</option><option value="review">기간 미확정</option></select></div>
+<select class="field-input" id="filter" style="max-width:175px" aria-label="기간 상태"><option value="all">전체</option><option value="linked">기간 입력</option><option value="review">기간 미확정</option><option value="resource">참고자료(미반영)</option></select></div>
 <div class="tablebox"><table><thead><tr><th>회사·발주처</th><th>프로젝트</th><th>기간</th><th>작업 내용 / 경력분야</th><th>상태</th><th>작업 추가·편집</th></tr></thead>
 <tbody id="projects"><tr><td colspan="6" class="empty">데이터를 불러오는 중입니다.</td></tr></tbody></table></div>
-<p class="note">입력한 내용은 이 브라우저에 저장됩니다. 다른 기기와 자동 동기화되지 않으니 필요할 때 ‘내 입력 백업’을 사용하세요. KOSA 공식 인정경력과는 별개입니다.</p>
+<p class="note">입력 내용은 이 브라우저에 저장되며 다른 기기와 자동 동기화되지 않습니다. 기간이나 회사·프로젝트가 부족하면 자료로만 저장되고 게이지에는 반영되지 않습니다. KOSA 공식 인정경력과는 별개입니다.</p>
 </section><div class="footer">SuaveForge Career · 신고 목표 대비 경력 복원 현황</div></div>
 <script>
 "use strict";
@@ -167,7 +167,18 @@ let base=[],fields=[],tasks=[],overrides={},editId=null,editBaseId=null,axis={},
 const monthId=s=>{if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(s||''))return null;return Number(s.slice(0,4))*12+Number(s.slice(5))-1};
 function months(a,b){let x=monthId(a),y=monthId(b);if(x===null||y===null||y<x||y-x>600)return [];return Array.from({length:y-x+1},(_,i)=>x+i)}
 function inMonths(t){return Boolean(t.start&&t.end&&months(t.start,t.end).length)}
-function status(t){return inMonths(t)?'linked':'review'}
+function hasSpecificIdentity(row){
+ const company=String(row.company||'').trim();
+ const project=String(row.project??row.title??'').trim();
+ const genericCompany=/^(?:프리랜서|freelancer|freelance|개인|기타|미정|미상|미확정|)$/i.test(company);
+ const genericProject=!project||/(?:통합|포괄|전체)\s*(?:경력|이력|수행기간)/.test(project)||
+  /^(?:프리랜서(?:\s*(?:개발|프로젝트|작업|업무))?|웹게임(?:\s*및\s*시스템)?\s*개발|웹\s*개발|서버\s*개발|프로젝트\s*개발|기타(?:\s*프로젝트)?|미정|미상|미확정)$/i.test(project);
+ return !genericCompany||!genericProject;
+}
+function isCreditable(row){
+ return inMonths(row)&&hasSpecificIdentity(row)&&!(row.resourceOnly&&!row.edited);
+}
+function status(t){return isCreditable(t)?'linked':inMonths(t)?'resource':'review'}
 
 function stored(){
  try{
@@ -184,10 +195,10 @@ function stored(){
 function persist(){try{localStorage.setItem(STORAGE,JSON.stringify({tasks,overrides}));return true}catch{return false}}
 function baseRow(p){
  const x=overrides[p.id];if(!x)return {...p,kind:'base',rowId:p.id,edited:false};
- const start=x.start||'',end=x.end||'',valid=Boolean(months(start,end).length&&x.categories.length);
- return {...p,company:x.company,title:x.project,work:x.work,start,end,categories:x.categories,
- period:valid?start+' ~ '+end:'기간 미확정',status:valid?'linked':'review',
- kind:'base',rowId:p.id,edited:true};
+ const start=x.start||'',end=x.end||'';
+ const row={...p,company:x.company,title:x.project,work:x.work,start,end,categories:x.categories,
+  kind:'base',rowId:p.id,edited:true};
+ return {...row,period:inMonths(row)?start+' ~ '+end:'기간 미확정',status:status(row)};
 }
 function allRows(){
  return base.map(baseRow).concat(tasks.map(t=>({company:t.company,title:t.project,
@@ -223,7 +234,7 @@ function fieldEmployerStates(rows,category,master){
   for(const employer of careerEmployers(row.company)){
    const item=byId.get(careerCompanyKey(employer));
    if(item){
-    if(inMonths(row))item.credited++;
+    if(isCreditable(row))item.credited++;
     else item.uncredited++;
    }
   }
@@ -246,7 +257,7 @@ const FIELD_SHARE_COLORS=['#337e98','#5b9d80','#b48a50','#8278b2','#af768e','#60
 function fieldEmployerContributions(rows,category){
  const names=new Map(),byMonth=new Map();
  for(const row of rows){
-  if(!Array.isArray(row.categories)||!row.categories.includes(category)||!inMonths(row))continue;
+  if(!Array.isArray(row.categories)||!row.categories.includes(category)||!isCreditable(row))continue;
   const employers=careerEmployers(row.company);
   for(const employer of employers){
    const identity=employer.normalize('NFKC').replace(/\s+/g,'').toLowerCase();
@@ -307,7 +318,7 @@ function ymFromNumber(n){return String(Math.floor(n/12)).padStart(4,'0')+'-'+Str
 function timelineBuild(){
  const start=monthId(axis.startMonth||'2009-02'),end=monthId(currentSeoulMonth());
  if(start===null||end===null||start>end)return [];
- const work=allRows().filter(p=>p.start&&p.end&&Array.isArray(p.categories)&&p.categories.length&&months(p.start,p.end).length);
+ const work=allRows().filter(p=>Array.isArray(p.categories)&&p.categories.length&&isCreditable(p));
  const clues=new Map((axis.portfolioClues||[]).map(c=>[c.month,c.names||[]]));
  const items=[];
  for(let n=start;n<=end;n++){
@@ -380,7 +391,7 @@ function renderTimeline(){
 function renderFields(){
  const rows=allRows(),master=careerMasterCompanies(rows);
  $('fields').innerHTML=fields.map(f=>{
-  const actual=new Set(rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name)&&t.start&&t.end).flatMap(t=>months(t.start,t.end)));
+  const actual=new Set(rows.filter(t=>Array.isArray(t.categories)&&t.categories.includes(f.name)&&isCreditable(t)).flatMap(t=>months(t.start,t.end)));
   const total=actual.size,target=Number(f.target),delta=total-Number(f.linked),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
   const diff=delta===0?'기준과 동일':(delta>0?'+':'')+delta+'개월 변화';
   const sources=fieldEmployerStates(rows,f.name,master);
@@ -410,11 +421,12 @@ function renderTable(){
  $('count').textContent=rows.length+'건';
  $('projects').innerHTML=rows.length?rows.map(p=>{
   const local=p.kind==='local',cats=p.categories?.length?'<div class="work-entry">'+p.categories.map(escape).join(' · ')+'</div>':'';
-  const label=local?'<span class="saved-tag">내 입력</span>':p.edited?'<span class="saved-tag">원본 수정</span>':'';
+  const label=p.status==='resource'?'<span class="saved-tag">참고자료 · 게이지 0개월</span>':
+   local?'<span class="saved-tag">내 입력</span>':p.edited?'<span class="saved-tag">원본 수정</span>':'';
   const id=escape(p.rowId);
   const buttons=local?'<button class="btn secondary tiny" data-action="edit" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="delete" data-id="'+id+'">삭제</button>'
    :'<button class="btn secondary tiny" data-action="editbase" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="add" data-id="'+id+'">+ 작업 추가</button>'+(p.edited?' <button class="btn secondary tiny" data-action="resetbase" data-id="'+id+'">원본 복원</button>':'');
-  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status==='review'?'review':'')+'">'+(p.status==='review'?'기간 미확정':'기간 입력')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
+  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status!=='linked'?'review':'')+'">'+(p.status==='linked'?'반영':p.status==='resource'?'자료 보관 · 미반영':'기간 미확정')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
  }).join(''):'<tr><td colspan="6" class="empty">검색 결과가 없습니다.</td></tr>';
 }
 function redraw(){renderTimeline();renderFields();renderTable()}
@@ -509,7 +521,7 @@ async function main(){
  const r=await fetch('./data.json',{cache:'no-store'});if(!r.ok)throw Error('데이터 HTTP '+r.status);
  const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];axis=data.timeAxis||{};
  $('updated').textContent='기준 데이터 '+escape(data.updatedAt||'');
- $('notice').textContent='기존 프로젝트 수정과 신규 작업 입력으로 변경된 수행월을 중복 제외해 계산합니다. 이 브라우저에서만 저장되는 비공식 경력표입니다.';
+ $('notice').textContent='경력 게이지는 수행기간 + 식별 가능한 회사 또는 구체적인 프로젝트가 있는 기록만 반영합니다. 프리랜서 통합경력은 자료로 보관하며, 이 브라우저의 개인 수정사항은 별도 보관됩니다.';
  const state=stored();tasks=state.tasks;overrides=state.overrides;setup();redraw();
  }catch(e){$('projects').innerHTML='<tr><td colspan="6" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';$('notice').textContent=e.message}
 }
