@@ -300,7 +300,9 @@
       "work": "방산 훈련용 전투 시뮬레이션 콘텐츠. 지급정보는 별도 비공개 증빙관리",
       "status": "review",
       "id": "p16",
-      "categories": [],
+      "categories": [
+        "웹 개발"
+      ],
       "start": null,
       "end": null
     }
