@@ -58,6 +58,10 @@ setImmediate(()=>{
  assert.ok(web.includes('>넥스</span>'),'confirmed Nexter');
  assert.ok(web.includes('>위메</span>'),'Wemade unconfirmed period');
  assert.ok(web.includes('<span class="field-source-label">미반영</span>'),'uncredited row is explicitly labeled');
+ assert.ok(web.includes('class="field-source-chip pending" data-master-company="온더라이브"'),'OnTheLive is related web work without credited months');
+ assert.ok(web.includes('title="미반영 · 해당 분야에 포함, 게이지 미등록 · 온더라이브"'),'OnTheLive remains period-unverified');
+ assert.ok(!web.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive must not show as not applicable for web');
+ assert.ok(web.includes('4 / 120개월'),'OnTheLive does not fabricate any additional web months');
  assert.ok(web.includes('MetaFastest')&&web.includes('MetaCross'),'two freelance clients with same two-character abbreviation must both remain');
  const ai=field('AI 개발');
  assert.ok(ai.includes('>테스</span>')&&ai.includes('>알파</span>'),'dynamic local tasks displayed');
@@ -90,14 +94,14 @@ setImmediate(()=>{
   assert.ok(markup.includes('<span class="field-source-label">미반영</span>'));
  };
  expectStates('PC 응용SW',[3,0,14]);
- expectStates('웹 개발',[1,4,12]);
+ expectStates('웹 개발',[1,5,11]);
  expectStates('AI 개발',[2,2,13]);
  expectStates('블록체인',[0,2,15]);
  for(const f of data.fields)expectStates(f.name,
   [shares.fieldEmployerStates(shares.allRows(),f.name,roster).credited.length,
    shares.fieldEmployerStates(shares.allRows(),f.name,roster).uncredited.length,
    shares.fieldEmployerStates(shares.allRows(),f.name,roster).unrelated.length]);
- assert.ok(pc.includes('data-master-company="온더라이브"'),'company with no classified field is shown as 해당 X');
+ assert.ok(pc.includes('class="field-source-chip unrelated" data-master-company="온더라이브"'),'OnTheLive stays unrelated in PC unless specifically classified');
  const pcShare=shares.fieldEmployerContributions(shares.allRows(),'PC 응용SW');
  assert.equal(pcShare.total,69,'PC field unique credited months unchanged');
  assert.equal(pcShare.entries.length,3,'two employers in NexonGT / UbiFun credited fractionally');
