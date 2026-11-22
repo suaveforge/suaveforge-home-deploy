@@ -62,6 +62,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      }),
      masterKeysConsistent:fields.map(card=>[...card.querySelectorAll('.field-source-chip')].map(el=>el.dataset.masterCompany).sort().join('|'))
       .every((keys,_,all)=>keys===all[0]),
+     ontheliveWebState:(()=>{
+      const web=fields.find(el=>el.querySelector('.name')?.textContent==='웹 개발');
+      const tag=web?.querySelector('.field-source-chip[data-master-company="온더라이브"]');
+      return {pending:!!tag?.classList.contains('pending'),notApplicable:!!tag?.classList.contains('unrelated'),months:web?.querySelector('.numbers small')?.textContent};
+     })(),
      clips:fields.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(el=>{
       const a=el.getBoundingClientRect(),b=card.getBoundingClientRect();
       return a.right>b.right+1 || a.left<b.left-1;
@@ -85,6 +90,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.unrelatedRows,9,'all fields show third not-applicable group');
    assert.equal(stats.fullMasterMatrix,true,'each field contains all 13 base master companies exactly once');
    assert.equal(stats.masterKeysConsistent,true,'all nine fields enumerate the identical master roster');
+   assert.equal(stats.ontheliveWebState.pending,true,'OnTheLive web history must appear under uncredited');
+   assert.equal(stats.ontheliveWebState.notApplicable,false,'OnTheLive must not appear under not applicable for web');
+   assert.equal(stats.ontheliveWebState.months,'4 / 120개월','no extra months from unverified OnTheLive time');
    assert.ok(stats.pendingTitlesValid,'uncredited company badges expose unconfirmed period');
    assert.deepEqual(stats.clips,[],'no company chips outside their cards');
    assert.ok(stats.pcBadges.includes('넥슨')&&stats.pcBadges.includes('유비'));
