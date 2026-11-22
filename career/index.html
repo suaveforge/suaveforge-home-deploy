@@ -370,7 +370,7 @@ function timelineDetails(item){
  const lines=[item.ym+' · '+source];
  if(names.length)lines.push('보험: '+names.join(' / '));
  if(projects.length)lines.push('작업: '+projects.slice(0,4).join(' / ')+(projects.length>4?' 외 '+(projects.length-4)+'건':''));
- if(item.hints.length)lines.push('활동 시점·자료 단서: '+item.hints.join(' / ')+' (기간 미산정)');
+ if(item.hints.length)lines.push('활동 시점·자료 단서: '+item.hints.join(' / ')+(item.type==='gap'?' (이 달 경력 미산정)':' (해당 월 개별 수행기록과 대조)'));
  if(item.type==='gap')lines.push('이 달 수행 사실이 없다는 뜻은 아니며, 작업기간을 더 연결해야 합니다.');
  return lines.join(' · ');
 }
@@ -383,7 +383,7 @@ function renderRecovery(){
   const state=dated.length?(dated.length===rows.length?'수행기간 등록':'일부 기간 등록'):'수행기간 미확정';
   const first=c.activity?.[0]?.month||'자료 확인 중';
   const last=c.activity?.[c.activity.length-1]?.month||first;
-  const months=(c.activity||[]).map(a=>'<span title="'+escape(a.evidence+' · '+a.desc+' · 개발기간 확정 아님')+'">'+escape(a.month)+'</span>').join('');
+  const months=(c.activity||[]).map(a=>'<span title="'+escape(a.evidence+' · '+a.desc+(a.creditedMonth?' · 이 월만 웹 1개월 잠정 반영':' · 개발기간 확정 아님'))+'">'+escape(a.month)+(a.creditedMonth?' ✓':'')+'</span>').join('');
   const buttons=rows.length?
    rows.map(row=>'<button type="button" data-recovery-project="'+escape(row.rowId)+'">기간 입력 · '+escape(row.title.length>20?row.title.slice(0,20)+'…':row.title)+'</button>').join(''):
    '<button type="button" data-recovery-new="'+escape(c.id)+'">+ 수행기간 기록</button>';
