@@ -69,7 +69,7 @@ setImmediate(()=>{
  assert.ok($('projects').innerHTML.includes('참고자료 · 게이지 0개월'),'project table explicitly marks excluded 19-month umbrella');
  const ai=field('AI 개발');
  assert.ok(ai.includes('>테스</span>')&&ai.includes('>알파</span>'),'dynamic local tasks displayed');
- assert.equal((ai.match(/title="테스트회사 · 1개월"/g)||[]).length,1,'same company appears once with concise credited month');
+ assert.equal((ai.match(/title="테스트회사 · 1개월"/g)||[]).length,2,'badge and stacked chart both show concise credited months');
  assert.ok(ai.includes('1 / 60개월'),'overlapping months not counted twice');
  assert.ok(ai.includes('>검토</span>'),'uncredited source displayed');
  assert.equal((ai.match(/<span class="field-source-label">미반영<\/span>/g)||[]).length,1,'uncredited group exists once per field');
