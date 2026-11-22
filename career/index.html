@@ -231,6 +231,8 @@ function allRows(){
 // A combined employer label (e.g. "넥슨GT / 유비펀") represents two
 // credited sources. Freelance work uses its actual client after the slash.
 function careerEmployers(company){
+ // Independent research and application leads are not employers; keep them as editable evidence.
+ if(['GitHub 개인 연구','외주 지원·포트폴리오 기록'].includes(String(company||'').trim()))return [];
  const parts=String(company||'').split(/\s*\/\s*/).map(x=>x.trim()).filter(Boolean);
  return parts[0]==='프리랜서'&&parts.length>1?parts.slice(1):parts;
 }
@@ -460,6 +462,10 @@ function renderFields(){
  }).join('');
 }
 
+function evidenceMarkup(p){
+ const links=(Array.isArray(p.evidence)?p.evidence:[]).filter(e=>typeof e.url==='string'&&/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/commit\/[a-f0-9]{12,40}$/.test(e.url));
+ return links.length?'<div class="work-entry" style="margin-top:7px">'+links.map((ev,i)=>'<a href="'+escape(ev.url)+'" target="_blank" rel="noopener noreferrer" style="color:#27697c;margin-right:10px">검증 커밋 '+(i+1)+'</a>').join('')+'</div>':'';
+}
 function renderTable(){
  const term=$('search').value.trim().toLowerCase(),state=$('filter').value;
  const rows=allRows().filter(p=>(state==='all'||p.status===state)&&[p.company,p.title,p.period,p.work,...(p.categories||[])].some(v=>String(v).toLowerCase().includes(term)));
@@ -471,7 +477,7 @@ function renderTable(){
   const id=escape(p.rowId);
   const buttons=local?'<button class="btn secondary tiny" data-action="edit" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="delete" data-id="'+id+'">삭제</button>'
    :'<button class="btn secondary tiny" data-action="editbase" data-id="'+id+'">수정</button> <button class="btn secondary tiny" data-action="add" data-id="'+id+'">+ 작업 추가</button>'+(p.edited?' <button class="btn secondary tiny" data-action="resetbase" data-id="'+id+'">원본 복원</button>':'');
-  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+'</td><td><span class="pill '+(p.status!=='linked'?'review':'')+'">'+(p.status==='linked'?'반영':p.status==='resource'?'자료 보관 · 미반영':'기간 미확정')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
+  return '<tr><td>'+escape(p.company)+label+'</td><td>'+escape(p.title)+'</td><td>'+escape(p.period)+'</td><td>'+escape(p.work)+cats+evidenceMarkup(p)+'</td><td><span class="pill '+(p.status!=='linked'?'review':'')+'">'+(p.status==='linked'?'반영':p.status==='resource'?'자료 보관 · 미반영':'기간 미확정')+'</span></td><td class="project-action">'+buttons+'</td></tr>';
  }).join(''):'<tr><td colspan="6" class="empty">검색 결과가 없습니다.</td></tr>';
 }
 function redraw(){renderRecovery();renderTimeline();renderFields();renderTable()}
