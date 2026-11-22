@@ -175,9 +175,9 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 </div>
 <div class="controls"><input id="search" type="search" class="field-input" style="max-width:310px" placeholder="회사·프로젝트·기술 검색" aria-label="검색">
 <select class="field-input" id="filter" style="max-width:175px" aria-label="기간 상태"><option value="all">전체</option><option value="linked">기간 입력</option><option value="review">기간 미확정</option><option value="resource">참고자료(미반영)</option></select></div>
-<div class="tablebox"><table><thead><tr><th>회사·발주처</th><th>프로젝트</th><th>기간</th><th>작업 내용 / 경력분야</th><th>상태</th><th>작업 추가·편집</th></tr></thead>
+<div class="tablebox"><table><thead><tr><th>회사·발주처</th><th>프로젝트명·수행작업</th><th>기간</th><th>작업 내용 / 경력분야</th><th>상태</th><th>작업 추가·편집</th></tr></thead>
 <tbody id="projects"><tr><td colspan="6" class="empty">데이터를 불러오는 중입니다.</td></tr></tbody></table></div>
-<p class="note">입력 내용은 이 브라우저에 저장되며 다른 기기와 자동 동기화되지 않습니다. 기간이나 회사·프로젝트가 부족하면 자료로만 저장되고 게이지에는 반영되지 않습니다. KOSA 공식 인정경력과는 별개입니다.</p>
+<p class="note">입력 내용은 이 브라우저에만 저장되며 자동 동기화되지 않습니다. 발주처·프로젝트명이 확인되지 않은 단서는 참고자료이며, 별도로 검증한 직접 Git 코드 활동월은 내부 개발활동으로 잠정 반영합니다. 기술명은 회사·고유 프로젝트명이 아닙니다. KOSA 공식 인정경력과는 별개입니다.</p>
 </section><div class="footer">SuaveForge Career · 신고 목표 대비 경력 복원 현황</div></div>
 <script>
 "use strict";
@@ -192,13 +192,18 @@ function inMonths(t){return Boolean(t.start&&t.end&&months(t.start,t.end).length
 function hasSpecificIdentity(row){
  const company=String(row.company||'').trim();
  const project=String(row.project??row.title??'').trim();
- const genericCompany=/^(?:프리랜서|freelancer|freelance|개인|기타|미정|미상|미확정|)$/i.test(company);
- const genericProject=!project||/(?:통합|포괄|전체)\s*(?:경력|이력|수행기간)/.test(project)||
+ const genericCompany=/^(?:프리랜서|freelancer|freelance|개인|기타|미정|미상|미확정|발주처 미확인|GitHub 개인 연구|)$/i.test(company);
+ const genericProject=!project||/프로젝트명 미확인/.test(project)||/(?:통합|포괄|전체)\s*(?:경력|이력|수행기간)/.test(project)||
   /^(?:프리랜서(?:\s*(?:개발|프로젝트|작업|업무))?|웹게임(?:\s*및\s*시스템)?\s*개발|웹\s*개발|서버\s*개발|프로젝트\s*개발|기타(?:\s*프로젝트)?|미정|미상|미확정)$/i.test(project);
  return !genericCompany||!genericProject;
 }
+function hasVerifiedGitActivity(row){
+ if(!Array.isArray(row.verifiedCommitMonths)||!Array.isArray(row.evidence)||!row.evidence.some(e=>e.type==='git_direct_code_commit'))return false;
+ const allowed=new Set(row.verifiedCommitMonths),active=months(row.start,row.end);
+ return active.length>0&&active.every(n=>allowed.has(String(Math.floor(n/12)).padStart(4,'0')+'-'+String(n%12+1).padStart(2,'0')));
+}
 function isCreditable(row){
- return inMonths(row)&&hasSpecificIdentity(row)&&!(row.resourceOnly&&!row.edited);
+ return inMonths(row)&&(hasSpecificIdentity(row)||hasVerifiedGitActivity(row))&&!(row.resourceOnly&&!row.edited);
 }
 function status(t){return isCreditable(t)?'linked':inMonths(t)?'resource':'review'}
 
@@ -246,6 +251,7 @@ function careerMasterCompanies(rows){
  for(const row of rows){
   for(const employer of careerEmployers(row.company)){
    const id=careerCompanyKey(employer);
+   if(['발주처미확인','github개인연구','외주지원·포트폴리오기록'].includes(id))continue;
    if(id&&!names.has(id))names.set(id,employer);
   }
  }
@@ -583,7 +589,7 @@ async function main(){
  const r=await fetch('./data.json',{cache:'no-store'});if(!r.ok)throw Error('데이터 HTTP '+r.status);
  const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];axis=data.timeAxis||{};
  $('updated').textContent='기준 데이터 '+escape(data.updatedAt||'');
- $('notice').textContent='경력 게이지는 수행기간 + 식별 가능한 회사 또는 구체적인 프로젝트가 있는 기록만 반영합니다. 프리랜서 통합경력은 자료로 보관하며, 이 브라우저의 개인 수정사항은 별도 보관됩니다.';
+ $('notice').textContent='기술명과 회사·프로젝트명을 구분합니다. 발주처 미확인인 경우 명칭을 임의로 만들지 않으며, 직접 검증된 Git 코드 활동월은 내부 개발활동으로만 잠정 연결합니다. KOSA 공식 승인경력은 아닙니다. 개인 수정사항은 현재 브라우저에 별도 보관됩니다.';
  const state=stored();tasks=state.tasks;overrides=state.overrides;setup();redraw();
  }catch(e){$('projects').innerHTML='<tr><td colspan="6" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';$('notice').textContent=e.message}
 }
