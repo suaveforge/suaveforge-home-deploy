@@ -310,6 +310,7 @@ function fieldEmployerContributions(rows,category){
  const total=byMonth.size;
  const entries=[...names].map(([id,company])=>({
   id,company,months:portions.get(id)||0,
+  rawMonths:[...byMonth.values()].filter(active=>active.has(id)).length,
   share:total?100*(portions.get(id)||0)/total:0
  })).filter(x=>x.months>0).sort((a,b)=>b.share-a.share||a.company.localeCompare(b.company,'ko'));
  // Largest-remainder rounding makes the *displayed* one-decimal shares total
@@ -324,18 +325,18 @@ function fieldEmployerContributions(rows,category){
  }
  return {entries,total};
 }
-function sourceChip(company,state,share=null,color='',uncreditedCount=0){
+function sourceChip(company,state,share=null,color='',uncreditedCount=0,rawMonths=0,allocatedMonths=0){
  const short=Array.from(company).slice(0,2).join('');
  const credited=state==='credited',uncredited=state==='uncredited';
- const detail=credited?'반영된 경력':uncredited?'미반영 · 해당 분야에 포함, 게이지 미등록':'해당 X · 이 분야에 속하지 않음';
- const outstanding=credited&&uncreditedCount?' · 별도 미반영 작업 '+uncreditedCount+'건':'';
- const title=detail+' · '+company+outstanding;
+ const detail=credited?'반영된 경력':uncredited?'미반영 · 해당 분야에 포함되지만 개월 미반영':'해당 X · 이 분야에 속하지 않음';
+ const outstanding=credited&&uncreditedCount?' · 추가 확인 필요 작업 '+uncreditedCount+'건(개월 미반영)':'';
+ const title=credited?'반영 · '+company+' · 회사별 반영 월 '+rawMonths+'개월(중복 가능) · 비중 환산 '+allocatedMonths.toFixed(1)+'개월(중복 월 균등분배) · 비중 '+share.toFixed(1)+'%'+outstanding:detail+' · '+company;
  const content=credited?'<span class="field-share-dot" style="background:'+color+'"></span>'+
   '<span class="field-chip-name">'+escape(short)+'</span>'+
   '<strong class="field-share-percent">'+share.toFixed(1)+'%</strong>':escape(short);
  return '<span class="field-source-chip '+(credited?'credited':uncredited?'pending':'unrelated')+
   '" data-master-company="'+escape(careerCompanyKey(company))+
-  '" title="'+escape(title)+'" aria-label="'+escape(title+(credited?' · 기여 비중 '+share.toFixed(1)+'%':''))+
+  '" title="'+escape(title)+'" aria-label="'+escape(title)+
   '" tabindex="0">'+content+'</span>';
 }
 
@@ -452,15 +453,15 @@ function renderFields(){
   const shares=contributions.entries;
   const confirmed=shares.map((item,i)=>{
    const state=sources.byId.get(item.id);
-   return sourceChip(item.company,'credited',item.percent,FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length],state?.uncredited||0);
+   return sourceChip(item.company,'credited',item.percent,FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length],state?.uncredited||0,item.rawMonths,item.months);
   }).join('');
   const pending=sources.uncredited.map(item=>sourceChip(item.company,'uncredited')).join('');
   const unrelated=sources.unrelated.map(item=>sourceChip(item.company,'unrelated')).join('');
   const chart=shares.length?'<div class="field-share-block"><div class="field-share-track" role="img" aria-label="'+
    escape('반영된 경력 '+total+'개월의 회사별 비중 · '+shares.map(x=>x.company+' '+x.percent.toFixed(1)+'%').join(', '))+'">'+
    shares.map((item,i)=>'<span class="field-share-segment" style="width:'+item.share.toFixed(6)+'%;background:'+
-     FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length]+'" title="'+escape(item.company+' · '+item.percent.toFixed(1)+'%')+'"></span>').join('')+
-   '</div><div class="field-share-help">반영 기간 내 비중 · 중복되는 월은 회사별로 균등 분배</div></div>':'';
+     FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length]+'" title="'+escape(item.company+' · 회사별 반영 월 '+item.rawMonths+'개월(중복 가능) · 비중 환산 '+item.months.toFixed(1)+'개월 · '+item.percent.toFixed(1)+'%')+'"></span>').join('')+
+   '</div><div class="field-share-help">회사별 반영 월은 중복 가능 · 비중은 겹친 월을 회사별로 균등 분배</div></div>':'';
   const sourceList='<div class="field-sources"><div class="field-source-row"><span class="field-source-label">반영</span><div class="field-source-tags">'+(confirmed||'<span class="field-source-empty">기간 확정 경력 없음</span>')+'</div></div>'+
    chart+'<div class="field-source-row"><span class="field-source-label">미반영</span><div class="field-source-tags">'+(pending||'<span class="field-source-empty">미반영 경력 없음</span>')+'</div></div>'+
    '<div class="field-source-row unrelated"><span class="field-source-label">해당 X</span><div class="field-source-tags">'+(unrelated||'<span class="field-source-empty">해당 X 회사 없음</span>')+'</div></div></div>';
