@@ -201,6 +201,9 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-activity-divider{height:27px;min-height:27px}
 .cg-activity-divider .cg-activity-header{padding:3px 10px;font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 
+.cg-bar.user-paid{background:#6489b8;border:1px dashed #b9d0ed;box-sizing:border-box}
+.cg-userpaid .cg-name{background:#f4f8fd}
+.cg-userpaid .cg-rail{background:#f4f8fd}
 </style>
 </head><body><div class="wrap"><header class="top"><div class="logo"><a href="/">SUAVEFORGE</a> <span style="font-weight:400;color:#89939e">/ CAREER</span></div><div class="meta" id="updated">데이터 확인 중</div></header>
 <h1>개발 경력 현황</h1><p>회사·프로젝트별 작업과 분야별 경력기간 복원 진행도</p>
@@ -212,14 +215,14 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <p class="cg-sub">건강보험·유상 수행은 정확한 날짜로, 그 외 개발활동은 확인된 월만 다른 색으로 표시합니다. 이름은 왼쪽에 표시합니다. 개발활동은 경력 개월수에 가산하지 않으며, ZeroMax의 짧은 기록 공백은 간트 표시만 연결합니다.</p>
 <div class="cg-kpis" id="ganttKpis"></div>
 <div class="cg-legend">
-<span><i style="background:#44877e"></i>건강보험 재직</span><span><i style="background:#6489b8"></i>유상 수행 확인</span>
+<span><i style="background:#44877e"></i>건강보험 재직</span><span><i style="background:#6489b8"></i>유상 수행 확인</span><span><i style="background:#6489b8;border:1px dashed #b9d0ed"></i>유급 강의 · 본인 확인</span>
 <span><i style="background:#8478b2"></i>기타 개발활동 · 경력 미산정</span><span><i style="background:#c28a4b"></i>실제 날짜 겹침</span><span><i style="background:#e4e9ed;border:1px solid #d2dce4"></i>증빙 미연결</span></div>
 <div class="cg-scroll" id="ganttScroll" role="region" tabindex="0" aria-label="회사별 기간 간트차트. 좁은 화면에서는 좌우 스크롤이 가능합니다.">
 <div class="cg-board" id="ganttBoard"></div></div>
 <p class="cg-caption" id="ganttCaption"></p>
 <div class="cg-gap-panel"><h3 id="ganttGapTitle">재직 증빙이 비는 날짜</h3>
 <div class="cg-gaps" id="ganttGaps"></div>
-<p class="cg-method">빈 날짜는 건강보험·유상 수행 증빙이 연결되지 않았다는 뜻이며 무직·업무 미수행으로 단정하지 않습니다. 막대에 마우스를 올리면 정확한 기간을 확인할 수 있습니다.</p></div>
+<p class="cg-method">빈 날짜는 일자 단위 건강보험·계약 증빙이 연결되지 않았다는 뜻입니다. 유급 온라인 강의는 본인 확인에 따라 월 단위로 별도 표시하며 일자 중복·공백 계산에는 포함하지 않습니다.</p></div>
 </section>
 <section class="timeline-section" id="careerTimeline" aria-labelledby="timelineTitle">
 <div class="timeline-header"><div><h2 id="timelineTitle">전체 개발활동 · 공백 점검</h2>
@@ -337,8 +340,11 @@ function careerCompanyKey(company){
 }
 // Only insured employer months or proven paid engagements can fill the
 // professional-career gauge. Git activity remains in the separate activity timeline.
-function isVerifiedEmployerMonth(company,n){
+function isVerifiedEmployerMonth(company,n,scope='software'){
  const id=careerCompanyKey(company);
+ if(scope==='education')return (axis.userConfirmedPaidEducation||[]).some(item=>
+  item.paidConfirmedByUser===true&&careerCompanyKey(item.company)===id&&
+  monthId(item.start)!==null&&monthId(item.end)!==null&&n>=monthId(item.start)&&n<=monthId(item.end));
  const insured=(axis.insurance||[]).some(item=>
   careerCompanyKey(item.company)===id&&
   monthId(String(item.start||'').slice(0,7))!==null&&
@@ -354,7 +360,7 @@ function isVerifiedEmployerMonth(company,n){
 function eligibleEmployersInMonth(row,n){
  if(!isCreditable(row))return [];
  return [...new Set(careerEmployers(row.company))]
-  .filter(company=>isVerifiedEmployerMonth(company,n));
+  .filter(company=>isVerifiedEmployerMonth(company,n,row.categories?.includes('교육·강의')?'education':'software'));
 }
 function careerCreditedMonths(row){
  return isCreditable(row)?months(row.start,row.end)
@@ -378,6 +384,11 @@ function careerMasterCompanies(rows){
   const id=careerCompanyKey(payer.company);
   if(id&&!names.has(id))names.set(id,payer.company);
  }
+ for(const course of axis.userConfirmedPaidEducation||[]){
+  if(course.paidConfirmedByUser!==true)continue;
+  const id=careerCompanyKey(course.company);
+  if(id&&!names.has(id))names.set(id,course.company);
+ }
  return [...names].map(([id,company])=>({id,company}));
 }
 function fieldEmployerStates(rows,category,master){
@@ -387,7 +398,7 @@ function fieldEmployerStates(rows,category,master){
   for(const employer of careerEmployers(row.company)){
    const item=byId.get(careerCompanyKey(employer));
    if(item){
-    if(careerCreditedMonths(row).length&&careerCreditedMonths(row).some(n=>isVerifiedEmployerMonth(employer,n)))item.credited++;
+    if(careerCreditedMonths(row).length&&careerCreditedMonths(row).some(n=>isVerifiedEmployerMonth(employer,n,row.categories?.includes('교육·강의')?'education':'software')))item.credited++;
     else item.uncredited++;
    }
   }
@@ -669,6 +680,21 @@ function renderCareerGantt(){
    return '<span class="cg-summary-bar '+p.kind+'" style="left:'+g.percent(p.start).toFixed(5)+'%;width:'+
     (100*(p.end-p.start)/g.span).toFixed(5)+'%" title="'+esc(name+' · '+fmt(g.iso(p.start))+'~'+fmt(g.iso(p.end-g.DAY)))+'"></span>';
   }).join('')+'</div></div>';
+ // Month-only paid teaching: visually separate from day-exact employer coverage;
+ // never contribute estimated day boundaries to date overlap/gap KPIs.
+ const paidTeaching=(axis.userConfirmedPaidEducation||[]).filter(item=>item.paidConfirmedByUser===true&&
+  monthId(item.start)!==null&&monthId(item.end)!==null&&monthId(item.end)>=monthId(item.start)).map(item=>{
+  const year=Number(item.start.slice(0,4)),mo=Number(item.start.slice(5,7));
+  const endYear=Number(item.end.slice(0,4)),endMo=Number(item.end.slice(5,7));
+  const first=Date.UTC(year,mo-1,1),until=Date.UTC(endYear,endMo,1);
+  const start=Math.max(first,g.from),end=Math.min(until,g.until);
+  if(end<=start)return '';
+  const length=monthId(item.end)-monthId(item.start)+1;
+  const tip=item.company+' · '+fmt(item.start)+'~'+fmt(item.end)+' (유급 강의)';
+  return '<div class="cg-row cg-userpaid" data-gantt-education="'+esc(item.id)+'"><div class="cg-name"><strong>'+esc(item.company)+' · 교육·강의</strong></div>'+
+   '<div class="cg-rail">'+rules()+'<span class="cg-bar user-paid" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+
+   '" style="left:'+g.percent(start).toFixed(5)+'%;width:'+(100*(end-start)/g.span).toFixed(5)+'%"></span></div></div>';
+ }).join('');
  const activity=ganttActivityGroups(g);
  const activityHeader=activity.length?'<div class="cg-row cg-activity-divider"><div class="cg-name"><strong>그 외 개발활동</strong><small>경력 개월수 미산정</small></div>'+
   '<div class="cg-activity-header">색상 구분 · 실제 수행월만 표시 (프로젝트명은 회사·발주처가 아닐 수 있음)</div></div>':'';
@@ -689,7 +715,7 @@ function renderCareerGantt(){
  }).join('');
 
  const board=$('ganttBoard');
- board.innerHTML=axis+items+summary+activityHeader+activityRows+
+ board.innerHTML=axis+items+summary+paidTeaching+activityHeader+activityRows+
   '<div class="cg-guide" id="ganttGuide" hidden aria-hidden="true"><span class="cg-guide-date" id="ganttGuideDate"></span></div>';
  board.onpointermove=e=>{
   const rail=e.target?.closest?.('.cg-rail, .cg-axis');
@@ -761,7 +787,8 @@ function renderFields(){
   const actual=new Set(related.flatMap(careerCreditedMonths));
   const activity=new Set(related.filter(isCreditable).flatMap(t=>months(t.start,t.end)));
   const total=actual.size,activityMonths=activity.size,waiting=activityMonths-total;
-  const target=Number(f.target),pct=target?Math.min(100,Math.max(0,100*total/target)):0,ok=total>=target;
+  const hasTarget=Number(f.target)>0,target=hasTarget?Number(f.target):0;
+  const pct=hasTarget?Math.min(100,Math.max(0,100*total/target)):0,ok=hasTarget&&total>=target;
   const diff=waiting>0?'개발활동 '+activityMonths+'개월 중 증빙대기 '+waiting+'개월':'검토대기 개발활동 없음';
   const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
@@ -780,7 +807,9 @@ function renderFields(){
   const sourceList='<div class="field-sources"><div class="field-source-row"><span class="field-source-label">반영</span><div class="field-source-tags">'+(confirmed||'<span class="field-source-empty">기간 확정 경력 없음</span>')+'</div></div>'+
    chart+'<div class="field-source-row"><span class="field-source-label">미반영</span><div class="field-source-tags">'+(pending||'<span class="field-source-empty">미반영 경력 없음</span>')+'</div></div>'+
    '<div class="field-source-row unrelated"><span class="field-source-label">해당 X</span><div class="field-source-tags">'+(unrelated||'<span class="field-source-empty">해당 X 회사 없음</span>')+'</div></div></div>';
-  return '<article class="field"><div class="name">'+escape(f.name)+'</div><div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>'+sourceList+'</article>';
+  const progress=hasTarget?'<div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>':
+   '<div class="numbers"><b style="color:#337e98">'+total+'개월</b><small>별도 교육·강의 경력</small></div><div class="foot"><span>경력 기준 미설정 · 유급 본인 확인</span><span>기존 개발경력에 미가산</span></div>';
+  return '<article class="field"><div class="name">'+escape(f.name)+'</div>'+progress+sourceList+'</article>';
  }).join('');
 }
 

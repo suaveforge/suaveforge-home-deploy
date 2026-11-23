@@ -1,8 +1,8 @@
 {
-  "version": 14,
-  "updatedAt": "2026-11-22",
+  "version": 15,
+  "updatedAt": "2026-11-23",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
-  "notice": "분야별 경력 게이지는 건강보험 재직 회사의 실제 재직월과 유상 수행 증빙이 확인된 거래처만 계산합니다. Git 커밋·개인 프로젝트·발주처 미확인 개발활동은 삭제하지 않고 증빙 대기 자료로 별도 보존합니다. KOSA 공식 승인경력과는 별개입니다.",
+  "notice": "분야별 경력 게이지는 건강보험 재직 회사의 실제 재직월과 유상 수행 증빙이 확인된 거래처만 계산합니다. Git 커밋·개인 프로젝트·발주처 미확인 개발활동은 삭제하지 않고 증빙 대기 자료로 별도 보존합니다. KOSA 공식 승인경력과는 별개입니다. 알지오 유급 C++ STL 20강 강의 제작(2013.07~2014.03)은 본인 확인 및 제작 메일 근거로 별도 교육·강의 9개월을 기록하며 SW 개발경력 합계에는 가산하지 않습니다.",
   "fields": [
     {
       "name": "웹 개발",
@@ -48,6 +48,12 @@
       "name": "PM / 조직 리딩",
       "target": 120,
       "linked": 42
+    },
+    {
+      "name": "교육·강의",
+      "target": null,
+      "linked": 0,
+      "note": "별도 교육 제작·강사 활동 월. SW 개발경력 월수와 중복 계산하지 않음. 기간 기준 미설정."
     }
   ],
   "projects": [
@@ -1336,6 +1342,54 @@
       "projectContextStart": "2016-02",
       "projectContextEnd": "2016-08",
       "projectNameVerified": true
+    },
+    {
+      "id": "p55",
+      "company": "알지오",
+      "title": "C++ STL 온라인 프로그래밍 강의 제작 (20강)",
+      "period": "2013.07 ~ 2014.03",
+      "start": "2013-07",
+      "end": "2014-03",
+      "categories": [
+        "교육·강의"
+      ],
+      "status": "linked",
+      "projectNameVerified": true,
+      "work": "알지오 C++ STL 인터넷 강의 기획, C++ STL 실습 예제·코드 및 강의 목차 준비, 화면 시연과 음성 녹화로 강의영상 제작·제출. 2013.07 착수 및 2013.07.31 1강 녹화 파일 송부, 2014.03.03 lec_STL_20-* 영상 파일 전송. 2014.04~06은 제작 종료 후 편집·검수·비용 정산 관련 후속 연락으로 보며 제작기간에 추가하지 않음.",
+      "evidence": [
+        {
+          "type": "gmail_original_work",
+          "note": "2013.07.23 알지오 C++ STL 제작 제안·보수 및 계약 절차 안내",
+          "source": "gmail",
+          "messageId": "1400951d8caf0d32"
+        },
+        {
+          "type": "gmail_original_work",
+          "note": "2013.07.31 본인 1강 AVI 4개 및 목차 파일 직접 전달",
+          "source": "gmail",
+          "messageId": "14035610a8730afb"
+        },
+        {
+          "type": "gmail_original_work",
+          "note": "2014.03.03 20강 AVI 4개 및 목차 파일 직접 전달",
+          "source": "gmail",
+          "messageId": "14483bd9a31f9291"
+        },
+        {
+          "type": "gmail_original_work",
+          "note": "2014.04.23 편집 17강 완료, 잔여 3강 및 비용 지급 예정 안내",
+          "source": "gmail",
+          "messageId": "1458dff3ab405dbb"
+        },
+        {
+          "type": "user_confirmed_paid",
+          "note": "2026.11.23 사용자가 2013.07~2014.03 인터넷 강의 제작을 유급 수행했다고 명시 확인함. 입금증빙은 별도 미조회."
+        }
+      ],
+      "note": "독립 유급 강의 제작 경력 9개월(본인 확인). 건강보험 재직기간과 같은 달에 중복되지만 교육·강의 분야에서만 분류하고 PC/웹/서버/DB/백엔드 등 SW 개발 분야 개월수에는 더하지 않음. KOSA 인정 경력이나 강의 플랫폼의 실명 강사 공개를 자동 주장하지 않음.",
+      "paidSourceStatus": "user_confirmed_paid",
+      "feeContractMentionedKRW": 700000,
+      "feePaidAmountVerified": false
     }
   ],
   "baselineRanges": {
@@ -2039,12 +2093,28 @@
       }
     ],
     "reconstructionDisclaimer": "GitHub 작성·커밋 일자가 모두 맞고 식별되는 코드·프로젝트가 있는 활동월만 내부 복원(중간 무커밋월 미산정). MetaFastest 사건 관련 추가 공개·경력가산은 보류. 정확한 계약일/사업소속/KOSA 공식 인정은 별도.",
-    "verifiedPaidEngagements": []
+    "verifiedPaidEngagements": [],
+    "userConfirmedPaidEducation": [
+      {
+        "id": "E01",
+        "company": "알지오",
+        "course": "C++ STL 온라인 프로그래밍 강의",
+        "start": "2013-07",
+        "end": "2014-03",
+        "paidConfirmedByUser": true,
+        "paymentReceiptVerified": false,
+        "sourceProjectId": "p55",
+        "precision": "month",
+        "kind": "education",
+        "note": "강의제작 유급 여부는 2026-11-23 본인 직접 확인. 실제 입금증빙은 별도 미확인. 2013-07~2014-03은 기획·강의 제작·영상파일 제출 기간."
+      }
+    ]
   },
   "careerSourcePolicy": {
     "counted": "건강보험 재직으로 입증된 해당 월 또는 유상 수행 증빙이 확인된 계약월만 분야별 경력 게이지에 산정",
     "uncounted": "Git 커밋·개인 프로젝트·조직명 미확인·증빙 전 외주 활동월은 개발활동 기록으로 보존하고 경력 게이지에서 제외",
     "proofTypes": "건강보험 자격득실, 계약·용역확인, 입금·원천징수·세금계산서 등 근거와 사업별 업무기간",
-    "caveat": "소프트웨어기술자 경력신고 인정과 별개의 내부 증빙 정리; 자료가 없는 것을 무급·미수행으로 판정하지 않음"
+    "caveat": "소프트웨어기술자 경력신고 인정과 별개의 내부 증빙 정리; 자료가 없는 것을 무급·미수행으로 판정하지 않음",
+    "education": "교육·강의는 본인 유급 확인+원본 강의파일 전송·업체 제작/정산 메일에 근거해 별도 9개월 기록. 실제 입금증빙 확보와 KOSA 인정은 별도. SW 개발경력에는 가산하지 않음."
   }
 }
