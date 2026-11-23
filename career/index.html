@@ -351,7 +351,7 @@ function isVerifiedEmployerMonth(company,n,scope='software'){
  const id=careerCompanyKey(company);
  if(scope==='education')return (axis.userConfirmedPaidEducation||[]).some(item=>
   item.paidConfirmedByUser===true&&careerCompanyKey(item.company)===id&&
-  monthId(item.start)!==null&&monthId(item.end)!==null&&n>=monthId(item.start)&&n<=monthId(item.end));
+  monthId(String(item.start).slice(0,7))!==null&&monthId(String(item.end).slice(0,7))!==null&&n>=monthId(String(item.start).slice(0,7))&&n<=monthId(String(item.end).slice(0,7)));
  const insured=(axis.insurance||[]).some(item=>
   careerCompanyKey(item.company)===id&&
   monthId(String(item.start||'').slice(0,7))!==null&&
@@ -361,14 +361,14 @@ function isVerifiedEmployerMonth(company,n,scope='software'){
  if((axis.verifiedPaidEngagements||[]).some(item=>
   item.verified===true&&item.proofType==='paid_contract_or_payment'&&
   careerCompanyKey(item.company)===id&&
-  monthId(item.start)!==null&&monthId(item.end)!==null&&
-  n>=monthId(item.start)&&n<=monthId(item.end)))return true;
+  monthId(String(item.start).slice(0,7))!==null&&monthId(String(item.end).slice(0,7))!==null&&
+  n>=monthId(String(item.start).slice(0,7))&&n<=monthId(String(item.end).slice(0,7))))return true;
  // Internally credited paid work confirmed by the user; documents/KOSA remain unverified.
  return (axis.userConfirmedPaidEngagements||[]).some(item=>
   item.paidConfirmedByUser===true&&item.periodConfirmedByUser===true&&
   careerCompanyKey(item.company)===id&&
-  monthId(item.start)!==null&&monthId(item.end)!==null&&
-  n>=monthId(item.start)&&n<=monthId(item.end));
+  monthId(String(item.start).slice(0,7))!==null&&monthId(String(item.end).slice(0,7))!==null&&
+  n>=monthId(String(item.start).slice(0,7))&&n<=monthId(String(item.end).slice(0,7)));
 }
 function eligibleEmployersInMonth(row,n){
  if(!isCreditable(row))return [];
