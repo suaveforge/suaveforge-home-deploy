@@ -57,6 +57,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .field-source-chip.unrelated{min-height:21px;padding:2px 6px;font-weight:600}
 
 .field-source-chip.credited{gap:5px;border-color:#d8e2e7;background:#f9fbfc}
+.field-source-chip.credited.unpaid{background:#e4e8ec;border-color:#b4bec8;color:#394a59}
 .field-share-dot{width:8px;height:8px;flex:none;border-radius:50%;display:inline-block}
 .field-chip-name{font-weight:700}
 .field-share-percent{font-size:11px;color:#334a5b;font-weight:700;font-variant-numeric:tabular-nums}
@@ -345,8 +346,8 @@ function careerEmployers(company){
 function careerCompanyKey(company){
  return String(company||'').normalize('NFKC').replace(/\s+/g,'').toLowerCase();
 }
-// Only insured employer months or proven paid engagements can fill the
-// professional-career gauge. Git activity remains in the separate activity timeline.
+// Confirmed dated work contributes to internal career progress regardless of
+// remuneration. Other Git activity remains in the separate activity timeline.
 function isVerifiedEmployerMonth(company,n,scope='software'){
  const id=careerCompanyKey(company);
  if(scope==='education')return (axis.userConfirmedPaidEducation||[]).some(item=>
@@ -372,8 +373,21 @@ function isVerifiedEmployerMonth(company,n,scope='software'){
 }
 function eligibleEmployersInMonth(row,n){
  if(!isCreditable(row))return [];
- return [...new Set(careerEmployers(row.company))]
-  .filter(company=>isVerifiedEmployerMonth(company,n,row.categories?.includes('교육·강의')?'education':'software'));
+ const scope=row.categories?.includes('교육·강의')?'education':'software';
+ const attributed=[...new Set(careerEmployers(row.company))]
+  .filter(company=>isVerifiedEmployerMonth(company,n,scope));
+ // Only explicitly mapped projects with confirmed work months are added.
+ // Pay status selects styling, never whether a work month is counted.
+ if(scope==='software'){
+  const projectId=row.rowId||row.id;
+  for(const entry of axis.unpaidActivityCompanies||[]){
+   if(entry.status!=='unpaid'||!entry.projectIds?.includes(projectId))continue;
+   if(!months(row.start,row.end).includes(n))continue;
+   if(!attributed.some(company=>careerCompanyKey(company)===careerCompanyKey(entry.company)))
+    attributed.push(entry.company);
+  }
+ }
+ return attributed;
 }
 function careerCreditedMonths(row){
  return isCreditable(row)?months(row.start,row.end)
@@ -438,10 +452,14 @@ function fieldEmployerStates(rows,category,master){
   if(!item)continue;
   unpaidIds.add(id);
   for(const row of rows){
-   if(!Array.isArray(entry.projectIds)||!entry.projectIds.includes(row.id||row.rowId))continue;
+   if(!Array.isArray(entry.projectIds)||!entry.projectIds.includes(row.rowId||row.id))continue;
    if(!Array.isArray(row.categories)||!row.categories.includes(category)||!inMonths(row))continue;
-   for(const month of months(row.start,row.end))item.unpaidMonths.add(month);
+   for(const month of careerCreditedMonths(row)){
+    if(eligibleEmployersInMonth(row,month).some(company=>careerCompanyKey(company)===id))
+     item.unpaidMonths.add(month);
+   }
   }
+  if(item.unpaidMonths.size)item.credited++;
  }
  const classified={credited:[],uncredited:[],unpaid:[],unrelated:[]};
  for(const item of byId.values()){
@@ -458,6 +476,10 @@ function fieldEmployerStates(rows,category,master){
 // overlap. Attribute each *distinct credited month* equally to its employers,
 // avoiding double counting in the field-wide progress calculation.
 const FIELD_SHARE_COLORS=['#337e98','#5b9d80','#b48a50','#8278b2','#af768e','#608f96','#976f5d','#7a9860','#6c82ae'];
+function fieldSourceColor(company,i){
+ return (axis.unpaidActivityCompanies||[]).some(x=>x.status==='unpaid'&&careerCompanyKey(x.company)===careerCompanyKey(company))
+  ?'#8c959f':FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length];
+}
 function fieldEmployerContributions(rows,category){
  const names=new Map(),byMonth=new Map();
  for(const row of rows){
@@ -506,7 +528,7 @@ function sourceChip(company,state,share=null,color='',uncreditedCount=0,rawMonth
  const content=credited?'<span class="field-share-dot" style="background:'+color+'"></span>'+
   '<span class="field-chip-name">'+escape(chipName)+'</span>'+
   '<strong class="field-share-percent">'+share.toFixed(1)+'%</strong>':escape(chipName);
- return '<span class="field-source-chip '+(credited?'credited':unpaid?'unpaid':uncredited?'pending':'unrelated')+
+ return '<span class="field-source-chip '+(credited?(unpaidEntry?'credited unpaid':'credited'):unpaid?'unpaid':uncredited?'pending':'unrelated')+
   '" data-master-company="'+escape(careerCompanyKey(company))+
   '" title="'+escape(title)+'" aria-label="'+escape(title)+
   '" tabindex="0">'+content+'</span>';
@@ -852,20 +874,16 @@ function renderFields(){
   const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
   const shares=contributions.entries;
-  const creditedTags=shares.map((item,i)=>{
+  const confirmed=shares.map((item,i)=>{
    const state=sources.byId.get(item.id);
-   return sourceChip(item.company,'credited',item.percent,FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length],state?.uncredited||0,item.rawMonths,item.months);
+   return sourceChip(item.company,'credited',item.percent,fieldSourceColor(item.company,i),state?.uncredited||0,item.rawMonths,item.months);
   }).join('');
-  // Show dated unpaid work beside completed/recorded work; it must never
-  // contribute to the paid career gauge or the share percentages below.
-  const unpaidTags=sources.unpaid.map(item=>sourceChip(item.company,'unpaid',null,'',0,item.unpaidMonths.size)).join('');
-  const confirmed=creditedTags+unpaidTags;
   const pending=sources.uncredited.map(item=>sourceChip(item.company,'uncredited')).join('');
   const unrelated=sources.unrelated.map(item=>sourceChip(item.company,'unrelated')).join('');
   const chart=shares.length?'<div class="field-share-block"><div class="field-share-track" role="img" aria-label="'+
    escape('반영된 경력 '+total+'개월의 회사별 비중 · '+shares.map(x=>x.company+' '+x.percent.toFixed(1)+'%').join(', '))+'">'+
    shares.map((item,i)=>'<span class="field-share-segment" style="width:'+item.share.toFixed(6)+'%;background:'+
-     FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length]+'" title="'+escape(item.company+' · '+item.rawMonths+'개월')+'"></span>').join('')+
+     fieldSourceColor(item.company,i)+'" title="'+escape(item.company+' · '+item.rawMonths+'개월')+'"></span>').join('')+
    '</div><div class="field-share-help">회사별 반영 월은 중복 가능 · 비중은 겹친 월을 회사별로 균등 분배</div></div>':'';
   const sourceList='<div class="field-sources"><div class="field-source-row"><span class="field-source-label">반영</span><div class="field-source-tags">'+(confirmed||'<span class="field-source-empty">기간 확정 경력 없음</span>')+'</div></div>'+
    chart+'<div class="field-source-row"><span class="field-source-label">미반영</span><div class="field-source-tags">'+(pending||'<span class="field-source-empty">미반영 경력 없음</span>')+'</div></div>'+
