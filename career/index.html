@@ -169,14 +169,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 
 /* Names stay anchored to the actual bars, including short dated periods. */
 .cg-bar{overflow:visible}
-.cg-bar-label{position:absolute;top:-2px;left:4px;z-index:2;display:inline-block;white-space:nowrap;
- padding:2px 6px;line-height:15px;font-size:12px;font-weight:750;color:#275a54;
- background:rgba(255,255,255,.94);border:1px solid #bfd8d2;border-radius:5px;
- pointer-events:none}
-.cg-bar-label.edge-end{left:auto;right:3px}
-.cg-bar.paid .cg-bar-label{color:#365b86;border-color:#c8d9e9}
 .cg-bar.activity{background:#8478b2}
-.cg-bar.activity .cg-bar-label{color:#5c4d85;border-color:#d9d2eb}
 .cg-activity-divider{background:#f5f2fa;min-height:38px}
 .cg-activity-divider .cg-name{background:#f5f2fa}
 .cg-activity-divider strong{color:#574976;font-size:12px}
@@ -196,7 +189,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <section class="section" id="careerFields"><h2>분야별 경력 복원</h2><p class="note">건강보험 재직·유상 수행이 확인된 월만 경력 게이지에 반영합니다. Git 개발활동 기록은 별도 보존합니다.</p><div class="grid" id="fields"></div></section>
 <section class="career-gantt" id="careerGantt" aria-labelledby="careerGanttTitle">
 <h2 id="careerGanttTitle">회사별 재직·수행기간 간트차트</h2>
-<p class="cg-sub">건강보험·유상 수행은 정확한 날짜로, 그 외 개발활동은 확인된 월만 다른 색으로 표시합니다. 이름은 각 기간 막대에 함께 표시하며, 개발활동은 경력 개월수에 가산하지 않습니다.</p>
+<p class="cg-sub">건강보험·유상 수행은 정확한 날짜로, 그 외 개발활동은 확인된 월만 다른 색으로 표시합니다. 이름은 왼쪽에 표시합니다. 개발활동은 경력 개월수에 가산하지 않으며, ZeroMax의 짧은 기록 공백은 간트 표시만 연결합니다.</p>
 <div class="cg-kpis" id="ganttKpis"></div>
 <div class="cg-legend">
 <span><i style="background:#44877e"></i>건강보험 재직</span><span><i style="background:#6489b8"></i>유상 수행 확인</span>
@@ -610,7 +603,20 @@ function ganttActivityGroups(g){
    if(last&&last.final===n-1)last.final=n;
    else intervals.push({first:n,final:n});
   }
-  return {...group,intervals:intervals.map(x=>{
+  // ZeroMax: one short Git activity gap in April 2023 is bridged ONLY in the
+  // visual interval. Evidence-backed activity months remain the six recorded months.
+  const visualGaps=[];
+  if(group.id==='zeromax'&&intervals.length>1){
+   for(let i=1;i<intervals.length;i++){
+    const before=intervals[i-1],after=intervals[i];
+    for(let m=before.final+1;m<after.first;m++)visualGaps.push(yearMonth(m));
+   }
+   if(visualGaps.length<=1){
+    const first=intervals[0].first,last=intervals[intervals.length-1].final;
+    intervals.splice(0,intervals.length,{first,final:last});
+   }else visualGaps.length=0;
+  }
+  return {...group,visualGaps,intervals:intervals.map(x=>{
    const start=yearMonth(x.first),end=yearMonth(x.final);
    const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5))-1,1);
    const b=Date.UTC(Number(end.slice(0,4)),Number(end.slice(5)),1);
@@ -633,13 +639,10 @@ function renderCareerGantt(){
  const items=g.periods.map(p=>{
   const left=g.percent(p.first),width=100*((p.last+g.DAY-p.first)/g.span);
   const label=p.company+' · '+p.start+' ~ '+p.end+' · '+g.workedMonths(p)+'개월(월 걸침)';
-  const onRight=left>86?' edge-end':'';
-  return '<div class="cg-row" data-gantt-company="'+esc(p.company)+'"><div class="cg-name"><strong>'+
-   (p.kind==='paid'?'유상 수행':'건강보험 재직')+' · '+g.workedMonths(p)+'개월</strong>'+
-   '<small>'+fmt(p.start)+' ~ '+fmt(p.end)+'</small></div><div class="cg-rail">'+rules()+
+   return '<div class="cg-row" data-gantt-company="'+esc(p.company)+'"><div class="cg-name"><strong>'+esc(p.company)+'</strong>'+
+   '<small>'+fmt(p.start)+' ~ '+fmt(p.end)+' · '+g.workedMonths(p)+'개월</small></div><div class="cg-rail">'+rules()+
    '<span class="cg-bar'+(p.kind==='paid'?' paid':'')+'" tabindex="0" title="'+esc(label)+'" aria-label="'+esc(label)+
-   '" style="left:'+left.toFixed(5)+'%;width:'+width.toFixed(5)+'%">'+
-   '<span class="cg-bar-label'+onRight+'" aria-hidden="true">'+esc(p.company)+'</span></span></div></div>';
+   '" style="left:'+left.toFixed(5)+'%;width:'+width.toFixed(5)+'%"></span></div></div>';
  }).join('');
  const summary='<div class="cg-row"><div class="cg-name cg-overview-name"><strong>전체 날짜 현황</strong><small>겹침·공백 동시 확인</small></div>'+
   '<div class="cg-rail cg-overview-rail">'+rules()+g.segments.map(p=>{
@@ -652,20 +655,18 @@ function renderCareerGantt(){
   '<div class="cg-activity-header">색상 구분 · 실제 수행월만 표시 (프로젝트명은 회사·발주처가 아닐 수 있음)</div></div>':'';
  const activityRows=activity.map(entry=>{
   const dates=entry.intervals.map(i=>i.start===i.end?i.start:i.start+' ~ '+i.end).join(', ');
-  const largest=entry.intervals.reduce((best,i,j)=>i.months>entry.intervals[best].months?j:best,0);
-  const bars=entry.intervals.map((i,j)=>{
+  const bars=entry.intervals.map(i=>{
    const start=Math.max(g.from,i.a),end=Math.min(g.until,i.b);
    if(end<=start)return '';
    const left=g.percent(start),width=100*((end-start)/g.span);
-   const nearEnd=left>86?' edge-end':'';
-   const tip=entry.label+' · '+i.start+' ~ '+i.end+' · '+i.months+'개월 (월 단위 근거, 일자 미확정) · '+entry.detail;
+   const bridged=entry.visualGaps.length?' · '+entry.visualGaps.join(', ')+'는 기록 공백을 차트에서만 연결 (경력·활동개월 미가산)':'';
+   const tip=entry.label+' · '+i.start+' ~ '+i.end+' · 근거 확인 '+entry.months.size+'개월 (월 단위 근거, 일자 미확정)'+bridged+' · '+entry.detail;
    return '<span class="cg-bar activity" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+'" style="left:'+
-    left.toFixed(5)+'%;width:'+width.toFixed(5)+'%">'+
-    (j===largest?'<span class="cg-bar-label'+nearEnd+'" aria-hidden="true">'+esc(entry.label)+'</span>':'')+'</span>';
+    left.toFixed(5)+'%;width:'+width.toFixed(5)+'%"></span>';
   }).join('');
   return '<div class="cg-row cg-activity-row" data-gantt-activity="'+esc(entry.id)+'">'+
-   '<div class="cg-name"><strong>개발활동 · '+entry.months.size+'개월</strong><small title="'+esc(dates)+'">'+
-   esc(dates.length>30?dates.slice(0,29)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bars+'</div></div>';
+   '<div class="cg-name"><strong title="'+esc(entry.detail)+'">'+esc(entry.label)+'</strong><small title="'+esc(dates)+'">'+
+   '개발활동 '+entry.months.size+'개월 · '+esc(dates.length>20?dates.slice(0,19)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bars+'</div></div>';
  }).join('');
 
  $('ganttBoard').innerHTML=axis+items+summary+activityHeader+activityRows;
