@@ -6,7 +6,6 @@
 *{box-sizing:border-box}body{margin:0}.wrap{max-width:1240px;margin:auto;padding:30px 22px 80px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center}
 .logo{font-weight:800;letter-spacing:.04em}.logo a{color:inherit;text-decoration:none}.meta{color:#667787;font-size:13px}
 h1{font-size:29px;letter-spacing:-.04em;margin:30px 0 7px}p{color:#657381;line-height:1.65}
-.notice{font-size:13px;padding:10px 14px;background:white;border:1px solid #e4e9ef;border-radius:8px}
 .section{margin-top:30px}.section h2{font-size:20px;margin-bottom:15px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .field{background:white;border:1px solid #e3e9f0;padding:19px;border-radius:12px}.name{font-weight:700;font-size:15px}
 .numbers{display:flex;justify-content:space-between;margin:12px 0 10px;align-items:baseline}.numbers b{font-size:25px;font-variant-numeric:tabular-nums}.numbers small{font-size:12px;color:#718090}
@@ -205,11 +204,11 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-userpaid .cg-name{background:#f4f8fd}
 .cg-userpaid .cg-rail{background:#f4f8fd}
 </style>
+<link rel="stylesheet" href="./specialties.css?v=20261123-2">
 </head><body><div class="wrap"><header class="top"><div class="logo"><a href="/">SUAVEFORGE</a> <span style="font-weight:400;color:#89939e">/ CAREER</span></div><div class="meta" id="updated">데이터 확인 중</div></header>
-<h1>개발 경력 현황</h1><p>회사·프로젝트별 작업과 분야별 경력기간 복원 진행도</p>
-<div class="notice" id="notice">경력 기준을 불러오는 중입니다.</div>
+<h1>개발 경력 현황</h1>
 
-<section class="section" id="careerFields"><h2>분야별 경력 복원</h2><p class="note">건강보험 재직·유상 수행이 확인된 월만 경력 게이지에 반영합니다. Git 개발활동 기록은 별도 보존합니다.</p><div class="grid" id="fields"></div></section>
+<section class="section" id="careerFields"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
 <section class="career-gantt" id="careerGantt" aria-labelledby="careerGanttTitle">
 <h2 id="careerGanttTitle">회사별 재직·수행기간 간트차트</h2>
 <p class="cg-sub">건강보험·유상 수행은 정확한 날짜로, 그 외 개발활동은 확인된 월만 다른 색으로 표시합니다. 이름은 왼쪽에 표시합니다. 개발활동은 경력 개월수에 가산하지 않으며, ZeroMax의 짧은 기록 공백은 간트 표시만 연결합니다.</p>
@@ -934,10 +933,9 @@ async function main(){
  const r=await fetch('./data.json',{cache:'no-store'});if(!r.ok)throw Error('데이터 HTTP '+r.status);
  const data=await r.json();base=Array.isArray(data.projects)?data.projects:[];fields=Array.isArray(data.fields)?data.fields:[];axis=data.timeAxis||{};
  $('updated').textContent='기준 데이터 '+escape(data.updatedAt||'');
- $('notice').textContent=data.notice||'건강보험 재직·유상 수행이 확인된 월만 분야별 경력 게이지에 반영하고, Git 개발활동은 경력과 분리하여 증빙 대기 자료로 보관합니다.';
  const state=stored();tasks=state.tasks;overrides=state.overrides;setup();redraw();
- }catch(e){$('projects').innerHTML='<tr><td colspan="6" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';$('notice').textContent=e.message}
+ }catch(e){$('projects').innerHTML='<tr><td colspan="6" class="empty">경력 데이터를 불러올 수 없습니다.</td></tr>';console.error(e)}
 }
 main();
 })();
-</script></body></html>
+</script><script src="./specialties.js?v=20261123-2"></script></body></html>
