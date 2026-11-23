@@ -612,7 +612,7 @@ function ganttActivityGroups(g){
   }
   return {...group,intervals:intervals.map(x=>{
    const start=yearMonth(x.first),end=yearMonth(x.final);
-   const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5)),1);
+   const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5))-1,1);
    const b=Date.UTC(Number(end.slice(0,4)),Number(end.slice(5))+1,1);
    return {start,end,a,b,months:x.final-x.first+1};
   })};
