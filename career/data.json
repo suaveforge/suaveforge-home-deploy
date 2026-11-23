@@ -2182,6 +2182,35 @@
         "paymentClaimDate": "2024-09-13",
         "note": "내부 경력 복원용 유급 수행 확인. 월 걸침 5개월. 계약서·입금증·KOSA 공식 승인 자료는 아직 미검증."
       }
+    ],
+    "unpaidActivityCompanies": [
+      {
+        "id": "ZM",
+        "company": "ZeroMax",
+        "shortName": "제맥",
+        "status": "unpaid",
+        "origin": "user_specified_display_2026-11-23",
+        "projectIds": [
+          "p24",
+          "p25",
+          "p39",
+          "p42",
+          "p48"
+        ],
+        "note": "기간이 특정된 개발활동만 분야별 무급 항목에 표시. 실제 수입/공식 경력 인정과 분리."
+      },
+      {
+        "id": "UP",
+        "company": "U.Podium",
+        "shortName": "유포",
+        "status": "unpaid",
+        "origin": "user_specified_display_2026-11-23",
+        "projectIds": [
+          "p26",
+          "p49"
+        ],
+        "note": "U.Podium과 MetaFastest는 별도 중복 회사로 만들지 않음. 활동월 있는 개발 기록만 무급에 표시."
+      }
     ]
   },
   "careerSourcePolicy": {
