@@ -1,0 +1,595 @@
+{
+  "schema": 1,
+  "source": "KOSA_경력마스터_복원작업판_20261123.xlsx · 02_분야전체 및 01_회사별체크",
+  "companies": [
+    {
+      "id": "C01",
+      "name": "위메이드"
+    },
+    {
+      "id": "C02",
+      "name": "넥슨GT"
+    },
+    {
+      "id": "C03",
+      "name": "유비펀"
+    },
+    {
+      "id": "C04",
+      "name": "유비펀스튜디오"
+    },
+    {
+      "id": "C05",
+      "name": "엔투스튜디오"
+    },
+    {
+      "id": "C06",
+      "name": "안드로메다게임즈"
+    },
+    {
+      "id": "C07",
+      "name": "네오위즈"
+    },
+    {
+      "id": "C08",
+      "name": "넥스터"
+    },
+    {
+      "id": "C09",
+      "name": "버드레터"
+    }
+  ],
+  "items": [
+    {
+      "id": "F001",
+      "group": "개발",
+      "name": "웹 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F002",
+      "group": "개발",
+      "name": "앱 개발(모바일)",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F003",
+      "group": "개발",
+      "name": "PC 응용SW 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F004",
+      "group": "개발",
+      "name": "서버 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F005",
+      "group": "데이터·AI",
+      "name": "DB 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F006",
+      "group": "개발",
+      "name": "백엔드 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F007",
+      "group": "데이터·AI",
+      "name": "AI 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F008",
+      "group": "데이터·AI",
+      "name": "블록체인 개발",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F009",
+      "group": "기획·관리",
+      "name": "PM·개발조직 리딩",
+      "stage": "registered",
+      "origin": "기존 등록"
+    },
+    {
+      "id": "F010",
+      "group": "인프라·운영",
+      "name": "빌드·CI/CD·형상관리",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F011",
+      "group": "인프라·운영",
+      "name": "운영·유지관리",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F012",
+      "group": "기술지원",
+      "name": "교육훈련·기술이전",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F013",
+      "group": "품질·보안",
+      "name": "성능 최적화·튜닝",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F014",
+      "group": "개발",
+      "name": "UI/UX 개발·기술 리딩",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F015",
+      "group": "기획·관리",
+      "name": "개발 PL·기술 리딩",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F016",
+      "group": "설계·아키텍처",
+      "name": "시스템 연계·인터페이스",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F017",
+      "group": "설계·아키텍처",
+      "name": "SW 아키텍처·프레임워크",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F018",
+      "group": "개발",
+      "name": "개발도구·관리도구 구축",
+      "stage": "active",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F019",
+      "group": "품질·보안",
+      "name": "SW 테스트·품질관리",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F020",
+      "group": "기획·관리",
+      "name": "요구사항 분석·상세설계",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F021",
+      "group": "인프라·운영",
+      "name": "장애 분석·기술지원",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F022",
+      "group": "인프라·운영",
+      "name": "서버·네트워크·인프라 관리",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F023",
+      "group": "데이터·AI",
+      "name": "데이터 분석·시각화",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F024",
+      "group": "데이터·AI",
+      "name": "배치·업무자동화 개발",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F025",
+      "group": "데이터·AI",
+      "name": "DB 설계·데이터 품질관리",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F026",
+      "group": "기술지원",
+      "name": "글로벌 서비스 현지화",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F027",
+      "group": "데이터·AI",
+      "name": "데이터 이관·마이그레이션",
+      "stage": "queue",
+      "origin": "앞선 후보"
+    },
+    {
+      "id": "F028",
+      "group": "기획·관리",
+      "name": "IT 서비스 기획",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F029",
+      "group": "기획·관리",
+      "name": "정보화 전략·시스템 기획",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F030",
+      "group": "기획·관리",
+      "name": "업무 프로세스 분석·개선",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F031",
+      "group": "기획·관리",
+      "name": "기능명세·기술문서 작성",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F032",
+      "group": "기획·관리",
+      "name": "기술 컨설팅·타당성 검토",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F033",
+      "group": "기획·관리",
+      "name": "일정·자원·위험 관리",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F034",
+      "group": "설계·아키텍처",
+      "name": "서버 아키텍처 설계",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F035",
+      "group": "설계·아키텍처",
+      "name": "DB·데이터 아키텍처",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F036",
+      "group": "설계·아키텍처",
+      "name": "클라우드 아키텍처",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F037",
+      "group": "설계·아키텍처",
+      "name": "분산서비스·마이크로서비스 설계",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F038",
+      "group": "개발",
+      "name": "시스템SW·미들웨어 개발",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F039",
+      "group": "개발",
+      "name": "실시간 통신·네트워크 프로그래밍",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F040",
+      "group": "개발",
+      "name": "게임·3D·시뮬레이션 개발",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F041",
+      "group": "개발",
+      "name": "UI/UX 화면·인터랙션 설계",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F042",
+      "group": "데이터·AI",
+      "name": "데이터 수집·ETL 파이프라인",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F043",
+      "group": "데이터·AI",
+      "name": "데이터 정제·검증",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F044",
+      "group": "데이터·AI",
+      "name": "통계·분석 시스템 개발",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F045",
+      "group": "데이터·AI",
+      "name": "AI 에이전트·LLM 연동",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F046",
+      "group": "데이터·AI",
+      "name": "검색·RAG·벡터DB",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F047",
+      "group": "데이터·AI",
+      "name": "AI 데이터셋·학습 파이프라인",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F048",
+      "group": "인프라·운영",
+      "name": "클라우드 구축·운영",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F049",
+      "group": "인프라·운영",
+      "name": "Linux·Windows 서버 구축",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F050",
+      "group": "인프라·운영",
+      "name": "컨테이너·배포환경 구축",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F051",
+      "group": "인프라·운영",
+      "name": "배포·릴리스·패치관리",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F052",
+      "group": "인프라·운영",
+      "name": "모니터링·로그·관제",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F053",
+      "group": "인프라·운영",
+      "name": "백업·복구·가용성 관리",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F054",
+      "group": "품질·보안",
+      "name": "단위·통합·부하·회귀시험",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F055",
+      "group": "품질·보안",
+      "name": "테스트 자동화",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F056",
+      "group": "품질·보안",
+      "name": "보안설계·취약점 점검",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F057",
+      "group": "품질·보안",
+      "name": "개인정보보호·접근권한 관리",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F058",
+      "group": "품질·보안",
+      "name": "IT 감리·품질감사",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F059",
+      "group": "기술지원",
+      "name": "사용자 교육·운영자 교육",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F060",
+      "group": "기술지원",
+      "name": "기술문서·매뉴얼 제작",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F061",
+      "group": "기술지원",
+      "name": "시스템 구축 후 안정화 지원",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F062",
+      "group": "기술지원",
+      "name": "고객 기술지원·요구사항 대응",
+      "stage": "queue",
+      "origin": "추가 후보"
+    },
+    {
+      "id": "F063",
+      "group": "기술지원",
+      "name": "IT 마케팅·서비스 확산",
+      "stage": "queue",
+      "origin": "추가 후보"
+    }
+  ],
+  "seeds": [
+    {
+      "field": "F010",
+      "company": "C05",
+      "status": "yes",
+      "note": "엔투 경력기술서 p.4 Jenkins 빌드자동화",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F010",
+      "company": "C09",
+      "status": "yes",
+      "note": "버드레터 Unity/C# 빌드 시스템 구축",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F012",
+      "company": "C08",
+      "status": "yes",
+      "note": "넥스터 메타버스 프레임워크 사내 인계",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F013",
+      "company": "C03",
+      "status": "yes",
+      "note": "유비펀 데카론 로딩 최적화",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F013",
+      "company": "C09",
+      "status": "yes",
+      "note": "버드레터 Unity 성능 최적화",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F014",
+      "company": "C01",
+      "status": "yes",
+      "note": "위메이드 UI/UX 파트 리딩",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F015",
+      "company": "C06",
+      "status": "yes",
+      "note": "안드로메다 개발팀장·조직 리딩",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F015",
+      "company": "C08",
+      "status": "yes",
+      "note": "넥스터 약 7명 프로그램팀 리딩",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F016",
+      "company": "C03",
+      "status": "yes",
+      "note": "유비펀 TCP·HTTP 연동",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F017",
+      "company": "C08",
+      "status": "yes",
+      "note": "넥스터 시스템·프레임워크 개발",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F018",
+      "company": "C01",
+      "status": "yes",
+      "note": "위메이드 맵툴·이펙트툴 제작",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    },
+    {
+      "field": "F018",
+      "company": "C03",
+      "status": "yes",
+      "note": "유비펀 맵툴·패치툴 제작",
+      "from": "2026-11-23 기존 경력 복원 자료",
+      "start": "",
+      "end": ""
+    }
+  ]
+}
