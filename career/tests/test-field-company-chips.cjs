@@ -29,9 +29,10 @@ setImmediate(()=>{
   return html.slice(begin,html.indexOf('</article>',begin));
  };
  const masters=qa.careerMasterCompanies(qa.allRows());
- assert.equal(masters.length,10,'nine insured employers plus one user-confirmed paid education provider');
+ assert.equal(masters.length,11,'nine insured, one paid education, and paid OnTheLive user-confirmed pending');
  assert.equal(masters.slice(0,9).map(x=>x.company).join('|'),data.timeAxis.insurance.map(x=>x.company).join('|'));
  assert.equal(masters[9].company,'알지오');
+ assert.equal(masters[10].company,'온더라이브');
  const expected={'웹 개발':[82,120],'모바일 앱':[95,192],'PC 응용SW':[69,180],
   '서버 개발':[82,156],'DB 개발':[50,156],'백엔드':[82,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
@@ -45,8 +46,8 @@ setImmediate(()=>{
   const markup=field(name);
   assert.ok(markup.includes(months+' / '+target+'개월'),name+' counts only insured/verified work');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
-  assert.equal(ids.length,10,name+' retains all ten evidence-tracked sources');
-  assert.equal(new Set(ids).size,10,name+' labels each employer once');
+  assert.equal(ids.length,11,name+' retains all eleven evidence-tracked sources');
+  assert.equal(new Set(ids).size,11,name+' labels each employer once');
   assert.deepEqual(ids.slice().sort().join('|'),masters.map(x=>x.id).sort().join('|'),name+' stable employer master');
   if(months){
    const chart=qa.fieldEmployerContributions(qa.allRows(),name);
@@ -109,28 +110,34 @@ setImmediate(()=>{
  assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,2,'MetaCross and OnTheLive are visible once each');
  assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross</strong>'),'MetaCross row shown');
  assert.ok(gh.includes('data-gantt-undated="OL"')&&gh.includes('>온더라이브</strong>'),'paid OnTheLive row shown');
- assert.ok(gh.includes('Git 2024.08.09~08.19 · 지급 09.13'),'Git work range and payment date displayed');
+ assert.ok(gh.includes('유급 최소 2024.06~10 · 증빙대기'),'user-confirmed minimum five months shown');
+ assert.ok(gh.includes('data-gantt-user-period="OL"'),'minimum paid user-confirmed range drawn');
+ assert.ok(gh.includes('온더라이브 · 2024-06-09~2024-10-09 · 유급 최소 수행기간(본인 직접 확인, 공식 증빙 대기)'),'minimum dated tooltip is exact');
  assert.ok(gh.includes('data-git-activity="OL"'),'exact Git activity marker is drawn for OnTheLive');
  assert.ok(gh.includes('10커밋 (계약기간 아님)'),'Git mark is not treated as a full contract bar');
  assert.equal((gh.match(/data-git-activity="OL"/g)||[]).length,1);
  const navy=data.projects.find(p=>p.id==='p16');
- assert.equal(navy.start,null,'unknown contract start remains null');
- assert.equal(navy.end,null,'unknown contract end remains null');
+ assert.equal(navy.start,'2024-06','user-confirmed minimum project start month');
+ assert.equal(navy.end,'2024-10','user-confirmed minimum project end month');
+ assert.equal(navy.confirmedMinimumPeriod.start,'2024-06-09');
+ assert.equal(navy.confirmedMinimumPeriod.end,'2024-10-09');
+ assert.equal(navy.confirmedMinimumPeriod.monthCount,5);
+ assert.equal(navy.confirmedMinimumPeriod.officialVerification,'pending');
  assert.equal(navy.confirmedGitActivity.firstCommit,'2024-08-09');
  assert.equal(navy.confirmedGitActivity.lastCommit,'2024-08-19');
  assert.equal(navy.paidConfirmedByUser,true,'paid status user-confirmed');
  
  assert.ok(!gh.includes('data-gantt-undated="MF"'),'MetaFastest stays consolidated with U.Podium');
- for(const id of ['MC','OL']){
-  const row=gh.slice(gh.indexOf('data-gantt-undated="'+id+'"'));
-  assert.ok(!row.slice(0,row.indexOf('</div></div>')).includes('class="cg-bar'),'unknown dates never become invented duration bars');
- }
+ const undatedMc=gh.slice(gh.indexOf('data-gantt-undated="MC"'));
+ assert.ok(!undatedMc.slice(0,undatedMc.indexOf('</div></div>')).includes('class="cg-bar'),'MetaCross stays undated');
+ assert.equal((gh.match(/data-gantt-user-period="OL"/g)||[]).length,1,'OnTheLive one dated minimum range');
  
  const web=field('웹 개발');
- assert.ok(web.includes('개발활동 114개월 중 증빙대기 32개월'),'retains 32 project development months outside career count');
+ assert.ok(web.includes('개발활동 115개월 중 증빙대기 33개월'),'retains 33 project development months outside career count');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','zeromax','테스트회사'])
   assert.ok(!current().toLowerCase().includes('data-master-company="'+unknown+'"'),'unverified identity never becomes an employer chip: '+unknown);
  assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),'insured MORPG split retained');
+ assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('유급 최소 수행 2024.06.09~10.09 · 5개월(본인 확인) · 서류 증빙대기'),'paid client included in pending professional field');
  assert.equal(field('AI 개발').includes('0 / 60개월'),true,'local non-employer must not create credited history');
  assert.ok(el('projects').innerHTML.includes('&lt;img src=x onerror=alert(1)&gt;'),'table escapes unsafe local company input');
  const rows=qa.allRows();
