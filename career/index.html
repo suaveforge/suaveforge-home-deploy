@@ -192,6 +192,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 /* Named paid/client projects stay listed even before their work dates are verified. */
 .cg-undated-row .cg-rail{background:#fdfcff}
 .cg-undated-note{position:relative;z-index:1;display:inline-block;padding:5px 10px;color:#766c86;font-size:11px;line-height:17px;white-space:nowrap}
+.cg-git-evidence{position:absolute;z-index:2;top:5px;height:17px;min-width:7px;border-radius:2px;background:#8577af;box-shadow:0 0 0 1px #6b5b91 inset}
 
 /* One compact row per employer; bar height almost fills the row. */
 .cg-row{height:27px;min-height:27px}
@@ -722,11 +723,17 @@ function renderCareerGantt(){
  const undatedRows=undatedEntries.map(item=>{
   // Named projects with unconfirmed dates must stay visible without fake work periods.
   const label=item.id==='MC'?'MetaCross':item.label;
-  const state=item.id==='OL'?'유급 확인 · 수행기간 미확정':'수행기간 미확정';
+  const navalGit=base.find(p=>p.id==='p16')?.confirmedGitActivity;
+  const hasNavalGit=item.id==='OL'&&navalGit?.firstCommit&&navalGit?.lastCommit;
+  const state=hasNavalGit?'Git 2024.08.09~08.19 · 지급 09.13':item.id==='OL'?'유급 확인 · 수행기간 미확정':'수행기간 미확정';
   const references=(item.activity||[]).map(a=>a.month+' '+a.desc).join(' / ');
+  // A Git activity marker is evidence of code changes, NOT a paid contract date bar.
+  const gitMarker=hasNavalGit?'<span class="cg-git-evidence" data-git-activity="OL" title="'+
+   esc('해군국방본부 Git 2024.08.09~08.19 · 10커밋 (계약기간 아님)')+
+   '" style="left:'+g.percent(Date.UTC(2024,7,9)).toFixed(5)+'%;width:'+Math.max(0.9,100*(11*g.DAY)/g.span).toFixed(5)+'%"></span>':'';
   return '<div class="cg-row cg-activity-row cg-undated-row" data-gantt-undated="'+esc(item.id)+'">'+
    '<div class="cg-name"><strong title="'+esc(item.work||state)+'">'+esc(label)+'</strong></div>'+
-   '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(references||state)+'">'+esc(state)+'</span></div></div>';
+   '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(references||state)+'">'+esc(state)+'</span>'+gitMarker+'</div></div>';
  }).join('');
  const board=$('ganttBoard');
  board.innerHTML=axisRow+items+summary+paidTeaching+activityHeader+activityRows+undatedRows+
