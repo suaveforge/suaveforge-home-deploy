@@ -321,9 +321,9 @@
     {
       "company": "프리랜서 / 온더라이브",
       "title": "해군 전투 시뮬레이터",
-      "period": "세부 기간 확인 중",
-      "work": "해군 전투 시뮬레이터 웹 개발. 사용 기술: React, Node.js, Go, MySQL, Three.js (사용자가 2026-11-22 직접 확인). 웹 프론트엔드·3D 시각화·서버/백엔드·DB 관련 작업으로 분류. 세부 구현 기능 및 분야별 실제 수행기간은 미확정.",
-      "status": "review",
+      "period": "2024.06.09 ~ 2024.10.09 (본인 확인 · 최소 수행기간)",
+      "work": "해군 전투 시뮬레이터 웹 개발. 사용 기술: React, Node.js, Go, MySQL, Three.js (사용자가 2026-11-22 직접 확인). 웹 프론트엔드·3D 시각화·서버/백엔드·DB 관련 작업으로 분류. 본인 확인 최소 수행기간 2024.06.09~10.09 (5개 월 걸침). 공식 인정경력 증빙은 별도.",
+      "status": "resource",
       "id": "p16",
       "categories": [
         "웹 개발",
@@ -331,9 +331,9 @@
         "DB 개발",
         "백엔드"
       ],
-      "start": null,
-      "end": null,
-      "note": "원본 프리랜서 경력기술서는 방산 전투 시뮬레이터와 프리랜서 전체 스택을 함께 기재하여 개별 매핑이 불분명했음. 2026-11-22 사용자 직접 확인으로 온더라이브 프로젝트 기술스택 5종 연결. Git 2024.08.09~08.19 해군국방본부 관련 개발활동 1개월 확인, 2024.09.13 유급 지급일은 본인 진술. 계약 전체 기간 미확정이므로 보험/KOSA 인정기간은 별개.",
+      "start": "2024-06",
+      "end": "2024-10",
+      "note": "2026-11-23 본인 직접 확인: 온더라이브 유급 해군 전투 시뮬레이터 최소 수행기간 2024.06.09~2024.10.09(5개월 월 걸침). 2024.08.09~19 React/Three.js 해군국방본부 관련 Git 커밋 10건, 2024.09.13 대금 지급 본인 진술은 별도 근거. 계약서·원천징수·납품 검증 전이므로 KOSA 공식 인정 또는 증빙 완료기간으로 계산하지 않음. 프리랜서 통합 이력 및 다른 업체 기간과 중복 합산 금지.",
       "evidence": [
         {
           "type": "resume",
@@ -347,6 +347,12 @@
           "type": "git_direct_code_commit",
           "note": "programmer119/react-three-cybersec: 2024-08-09~2024-08-19 본인 작성 Git 커밋 10건. src/field/1000.json fieldName '해군국방본부 - 양방향 훈련 test'. 온더라이브 계약의 동일 납품 저장소 여부는 추가 대조 필요.",
           "url": "https://github.com/programmer119/react-three-cybersec/commits/master/"
+        },
+        {
+          "type": "user_confirmed_period",
+          "start": "2024-06-09",
+          "end": "2024-10-09",
+          "note": "2026-11-23 본인 직접 확인. 해당 기간은 최소 수행기간이며, 계약서·공식 증빙과는 별도."
         }
       ],
       "confirmedGitActivity": {
@@ -357,7 +363,16 @@
         "firstRecordedActivityMonth": "2024-08",
         "sourceProjectLink": "해군국방본부 테스트 필드명 및 React/Three.js 코드로 연관성 확인. 온더라이브 계약 원본 저장소와 동일함은 미검증"
       },
-      "paidConfirmedByUser": true
+      "paidConfirmedByUser": true,
+      "confirmedMinimumPeriod": {
+        "start": "2024-06-09",
+        "end": "2024-10-09",
+        "monthCount": 5,
+        "precision": "day",
+        "coverage": "user_confirmed_minimum",
+        "source": "user_statement_2026-11-23",
+        "officialVerification": "pending"
+      }
     },
     {
       "company": "유비펀",
@@ -1996,7 +2011,7 @@
         "relatedProjects": [
           "p16"
         ],
-        "dateStatus": "Git 개발기록 2024.08.09~08.19 확인 · 계약 전체 기간 미확정",
+        "dateStatus": "2024.06.09 ~ 2024.10.09 최소 수행기간 5개월 (본인 직접 확인 · 증빙대기)",
         "work": "해군 전투 시뮬레이터 웹 프론트·Three.js·React·Node.js·Go·MySQL 작업",
         "tags": [
           "웹 개발",
@@ -2005,6 +2020,12 @@
           "백엔드"
         ],
         "activity": [
+          {
+            "month": "2024-06",
+            "desc": "최소 수행기간 시작 06.09 (2026.11.23 본인 직접 확인)",
+            "evidence": "사용자 직접 진술",
+            "proof": "user_statement"
+          },
           {
             "month": "2024-08",
             "desc": "해군국방본부 양방향훈련 React/Three.js 소스 Git 커밋 10건 (08.09~08.19)",
@@ -2017,9 +2038,25 @@
             "desc": "2024.09.13 방산 업무 지급일(본인 진술, 계약 대응 검증 전)",
             "evidence": "2026-11-22 사용자 진술",
             "proof": "statement"
+          },
+          {
+            "month": "2024-10",
+            "desc": "최소 수행기간 종료 10.09 (2026.11.23 본인 직접 확인)",
+            "evidence": "사용자 직접 진술",
+            "proof": "user_statement"
           }
         ],
-        "note": "온더라이브 유급 수행은 본인 확인. GitHub 해군국방본부 관련 시뮬레이션 2024.08.09~19 개발활동 확인. 2024.09.13 지급일은 작업기간의 종료일이 아님. 계약 원본 저장소 연결 및 전체 계약 시작·종료일 추가 확인 필요."
+        "note": "온더라이브 유급 외주 최소 2024.06.09~2024.10.09(5개월 월 걸침) 본인 직접 확인. 2024.08.09~19 Git 커밋, 2024.09.13 지급 본인 진술 별도 기록. 실제 계약 시작·완료의 전체 구간이 더 길 수 있으며 계약·원천징수 서류 등 공식 인정 증빙은 미확보. MetaCross 및 U.Podium과 중복 개월을 임의 합산하지 않음.",
+        "confirmedMinimumPeriod": {
+          "start": "2024-06-09",
+          "end": "2024-10-09",
+          "monthCount": 5,
+          "precision": "day",
+          "coverage": "user_confirmed_minimum",
+          "source": "user_statement_2026-11-23",
+          "officialVerification": "pending"
+        },
+        "paidConfirmedByUser": true
       },
       {
         "id": "SC",
