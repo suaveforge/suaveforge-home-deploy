@@ -62,6 +62,13 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
        activityCount:sec.querySelectorAll('[data-gantt-activity]').length,
        paidEducation:sec.querySelectorAll('[data-gantt-education]').length,
+       undatedRows:[...sec.querySelectorAll('[data-gantt-undated]')].map(r=>({
+        id:r.dataset.ganttUndated,
+        name:r.querySelector('.cg-name strong')?.textContent,
+        status:r.querySelector('.cg-undated-note')?.textContent,
+        hasBar:!!r.querySelector('.cg-bar')
+       })),
+ 
        paidEducationTooltip:sec.querySelector('[data-gantt-education] .cg-bar.user-paid')?.title,
        insuredMonthlyUnchanged:sec.querySelector('#ganttKpis')?.textContent.includes('162개월'),
        compactRows:[...sec.querySelectorAll('.cg-row')].every(r=>r.getBoundingClientRect().height<=30),
@@ -108,6 +115,12 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.railContained,'Gantt bars remain inside timeline rails');
    assert.ok(stats.gantt.scrollable,'horizontal scroll available when needed');
    assert.equal(stats.gantt.activityCount,6,'art test merged with U.Podium development group');
+   assert.deepEqual(stats.gantt.undatedRows.map(r=>r.id).join('|'),'MC|OL','two missing named projects stay on Gantt');
+   assert.equal(stats.gantt.undatedRows[0].name,'MetaCross');
+   assert.equal(stats.gantt.undatedRows[1].name,'온더라이브');
+   assert.ok(stats.gantt.undatedRows[1].status.includes('유급 확인'));
+   assert.ok(stats.gantt.undatedRows.every(r=>!r.hasBar),'unknown dates do not become continuous work bars');
+ 
    assert.ok(stats.gantt.artTestMerged,'no duplicate art-test Gantt row');
    assert.ok(stats.gantt.compactRows,'Gantt rows are single-line and compact');
    assert.ok(stats.gantt.barGap,'bars nearly fill each row; no large vertical gaps');
