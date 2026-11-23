@@ -188,6 +188,11 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-activity-row .cg-name small{white-space:normal}
 .cg-method strong{color:#66578e}
 
+
+/* Named paid/client projects stay listed even before their work dates are verified. */
+.cg-undated-row .cg-rail{background:#fdfcff}
+.cg-undated-note{position:relative;z-index:1;display:inline-block;padding:5px 10px;color:#766c86;font-size:11px;line-height:17px;white-space:nowrap}
+
 /* One compact row per employer; bar height almost fills the row. */
 .cg-row{height:27px;min-height:27px}
 .cg-row .cg-name{display:flex;align-items:center;padding:2px 10px;overflow:hidden}
@@ -713,8 +718,18 @@ function renderCareerGantt(){
    '개발활동 '+entry.months.size+'개월 · '+esc(dates.length>20?dates.slice(0,19)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bars+'</div></div>';
  }).join('');
 
+ const undatedEntries=(axis.reconstructionCandidates||[]).filter(item=>item.id==='MC'||item.id==='OL');
+ const undatedRows=undatedEntries.map(item=>{
+  // Named projects with unconfirmed dates must stay visible without fake work periods.
+  const label=item.id==='MC'?'MetaCross':item.label;
+  const state=item.id==='OL'?'유급 확인 · 수행기간 미확정':'수행기간 미확정';
+  const references=(item.activity||[]).map(a=>a.month+' '+a.desc).join(' / ');
+  return '<div class="cg-row cg-activity-row cg-undated-row" data-gantt-undated="'+esc(item.id)+'">'+
+   '<div class="cg-name"><strong title="'+esc(item.work||state)+'">'+esc(label)+'</strong></div>'+
+   '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(references||state)+'">'+esc(state)+'</span></div></div>';
+ }).join('');
  const board=$('ganttBoard');
- board.innerHTML=axisRow+items+summary+paidTeaching+activityHeader+activityRows+
+ board.innerHTML=axisRow+items+summary+paidTeaching+activityHeader+activityRows+undatedRows+
   '<div class="cg-guide" id="ganttGuide" hidden aria-hidden="true"><span class="cg-guide-date" id="ganttGuideDate"></span></div>';
  board.onpointermove=e=>{
   const rail=e.target?.closest?.('.cg-rail, .cg-axis');
