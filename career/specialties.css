@@ -1,19 +1,11 @@
-/* Career specialty recovery */
-.cr{margin:22px 0 28px;background:#fff;border:1px solid #dfe6ee;border-radius:12px;overflow:hidden}
-.cr-header{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 20px 12px}
-.cr-header h2{margin:0;font-size:21px;color:#1a3043}.cr-header small{color:#718294;font-size:12px}
-.cr-tabs{display:flex;flex-wrap:wrap;gap:7px;padding:0 19px 14px;border-bottom:1px solid #e7edf2}
-.cr-tabs button{padding:8px 12px;border-radius:7px;font-size:13px;font-weight:650;border:1px solid #d9e3eb;color:#496175;background:#f7f9fb;cursor:pointer}
-.cr-tabs button[aria-selected=true]{background:#e9f3fc;border-color:#4a7caa;color:#1b4b74}.cr-tabs strong{margin-left:5px}
-.cr-columns{display:grid;grid-template-columns:minmax(265px,.82fr) minmax(0,1.4fr);min-height:370px}
-.cr-left{border-right:1px solid #e7edf2;padding:12px;min-width:0}
-.cr-left input{box-sizing:border-box;width:100%;border:1px solid #d9e3eb;border-radius:7px;padding:9px 10px;font-size:13px;margin-bottom:7px}
-.cr-list{max-height:530px;overflow:auto}.cr-list button{width:100%;display:flex;gap:8px;justify-content:space-between;text-align:left;align-items:center;background:#fff;border:1px solid transparent;border-bottom-color:#edf1f5;color:#233a50;border-radius:4px;padding:10px 9px;cursor:pointer}
-.cr-list button[aria-current=true]{background:#edf5fb;border-color:#b8cfe2}.cr-list strong{font-size:13px}.cr-list small{display:block;color:#8794a2;font-size:11px;margin-top:4px}.cr-list em{font-size:11px;color:#657e90;font-style:normal;white-space:nowrap}
-.cr-right{padding:18px;min-width:0}.cr-right h3{font-size:17px;color:#20354b;margin:0 0 10px}.cr-meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.cr-meta span{background:#f1f5f8;padding:5px 7px;border-radius:5px;font-size:11px;color:#5a7184}
-.cr-company{border-top:1px solid #e7edf2}.cr-company summary{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;padding:9px 0;list-style:none}.cr-company summary::-webkit-details-marker{display:none}.cr-company summary strong{font-size:13px;font-weight:600}.cr-company summary span{font-size:11px;color:#7a8c9d}.cr-company summary .cr-yes{color:#287c59}
-.cr-company-body{background:#f7fafc;border-radius:7px;padding:12px;margin:0 0 10px}.cr-company-body label{display:block;font-size:11px;color:#607589;margin-bottom:4px}.cr-company-body select,.cr-company-body input{box-sizing:border-box;border:1px solid #d7e2ea;border-radius:6px;padding:7px 9px;font:inherit;font-size:12px;background:#fff;max-width:100%;color:#263e52}.cr-company-body select,.cr-company-body .cr-note{width:100%;margin-bottom:8px}.cr-dates{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:5px}.cr-dates input{width:100%}
-.cr-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;border-top:1px solid #e7edf2;padding-top:13px}.cr-actions button,.cr-footer button{border:1px solid #d5e1ea;border-radius:7px;padding:7px 11px;background:#fff;color:#3b5c77;font-size:12px;cursor:pointer}.cr-actions .cr-main{background:#275e88;color:#fff;border-color:#275e88}
-.cr-error{color:#aa4b3b;font-size:12px;min-height:17px;margin:0 0 4px}.cr-empty{padding:24px 10px;text-align:center;color:#8391a0;font-size:13px}
-.cr-footer{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 18px;border-top:1px solid #edf1f5;color:#8391a0;font-size:11px}.cr-footer div{display:flex;gap:8px}
-@media(max-width:820px){.cr-columns{grid-template-columns:minmax(0,1fr)}.cr-left{border-right:0;border-bottom:1px solid #e7edf2}.cr-list{max-height:260px}.cr-header{flex-direction:column;align-items:flex-start}.cr-right{padding:14px}.cr-tabs{padding:0 12px 12px}}
+/* Existing field-card style reused for the four category tabs. */
+.specialty-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 16px}
+.specialty-tabs button{font:inherit;font-size:13px;font-weight:650;padding:8px 12px;border:1px solid #d7e2eb;border-radius:7px;background:#fff;color:#49657c;cursor:pointer}
+.specialty-tabs button[aria-selected=true]{background:#eaf2f8;border-color:#4c7fa3;color:#17476d}
+.specialty-tabs button strong{font-variant-numeric:tabular-nums;margin-left:4px}
+.specialty-tabs button:focus-visible{outline:2px solid #23768a;outline-offset:2px}
+#fields[hidden],#careerSpecialtyCards[hidden]{display:none!important}
+.specialty-field{min-height:84px}
+.specialty-sources{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.specialty-company{display:inline-block;border:1px solid #dbe4eb;background:#f6fafc;border-radius:6px;padding:4px 8px;font-size:12px;color:#48697d}
+.specialty-empty{grid-column:1/-1;padding:24px 4px;color:#6c7c8d;font-size:13px}
