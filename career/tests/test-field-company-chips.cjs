@@ -134,11 +134,17 @@ setImmediate(()=>{
   const web=field('웹 개발');
  assert.ok(web.includes('미반영 개발활동 28개월'),'retains 28 other project months outside internal paid count');
  assert.equal((web.match(/class="field-source-chip unpaid"/g)||[]).length,2,'web shows exactly two unpaid company tags');
- assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 무급 · 개발기록 5개월"'),'ZeroMax web development has five distinct dated months (February, May-August)');
- assert.ok(web.includes('data-master-company="u.podium" title="U.Podium · 무급 · 개발기록 10개월"'),'U.Podium shows ten documented months without double-counting September');
+ assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 5개월"'),'ZeroMax web development has five distinct dated months (February, May-August)');
+ assert.ok(web.includes('data-master-company="u.podium" title="U.Podium · 10개월"'),'U.Podium shows ten documented months without double-counting September');
  assert.ok(web.includes('>제맥</span>')&&web.includes('>유포</span>'),'unpaid source names remain readable and concise');
+ assert.ok(!web.includes('class="field-source-row unpaid"'),'no separate unpaid row is created');
+ const uncreditedPart=web.slice(web.indexOf('<span class="field-source-label">미반영</span>'),web.indexOf('<div class="field-source-row unrelated">'));
+ assert.ok(uncreditedPart.includes('class="field-source-chip unpaid" data-master-company="zeromax"')&&
+  uncreditedPart.includes('class="field-source-chip unpaid" data-master-company="u.podium"'),
+  'gray ZeroMax and U.Podium chips are both inside the existing 미반영 row');
+ assert.equal((web.match(/<span class="field-source-label">무급<\/span>/g)||[]).length,0,'no visible unpaid heading');
  assert.equal((field('PC 응용SW').match(/class="field-source-chip unpaid"/g)||[]).length,1,'PC field shows ZeroMax dated Unity code only');
- assert.ok(field('PC 응용SW').includes('data-master-company="zeromax" title="ZeroMax · 무급 · 개발기록 1개월"'),'PC dated evidence is March 2023 only');
+ assert.ok(field('PC 응용SW').includes('data-master-company="zeromax" title="ZeroMax · 1개월"'),'PC dated evidence is March 2023 only');
  for(const category of ['모바일 앱','DB 개발','백엔드','블록체인','교육·강의']){
   const card=field(category);
   assert.ok(!card.includes('class="field-source-row unpaid"'),'no undated/unrelated company is mislabeled unpaid under '+category);
