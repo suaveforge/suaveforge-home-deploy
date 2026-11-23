@@ -59,11 +59,15 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
        activityCount:sec.querySelectorAll('[data-gantt-activity]').length,
        activityKeys:[...sec.querySelectorAll('[data-gantt-activity]')].map(x=>x.dataset.ganttActivity),
-       visibleNames:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>x.querySelector('.cg-bar-label')?.textContent===x.dataset.ganttCompany),
+       visibleNames:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>x.querySelector('.cg-name strong')?.textContent===x.dataset.ganttCompany)&&
+        [...sec.querySelectorAll('[data-gantt-activity]')].every(x=>x.querySelector('.cg-name strong')?.textContent?.trim().length>0),
        activityColors:[...sec.querySelectorAll('.cg-bar.activity')].every(x=>getComputedStyle(x).backgroundColor==='rgb(132, 120, 178)'),
-       allBarNamesInRail:[...sec.querySelectorAll('.cg-bar-label')].every(x=>{
-        const r=x.closest('.cg-rail').getBoundingClientRect(),b=x.getBoundingClientRect();
-        return b.left>=r.left-3&&b.right<=r.right+3;
+       barLabelsRemoved:sec.querySelectorAll('.cg-bar-label').length===0,
+       zeroMaxBars:sec.querySelector('[data-gantt-activity="zeromax"]')?.querySelectorAll('.cg-bar.activity').length,
+       zeroMaxTooltip:sec.querySelector('[data-gantt-activity="zeromax"] .cg-bar.activity')?.title||'',
+       leftNamesVisible:[...sec.querySelectorAll('[data-gantt-company], [data-gantt-activity]')].every(x=>{
+        const label=x.querySelector('.cg-name strong'),rect=label?.getBoundingClientRect();
+        return !!label&&!!rect&&rect.width>0&&rect.height>0;
        }),
        multiIntervals:sec.querySelector('[data-gantt-activity="multiasset"]')?.querySelectorAll('.cg-bar.activity').length,
        unknownIsActivity:!!sec.querySelector('[data-gantt-activity="unknown"] .cg-bar.activity'),
@@ -92,7 +96,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|arttest|multiasset|investment|suaveforge|unknown');
    assert.ok(stats.gantt.visibleNames,'each insured employer name stays attached to its bar');
    assert.ok(stats.gantt.activityColors,'unverified activity has distinct purple color');
-   assert.ok(stats.gantt.allBarNamesInRail,'short-bar labels remain visible and not clipped');
+   assert.ok(stats.gantt.barLabelsRemoved,'no names inside progress bars');
+   assert.ok(stats.gantt.leftNamesVisible,'all company and project labels appear in left column');
+   assert.equal(stats.gantt.zeroMaxBars,1,'ZeroMax one continuous visible period');
+   assert.ok(stats.gantt.zeroMaxTooltip.includes('2023-02 ~ 2023-08'));
+   assert.ok(stats.gantt.zeroMaxTooltip.includes('2023-04는 기록 공백을 차트에서만 연결'));
    assert.equal(stats.gantt.multiIntervals,5,'do not fill unproven gaps in multiaset development');
    assert.ok(stats.gantt.unknownIsActivity,'unknown-client code is not an employer record');
 

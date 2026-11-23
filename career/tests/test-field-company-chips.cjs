@@ -65,12 +65,22 @@ setImmediate(()=>{
  assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,7,'display every evidenced group in a separate row');
  assert.ok(gh.includes('data-gantt-activity="zeromax"')&&gh.includes('data-gantt-activity="multiasset"'),'unpaid source types displayed');
  assert.ok(gh.includes('U.Podium 아트테스트')&&gh.includes('투자전략 대시보드'),'one-month activities retained');
- assert.equal((gh.match(/class="cg-bar-label(?: edge-end)?"/g)||[]).length,16,'bar labels appear for nine employers plus seven evidence groups');
+ assert.ok(!gh.includes('cg-bar-label'),'no company or project name inside a progress bar');
+ for(const group of activityGroups){
+  assert.ok(gh.includes('data-gantt-activity="'+group.id+'"'),'all activity identities remain in left-hand name column');
+ }
+ for(const co of data.timeAxis.insurance){
+  assert.ok(gh.includes('<strong>'+co.company+'</strong>'),'insured employer name restored in left-hand name column: '+co.company);
+ }
  assert.equal((gh.match(/class="cg-bar activity"/g)||[]).length,activityGroups.reduce((n,g)=>n+g.intervals.length,0),
   'one segment per continuous evidenced range; no invented continuous employment');
  const zm=activityGroups.find(x=>x.id==='zeromax');
  assert.equal([...zm.months].sort((a,b)=>a-b).length,6,'ZeroMax: Feb, Mar, May-Aug, not April planning');
- assert.deepEqual(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-03|2023-05~2023-08');
+ assert.equal(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-08','ZeroMax short gap merged visually');
+ assert.deepEqual(zm.visualGaps.join('|'),'2023-04','April is explicitly recorded as visually bridged, not independently proven');
+ assert.ok(gh.includes('2023-04는 기록 공백을 차트에서만 연결'),'chart tooltip discloses displayed continuity without crediting April');
+ assert.equal((gh.match(/data-gantt-activity="zeromax"/g)||[]).length,1);
+ assert.equal((gh.match(/class="cg-bar activity"/g)||[]).length,activityGroups.reduce((n,g)=>n+g.intervals.length,0));
  const trader=activityGroups.find(x=>x.id==='multiasset');
  assert.equal(trader.intervals.map(x=>x.start+'~'+x.end).join('|'),
   '2024-01~2024-01|2024-04~2024-08|2024-10~2025-07|2025-12~2026-05|2026-07~2026-07',
