@@ -664,7 +664,7 @@ function renderCareerGantt(){
   [g.overlaps.reduce((n,p)=>n+Math.round((p.end-p.start)/g.DAY),0)+'일','실제 날짜 겹침']
  ].map(([value,label])=>'<div class="cg-kpi"><b>'+esc(value)+'</b><span>'+esc(label)+'</span></div>').join('');
  const rules=()=>g.years.map(y=>'<span class="cg-rule" style="left:'+y.position.toFixed(5)+'%"></span>').join('');
- const axis='<div class="cg-row"><div class="cg-name cg-axis-label">회사 · 실제 재직일</div><div class="cg-axis">'+
+ const axisRow='<div class="cg-row"><div class="cg-name cg-axis-label">회사 · 실제 재직일</div><div class="cg-axis">'+
   g.years.map(y=>'<span class="cg-axis-year" style="left:'+y.position.toFixed(5)+'%">'+y.name+'</span>').join('')+'</div></div>';
  const items=g.periods.map(p=>{
   const left=g.percent(p.first),width=100*((p.last+g.DAY-p.first)/g.span);
@@ -715,7 +715,7 @@ function renderCareerGantt(){
  }).join('');
 
  const board=$('ganttBoard');
- board.innerHTML=axis+items+summary+paidTeaching+activityHeader+activityRows+
+ board.innerHTML=axisRow+items+summary+paidTeaching+activityHeader+activityRows+
   '<div class="cg-guide" id="ganttGuide" hidden aria-hidden="true"><span class="cg-guide-date" id="ganttGuideDate"></span></div>';
  board.onpointermove=e=>{
   const rail=e.target?.closest?.('.cg-rail, .cg-axis');
