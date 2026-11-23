@@ -446,11 +446,11 @@ function fieldEmployerStates(rows,category,master){
  }
  const classified={credited:[],uncredited:[],unpaid:[],unrelated:[]};
  for(const item of byId.values()){
-  if(unpaidIds.has(item.id)){
+  if(item.credited)classified.credited.push(item);
+  else if(unpaidIds.has(item.id)){
    if(item.unpaidMonths.size)classified.unpaid.push(item);
    else classified.unrelated.push(item);
-  }else if(item.credited)classified.credited.push(item);
-  else if(item.uncredited)classified.uncredited.push(item);
+  }else if(item.uncredited)classified.uncredited.push(item);
   else classified.unrelated.push(item);
  }
  return {...classified,byId,total:master.length};
