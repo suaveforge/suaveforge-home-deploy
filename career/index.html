@@ -193,6 +193,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-undated-row .cg-rail{background:#fdfcff}
 .cg-undated-note{position:relative;z-index:1;display:inline-block;padding:5px 10px;color:#766c86;font-size:11px;line-height:17px;white-space:nowrap}
 .cg-git-evidence{position:absolute;z-index:2;top:5px;height:17px;min-width:7px;border-radius:2px;background:#8577af;box-shadow:0 0 0 1px #6b5b91 inset}
+.cg-bar.paid-minimum{background:#7192bd;box-shadow:inset 0 0 0 1px #476d98;opacity:.82;z-index:1}
 
 /* One compact row per employer; bar height almost fills the row. */
 .cg-row{height:27px;min-height:27px}
@@ -394,6 +395,15 @@ function careerMasterCompanies(rows){
   const id=careerCompanyKey(course.company);
   if(id&&!names.has(id))names.set(id,course.company);
  }
+ // User-confirmed paid client with a dated minimum work period: preserve it in
+ // all field source chips, even before document-backed credited months exist.
+ for(const row of rows){
+  if(row.paidConfirmedByUser!==true||!row.confirmedMinimumPeriod)continue;
+  for(const company of careerEmployers(row.company)){
+   const id=careerCompanyKey(company);
+   if(id&&!names.has(id))names.set(id,company);
+  }
+ }
  return [...names].map(([id,company])=>({id,company}));
 }
 function fieldEmployerStates(rows,category,master){
@@ -464,7 +474,8 @@ function fieldEmployerContributions(rows,category){
 function sourceChip(company,state,share=null,color='',uncreditedCount=0,rawMonths=0,allocatedMonths=0){
  const short=Array.from(company).slice(0,2).join('');
  const credited=state==='credited',uncredited=state==='uncredited';
- const title=company+' · '+(credited?rawMonths+'개월':uncredited?'미반영':'해당 X');
+ const pendingPaid=uncredited&&company==='온더라이브';
+ const title=company+' · '+(credited?rawMonths+'개월':pendingPaid?'유급 최소 수행 2024.06.09~10.09 · 5개월(본인 확인) · 서류 증빙대기':uncredited?'미반영':'해당 X');
  const content=credited?'<span class="field-share-dot" style="background:'+color+'"></span>'+
   '<span class="field-chip-name">'+escape(short)+'</span>'+
   '<strong class="field-share-percent">'+share.toFixed(1)+'%</strong>':escape(short);
@@ -526,7 +537,8 @@ function renderRecovery(){
  $('recoveryItems').innerHTML=candidates.map(c=>{
   const rows=(c.relatedProjects||[]).map(id=>base.find(x=>x.id===id)).filter(Boolean).map(baseRow);
   const dated=rows.filter(x=>isCreditable(x));
-  const state=dated.length?(dated.length===rows.length?'수행기간 등록':'일부 기간 등록'):'수행기간 미확정';
+  const state=c.id==='OL'&&c.confirmedMinimumPeriod?'유급 최소 5개월 · 증빙대기':
+   dated.length?(dated.length===rows.length?'수행기간 등록':'일부 기간 등록'):'수행기간 미확정';
   const first=c.activity?.[0]?.month||'자료 확인 중';
   const last=c.activity?.[c.activity.length-1]?.month||first;
   const months=(c.activity||[]).map(a=>'<span title="'+escape(a.evidence+' · '+a.desc+(a.creditedMonth?' · 이 월만 웹 1개월 잠정 반영':' · 개발기간 확정 아님'))+'">'+escape(a.month)+(a.creditedMonth?' ✓':'')+'</span>').join('');
@@ -725,15 +737,23 @@ function renderCareerGantt(){
   const label=item.id==='MC'?'MetaCross':item.label;
   const navalGit=base.find(p=>p.id==='p16')?.confirmedGitActivity;
   const hasNavalGit=item.id==='OL'&&navalGit?.firstCommit&&navalGit?.lastCommit;
-  const state=hasNavalGit?'Git 2024.08.09~08.19 · 지급 09.13':item.id==='OL'?'유급 확인 · 수행기간 미확정':'수행기간 미확정';
+  const minimum=item.id==='OL'?item.confirmedMinimumPeriod:null;
+  const rangeStart=minimum?.start?Date.parse(minimum.start+'T00:00:00Z'):NaN;
+  const rangeEnd=minimum?.end?Date.parse(minimum.end+'T00:00:00Z')+g.DAY:NaN;
+  const hasPaidRange=Number.isFinite(rangeStart)&&Number.isFinite(rangeEnd)&&rangeStart<rangeEnd;
+  const state=hasPaidRange?'유급 최소 2024.06~10 · 증빙대기':
+   hasNavalGit?'Git 2024.08.09~08.19 · 지급 09.13':item.id==='OL'?'유급 확인 · 수행기간 미확정':'수행기간 미확정';
   const references=(item.activity||[]).map(a=>a.month+' '+a.desc).join(' / ');
-  // A Git activity marker is evidence of code changes, NOT a paid contract date bar.
+  const paidRange=hasPaidRange?'<span class="cg-bar paid-minimum" data-gantt-user-period="OL" title="'+
+   esc('온더라이브 · '+minimum.start+'~'+minimum.end+' · 유급 최소 수행기간(본인 직접 확인, 공식 증빙 대기)')+
+   '" style="left:'+g.percent(rangeStart).toFixed(5)+'%;width:'+(100*(rangeEnd-rangeStart)/g.span).toFixed(5)+'%"></span>':'';
+  // Git marker is a separate source; payment date is not used as work end.
   const gitMarker=hasNavalGit?'<span class="cg-git-evidence" data-git-activity="OL" title="'+
    esc('해군국방본부 Git 2024.08.09~08.19 · 10커밋 (계약기간 아님)')+
    '" style="left:'+g.percent(Date.UTC(2024,7,9)).toFixed(5)+'%;width:'+Math.max(0.9,100*(11*g.DAY)/g.span).toFixed(5)+'%"></span>':'';
   return '<div class="cg-row cg-activity-row cg-undated-row" data-gantt-undated="'+esc(item.id)+'">'+
    '<div class="cg-name"><strong title="'+esc(item.work||state)+'">'+esc(label)+'</strong></div>'+
-   '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(references||state)+'">'+esc(state)+'</span>'+gitMarker+'</div></div>';
+   '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(references||state)+'">'+esc(state)+'</span>'+paidRange+gitMarker+'</div></div>';
  }).join('');
  const board=$('ganttBoard');
  board.innerHTML=axisRow+items+summary+paidTeaching+activityHeader+activityRows+undatedRows+
