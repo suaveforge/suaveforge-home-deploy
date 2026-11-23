@@ -129,7 +129,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .career-gantt{margin:24px 0 30px;padding:23px 24px;background:white;border:1px solid #dee8ef;border-radius:13px}
 .career-gantt h2{font-size:20px;margin:0 0 6px;letter-spacing:-.02em}
 .cg-sub{font-size:13px;color:#62788a;margin:0 0 16px;line-height:1.65}
-.cg-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.cg-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
 .cg-kpi{background:#f8fafb;border:1px solid #e9eef3;border-radius:9px;padding:11px 14px}
 .cg-kpi b{font-size:21px;font-variant-numeric:tabular-nums;display:block;color:#263c4c}
 .cg-kpi span{display:block;font-size:12px;color:#6e8190;margin-top:3px}
@@ -164,7 +164,29 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-gap{display:flex;justify-content:space-between;gap:8px;background:#f8fafb;border:1px solid #e9eff3;border-radius:7px;padding:10px 11px;font-size:12px;color:#476072}
 .cg-gap span{font-variant-numeric:tabular-nums}.cg-gap strong{color:#ae6751;white-space:nowrap}
 .cg-method{font-size:12px;color:#738693;line-height:1.6;margin:11px 0 0}
-@media(max-width:700px){.career-gantt{padding:16px 12px}.cg-kpi{padding:10px}.cg-kpi b{font-size:18px}.cg-gaps{grid-template-columns:1fr}}
+@media(max-width:700px){.career-gantt{padding:16px 12px}.cg-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.cg-kpi{padding:10px}.cg-kpi b{font-size:18px}.cg-gaps{grid-template-columns:1fr}}
+
+
+/* Names stay anchored to the actual bars, including short dated periods. */
+.cg-bar{overflow:visible}
+.cg-bar-label{position:absolute;top:-2px;left:4px;z-index:2;display:inline-block;white-space:nowrap;
+ padding:2px 6px;line-height:15px;font-size:12px;font-weight:750;color:#275a54;
+ background:rgba(255,255,255,.94);border:1px solid #bfd8d2;border-radius:5px;
+ pointer-events:none}
+.cg-bar-label.edge-end{left:auto;right:3px}
+.cg-bar.paid .cg-bar-label{color:#365b86;border-color:#c8d9e9}
+.cg-bar.activity{background:#8478b2}
+.cg-bar.activity .cg-bar-label{color:#5c4d85;border-color:#d9d2eb}
+.cg-activity-divider{background:#f5f2fa;min-height:38px}
+.cg-activity-divider .cg-name{background:#f5f2fa}
+.cg-activity-divider strong{color:#574976;font-size:12px}
+.cg-activity-divider .cg-activity-header{padding:9px 12px;align-content:center;
+ color:#71648c;font-size:12px;border-left:0}
+.cg-activity-row .cg-rail{background:#fdfcff}
+.cg-activity-row .cg-name{background:#fdfcff}
+.cg-activity-row .cg-name strong{color:#71648c}
+.cg-activity-row .cg-name small{white-space:normal}
+.cg-method strong{color:#66578e}
 
 </style>
 </head><body><div class="wrap"><header class="top"><div class="logo"><a href="/">SUAVEFORGE</a> <span style="font-weight:400;color:#89939e">/ CAREER</span></div><div class="meta" id="updated">데이터 확인 중</div></header>
@@ -174,11 +196,11 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <section class="section" id="careerFields"><h2>분야별 경력 복원</h2><p class="note">건강보험 재직·유상 수행이 확인된 월만 경력 게이지에 반영합니다. Git 개발활동 기록은 별도 보존합니다.</p><div class="grid" id="fields"></div></section>
 <section class="career-gantt" id="careerGantt" aria-labelledby="careerGanttTitle">
 <h2 id="careerGanttTitle">회사별 재직·수행기간 간트차트</h2>
-<p class="cg-sub">건강보험 재직 및 유상 수행 증빙에 연결된 기간만 표시합니다. 시작·종료일은 실제 날짜를 사용하며, 개발활동만 확인된 프로젝트는 포함하지 않습니다.</p>
+<p class="cg-sub">건강보험·유상 수행은 정확한 날짜로, 그 외 개발활동은 확인된 월만 다른 색으로 표시합니다. 이름은 각 기간 막대에 함께 표시하며, 개발활동은 경력 개월수에 가산하지 않습니다.</p>
 <div class="cg-kpis" id="ganttKpis"></div>
 <div class="cg-legend">
 <span><i style="background:#44877e"></i>건강보험 재직</span><span><i style="background:#6489b8"></i>유상 수행 확인</span>
-<span><i style="background:#c28a4b"></i>실제 날짜 겹침</span><span><i style="background:#e4e9ed;border:1px solid #d2dce4"></i>증빙 미연결</span></div>
+<span><i style="background:#8478b2"></i>기타 개발활동 · 경력 미산정</span><span><i style="background:#c28a4b"></i>실제 날짜 겹침</span><span><i style="background:#e4e9ed;border:1px solid #d2dce4"></i>증빙 미연결</span></div>
 <div class="cg-scroll" id="ganttScroll" role="region" tabindex="0" aria-label="회사별 기간 간트차트. 좁은 화면에서는 좌우 스크롤이 가능합니다.">
 <div class="cg-board" id="ganttBoard"></div></div>
 <p class="cg-caption" id="ganttCaption"></p>
@@ -541,6 +563,62 @@ function companyGanttModel(){
  return {DAY,periods,from,until,span,segments,months,sameMonth,gaps,overlaps,years,iso,
   percent:n=>(100*(n-from)/span),workedMonths:p=>monthId(p.end.slice(0,7))-monthId(p.start.slice(0,7))+1};
 }
+
+function ganttActivityGroups(g){
+ // Dated authored commits, dated work messages and directly assigned development
+ // tasks are useful activity evidence, never substitutes for salary/contract proof.
+ // Ignore undated/planning/reference-only, generic freelance umbrella and local tasks.
+ const documented=new Set(['git_direct_code_commit','telegram_dated_work','git_commit','assigned_task']);
+ const keys=[
+  {id:'zeromax',label:'ZeroMax',detail:'조직 연관 개발기록 · 고용·유상 증빙 미연결'},
+  {id:'upodium',label:'U.Podium',detail:'서비스 개발기록 · 발주 법인 미확인'},
+  {id:'arttest',label:'U.Podium 아트테스트',detail:'독립 WebGL 개발 월'},
+  {id:'multiasset',label:'멀티에셋 트레이더',detail:'프로젝트명 · 유상 증빙 미연결'},
+  {id:'investment',label:'투자전략 대시보드',detail:'프로젝트명 · 유상 증빙 미연결'},
+  {id:'suaveforge',label:'SuaveForge',detail:'자체 개발활동 · 유상 고객사 증빙 미연결'},
+  {id:'unknown',label:'발주처 미확인',detail:'개별 Git 직접 개발월 합산 · 동일 발주처라는 의미 아님'}
+ ];
+ const buckets=new Map(keys.map(k=>[k.id,{...k,months:new Set(),projects:[]}]));
+ const codeMonth=s=>monthId(s);
+ const yearMonth=n=>Math.floor(n/12)+'-'+String(n%12+1).padStart(2,'0');
+ const sourceKey=p=>{
+  const c=String(p.company||'');
+  if(c==='ZeroMax'||c==='프리랜서 / ZeroMax')return 'zeromax';
+  if(c==='프리랜서 / Upodium 아트테스트')return 'arttest';
+  if(c==='발주처 미확인'&&/U\.Podium/.test(p.title||''))return 'upodium';
+  if(c==='프리랜서 / 멀티에셋 트레이더')return 'multiasset';
+  if(c==='프리랜서 / 투자전략 대시보드')return 'investment';
+  if(c==='SuaveForge')return 'suaveforge';
+  if(c==='발주처 미확인')return 'unknown';
+  return null;
+ };
+ for(const p of base){
+  if(p.resourceOnly||!p.start||!p.end||!Array.isArray(p.categories)||!p.categories.length)continue;
+  const ev=(p.evidence||[]).filter(x=>documented.has(x.type));
+  if(!ev.length)continue;
+  const k=sourceKey(p),entry=buckets.get(k);
+  if(!entry)continue;
+  const first=codeMonth(p.start),last=codeMonth(p.end);
+  if(first===null||last===null||last<first||last-first>120)continue;
+  entry.projects.push(p.id);
+  for(let n=first;n<=last;n++)entry.months.add(n);
+ }
+ return [...buckets.values()].filter(x=>x.months.size).map(group=>{
+  const seq=[...group.months].sort((a,b)=>a-b),intervals=[];
+  for(const n of seq){
+   const last=intervals[intervals.length-1];
+   if(last&&last.final===n-1)last.final=n;
+   else intervals.push({first:n,final:n});
+  }
+  return {...group,intervals:intervals.map(x=>{
+   const start=yearMonth(x.first),end=yearMonth(x.final);
+   const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5)),1);
+   const b=Date.UTC(Number(end.slice(0,4)),Number(end.slice(5))+1,1);
+   return {start,end,a,b,months:x.final-x.first+1};
+  })};
+ });
+}
+
 function renderCareerGantt(){
  const g=companyGanttModel();if(!g){$('ganttKpis').textContent='확인된 재직기간 없음';$('ganttBoard').innerHTML='';return}
  const fmt=s=>String(s).replace(/-/g,'.'),esc=escape;
@@ -555,10 +633,13 @@ function renderCareerGantt(){
  const items=g.periods.map(p=>{
   const left=g.percent(p.first),width=100*((p.last+g.DAY-p.first)/g.span);
   const label=p.company+' · '+p.start+' ~ '+p.end+' · '+g.workedMonths(p)+'개월(월 걸침)';
-  return '<div class="cg-row" data-gantt-company="'+esc(p.company)+'"><div class="cg-name"><strong>'+esc(p.company)+
-   '</strong><small>'+fmt(p.start)+' ~ '+fmt(p.end)+' · '+g.workedMonths(p)+'개월</small></div><div class="cg-rail">'+rules()+
+  const onRight=left>86?' edge-end':'';
+  return '<div class="cg-row" data-gantt-company="'+esc(p.company)+'"><div class="cg-name"><strong>'+
+   (p.kind==='paid'?'유상 수행':'건강보험 재직')+' · '+g.workedMonths(p)+'개월</strong>'+
+   '<small>'+fmt(p.start)+' ~ '+fmt(p.end)+'</small></div><div class="cg-rail">'+rules()+
    '<span class="cg-bar'+(p.kind==='paid'?' paid':'')+'" tabindex="0" title="'+esc(label)+'" aria-label="'+esc(label)+
-   '" style="left:'+left.toFixed(5)+'%;width:'+width.toFixed(5)+'%"></span></div></div>';
+   '" style="left:'+left.toFixed(5)+'%;width:'+width.toFixed(5)+'%">'+
+   '<span class="cg-bar-label'+onRight+'" aria-hidden="true">'+esc(p.company)+'</span></span></div></div>';
  }).join('');
  const summary='<div class="cg-row"><div class="cg-name cg-overview-name"><strong>전체 날짜 현황</strong><small>겹침·공백 동시 확인</small></div>'+
   '<div class="cg-rail cg-overview-rail">'+rules()+g.segments.map(p=>{
@@ -566,7 +647,29 @@ function renderCareerGantt(){
    return '<span class="cg-summary-bar '+p.kind+'" style="left:'+g.percent(p.start).toFixed(5)+'%;width:'+
     (100*(p.end-p.start)/g.span).toFixed(5)+'%" title="'+esc(name+' · '+g.iso(p.start)+' ~ '+g.iso(p.end-g.DAY))+'"></span>';
   }).join('')+'</div></div>';
- $('ganttBoard').innerHTML=axis+items+summary;
+ const activity=ganttActivityGroups(g);
+ const activityHeader=activity.length?'<div class="cg-row cg-activity-divider"><div class="cg-name"><strong>그 외 개발활동</strong><small>경력 개월수 미산정</small></div>'+
+  '<div class="cg-activity-header">색상 구분 · 실제 수행월만 표시 (프로젝트명은 회사·발주처가 아닐 수 있음)</div></div>':'';
+ const activityRows=activity.map(entry=>{
+  const dates=entry.intervals.map(i=>i.start===i.end?i.start:i.start+' ~ '+i.end).join(', ');
+  const largest=entry.intervals.reduce((best,i,j)=>i.months>entry.intervals[best].months?j:best,0);
+  const bars=entry.intervals.map((i,j)=>{
+   const start=Math.max(g.from,i.a),end=Math.min(g.until,i.b);
+   if(end<=start)return '';
+   const left=g.percent(start),width=100*((end-start)/g.span);
+   const nearEnd=left>86?' edge-end':'';
+   const tip=entry.label+' · '+i.start+' ~ '+i.end+' · '+i.months+'개월 (월 단위 근거, 일자 미확정) · '+entry.detail;
+   return '<span class="cg-bar activity" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+'" style="left:'+
+    left.toFixed(5)+'%;width:'+width.toFixed(5)+'%">'+
+    (j===largest?'<span class="cg-bar-label'+nearEnd+'" aria-hidden="true">'+esc(entry.label)+'</span>':'')+'</span>';
+  }).join('');
+  return '<div class="cg-row cg-activity-row" data-gantt-activity="'+esc(entry.id)+'">'+
+   '<div class="cg-name"><strong>개발활동 · '+entry.months.size+'개월</strong><small title="'+esc(dates)+'">'+
+   esc(dates.length>30?dates.slice(0,29)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bars+'</div></div>';
+ }).join('');
+
+ $('ganttBoard').innerHTML=axis+items+summary+activityHeader+activityRows;
+ $('ganttKpis').innerHTML+='<div class="cg-kpi"><b>'+activity.length+'개</b><span>추가 개발활동 기록 (경력 미산정)</span></div>';
  const inner=g.gaps.filter(p=>p.start>g.periods[0].start&&p.end<g.periods[g.periods.length-1].end);
  $('ganttCaption').textContent='실제 날짜 겹침 '+g.overlaps.length+'구간 · 같은 달에 회사가 바뀐 사례 '+
   g.sameMonth.length+'개월'+(g.sameMonth.length?' ('+g.sameMonth.join(', ')+')':'')+
