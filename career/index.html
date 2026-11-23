@@ -193,7 +193,6 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-undated-row .cg-rail{background:#fdfcff}
 .cg-undated-note{position:relative;z-index:1;display:inline-block;padding:5px 10px;color:#766c86;font-size:11px;line-height:17px;white-space:nowrap}
 .cg-bar.paid.user-confirmed{background:#7192bd;border:1px dashed #335c90;box-sizing:border-box}
-.field-paid-note{font-size:11px;color:#416787;background:#f2f7fb;padding:5px 8px;border-radius:5px;line-height:1.45;margin-bottom:7px}
 
 /* One compact row per employer; bar height almost fills the row. */
 .cg-row{height:27px;min-height:27px}
@@ -218,18 +217,18 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <section class="section" id="careerFields"><h2>분야별 경력 복원</h2><div class="grid" id="fields"></div></section>
 <section class="career-gantt" id="careerGantt" aria-labelledby="careerGanttTitle">
 <h2 id="careerGanttTitle">회사별 재직·수행기간 간트차트</h2>
-<p class="cg-sub">건강보험 재직과 유급 수행(본인 확인 포함)은 실제 날짜로 표시합니다. 본인 확인 유급기간은 내부 복원에 포함하되 KOSA 공식 인정과는 구분합니다. 기타 Git 활동은 별도 표시합니다.</p>
+<p class="cg-sub">건강보험 재직·유급 수행은 실제 날짜로 표시하고, 기타 개발활동은 색상으로 구분합니다.</p>
 <div class="cg-kpis" id="ganttKpis"></div>
 <div class="cg-legend">
 <span><i style="background:#44877e"></i>건강보험 재직</span><span><i style="background:#6489b8"></i>유상 수행 확인</span><span><i style="background:#6489b8;border:1px dashed #b9d0ed"></i>유급 강의 · 본인 확인</span>
-<span><i style="background:#7192bd;border:1px dashed #335c90"></i>유급 본인확인 · 서류 미검증</span>
+<span><i style="background:#7192bd;border:1px dashed #335c90"></i>유급 수행</span>
 <span><i style="background:#8478b2"></i>기타 개발활동 · 경력 미산정</span><span><i style="background:#c28a4b"></i>실제 날짜 겹침</span><span><i style="background:#e4e9ed;border:1px solid #d2dce4"></i>증빙 미연결</span></div>
 <div class="cg-scroll" id="ganttScroll" role="region" tabindex="0" aria-label="회사별 기간 간트차트. 좁은 화면에서는 좌우 스크롤이 가능합니다.">
 <div class="cg-board" id="ganttBoard"></div></div>
 <p class="cg-caption" id="ganttCaption"></p>
 <div class="cg-gap-panel"><h3 id="ganttGapTitle">재직 증빙이 비는 날짜</h3>
 <div class="cg-gaps" id="ganttGaps"></div>
-<p class="cg-method">빈 날짜는 건강보험 재직·유상계약·본인 확인 유급 수행으로 연결되지 않은 날입니다. 본인 확인 유급 경력은 공식 서류 검증 전이며, 온라인 강의는 별도 월 단위 기록입니다.</p></div>
+<p class="cg-method">빈 날짜는 재직·유급 수행으로 연결되지 않은 날입니다. 온라인 강의는 별도로 기록합니다.</p></div>
 </section>
 <section class="timeline-section" id="careerTimeline" aria-labelledby="timelineTitle">
 <div class="timeline-header"><div><h2 id="timelineTitle">전체 개발활동 · 공백 점검</h2>
@@ -278,7 +277,7 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 <select class="field-input" id="filter" style="max-width:175px" aria-label="기간 상태"><option value="all">전체</option><option value="linked">기간 입력</option><option value="review">기간 미확정</option><option value="resource">증빙대기·참고자료</option></select></div>
 <div class="tablebox"><table><thead><tr><th>회사·발주처</th><th>프로젝트명·수행작업</th><th>기간</th><th>작업 내용 / 경력분야</th><th>상태</th><th>작업 추가·편집</th></tr></thead>
 <tbody id="projects"><tr><td colspan="6" class="empty">데이터를 불러오는 중입니다.</td></tr></tbody></table></div>
-<p class="note">입력 내용은 이 브라우저에만 저장됩니다. Git 커밋이나 프로젝트명만으로는 회사·유급 경력이 되지 않으며, 개발활동 증거는 별도로 보존합니다. 건강보험·유상 수행 증빙이 연결된 월만 경력 게이지에 반영합니다. KOSA 공식 인정경력과는 별개입니다.</p>
+<p class="note">직접 추가하거나 수정한 작업은 이 브라우저에 저장됩니다. 재직·유급 수행과 기타 개발활동은 구분해 집계합니다.</p>
 </section><div class="footer">SuaveForge Career · 신고 목표 대비 경력 복원 현황</div></div>
 <script>
 "use strict";
@@ -482,7 +481,7 @@ function sourceChip(company,state,share=null,color='',uncreditedCount=0,rawMonth
  const short=Array.from(company).slice(0,2).join('');
  const credited=state==='credited',uncredited=state==='uncredited';
  const userPaid=company==='온더라이브'&&(axis.userConfirmedPaidEngagements||[]).some(p=>p.paidConfirmedByUser&&p.periodConfirmedByUser);
- const title=company+' · '+(credited?(rawMonths+'개월'+(userPaid?' · 유급/기간 본인확인 · 공식 증빙 미검증':'')):uncredited?'미반영':'해당 X');
+ const title=company+' · '+(credited?(rawMonths+'개월'+(userPaid?' · 유급 · 2024.06~10':'')):uncredited?'미반영':'해당 X');
  const content=credited?'<span class="field-share-dot" style="background:'+color+'"></span>'+
   '<span class="field-chip-name">'+escape(short)+'</span>'+
   '<strong class="field-share-percent">'+share.toFixed(1)+'%</strong>':escape(short);
@@ -699,7 +698,7 @@ function renderCareerGantt(){
  const items=g.periods.map(p=>{
   const left=g.percent(p.first),width=100*((p.last+g.DAY-p.first)/g.span);
   const selfConfirmed=p.kind==='user-paid';
-  const label=p.company+' · '+fmt(p.start)+'~'+fmt(p.end)+(selfConfirmed?' · 유급 본인확인 (서류 미검증)':'');
+  const label=p.company+' · '+fmt(p.start)+'~'+fmt(p.end)+(selfConfirmed?' · 유급':'');
   const marker=selfConfirmed?' data-gantt-user-period="'+esc(p.id||'OL')+'"':'';
   return '<div class="cg-row" data-gantt-company="'+esc(p.company)+'"><div class="cg-name"><strong>'+esc(p.company)+'</strong>'+
    '<small>'+fmt(p.start)+' ~ '+fmt(p.end)+' · '+g.workedMonths(p)+'개월</small></div><div class="cg-rail">'+rules()+
@@ -829,8 +828,6 @@ function renderFields(){
   const hasTarget=Number(f.target)>0,target=hasTarget?Number(f.target):0;
   const pct=hasTarget?Math.min(100,Math.max(0,100*total/target)):0,ok=hasTarget&&total>=target;
   const diff=waiting>0?'미반영 개발활동 '+waiting+'개월':'미반영 개발활동 없음';
-  const selfPaidInField=related.some(row=>row.paidConfirmedByUser===true&&row.confirmedMinimumPeriod&&careerCreditedMonths(row).length>0);
-  const sourceNote=selfPaidInField?'<div class="field-paid-note">온더라이브 유급 5개월 내부 반영 · KOSA 공식 증빙 별도</div>':'';
   const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
   const shares=contributions.entries;
@@ -850,7 +847,7 @@ function renderFields(){
    '<div class="field-source-row unrelated"><span class="field-source-label">해당 X</span><div class="field-source-tags">'+(unrelated||'<span class="field-source-empty">해당 X 회사 없음</span>')+'</div></div></div>';
   const progress=hasTarget?'<div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>':
    '<div class="numbers"><b style="color:#337e98">'+total+'개월</b><small>별도 교육·강의 경력</small></div><div class="foot"><span>경력 기준 미설정 · 유급 본인 확인</span><span>기존 개발경력에 미가산</span></div>';
-  return '<article class="field"><div class="name">'+escape(f.name)+'</div>'+progress+sourceNote+sourceList+'</article>';
+  return '<article class="field"><div class="name">'+escape(f.name)+'</div>'+progress+sourceList+'</article>';
  }).join('');
 }
 
@@ -864,7 +861,7 @@ function renderTable(){
  $('count').textContent=rows.length+'건';
  $('projects').innerHTML=rows.length?rows.map(p=>{
   const local=p.kind==='local',cats=p.categories?.length?'<div class="work-entry">'+p.categories.map(escape).join(' · ')+'</div>':'';
-  const label=p.paidConfirmedByUser===true&&p.confirmedMinimumPeriod?'<span class="saved-tag">유급·기간 본인확인 · 5개월 내부 반영 · 서류 미검증</span>':
+  const label=p.paidConfirmedByUser===true&&p.confirmedMinimumPeriod?'<span class="saved-tag">유급 · 2024.06~10 · 5개월</span>':
     p.status==='resource'?'<span class="saved-tag">'+(isCreditable(p)?'개발활동 확인 · 경력 증빙 대기':'참고자료 · 게이지 0개월')+'</span>':
    local?'<span class="saved-tag">내 입력</span>':p.edited?'<span class="saved-tag">원본 수정</span>':'';
   const id=escape(p.rowId);
