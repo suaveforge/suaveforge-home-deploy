@@ -24,8 +24,8 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
-    const expected={'웹 개발':'87 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
-      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'69 / 180개월'};
+    const expected={'웹 개발':'101 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
+      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'70 / 180개월'};
     const sharesValid=cards.every(card=>{
      const chips=[...card.querySelectorAll('.field-source-chip.credited')],segments=[...card.querySelectorAll('.field-share-segment')];
      if(!chips.length)return segments.length===0;
@@ -39,12 +39,13 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
      return nodes.length===13&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===13&&
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
-    const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 28개월');
+    const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 14개월');
     const unpaidEvidence=(()=>{
       const web=field('웹 개발'),pc=field('PC 응용SW'),db=field('DB 개발');
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
       const gray=chips.every(el=>getComputedStyle(el).backgroundColor==='rgb(228, 232, 236)');
-      const webNames=chips.map(el=>el.textContent).join('|')==='제맥|유포';
+      const names=chips.map(el=>el.querySelector('.field-chip-name')?.textContent);
+      const webNames=names.length===2&&names.includes('제맥')&&names.includes('유포');
       const sourceDates=chips.some(el=>el.title==='ZeroMax · 5개월')&&
         chips.some(el=>el.title==='U.Podium · 10개월');
       return {gray,webNames,sourceDates,webCount:chips.length,
@@ -52,7 +53,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
         db:db?.querySelectorAll('.field-source-chip.unpaid').length,
         inExistingCreditedRow:chips.every(el=>el.closest('.field-source-row')?.querySelector('.field-source-label')?.textContent==='반영'),
         hasSeparateRow:!!web?.querySelector('.field-source-row.unpaid'),
-        sourcePercentIgnored:chips.every(el=>!el.querySelector('.field-share-percent'))};
+        sourcePercentShown:chips.every(el=>!!el.querySelector('.field-share-percent')),
+        graySegments:[...web.querySelectorAll('.field-share-segment')].filter(el=>/^(ZeroMax|U.Podium)/.test(el.title))
+         .every(el=>getComputedStyle(el).backgroundColor==='rgb(140, 149, 159)'),
+        totalShares:[...web.querySelectorAll('.field-source-chip.credited .field-share-percent')].reduce((a,el)=>a+Number(el.textContent.replace('%','')),0)};
     })();
     const clip=cards.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(x=>{
       const a=x.getBoundingClientRect(),b=card.getBoundingClientRect();return a.left<b.left-1||a.right>b.right+1;
@@ -182,10 +186,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.paidEducationTooltip,'알지오 · 2013.07~2014.03 (유급 강의)');
    assert.ok(stats.gantt.insuredMonthlyUnchanged,'same-month paid teaching not duplicated into insured month count');
    assert.ok(stats.rosterValid,'eleven paid/insured/teaching and two explicitly unpaid sources are consistently named'); 
-   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,inExistingCreditedRow:true,hasSeparateRow:false,sourcePercentIgnored:true},
-    'ZeroMax and U.Podium are visually distinct gray unpaid tags in the correct fields');
+   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,inExistingCreditedRow:true,hasSeparateRow:false,sourcePercentShown:true,graySegments:true,totalShares:100},
+    'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
-   assert.ok(stats.sourceHelp,'28 remaining uncredited activity months are retained separately');
+   assert.ok(stats.sourceHelp,'14 remaining uncredited activity months are retained separately');
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
    assert.ok(stats.mobileGaps,'company tags wrap');assert.equal(stats.overflow,false,'no horizontal scroll');
    assert.equal(stats.tabActivityRow,true,'Git project stays in archive as unverified career');
