@@ -29,6 +29,7 @@ assert.deepEqual(counts,{registered:9,active:9,queue:45});
    });
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.locator('#careerSpecialties').waitFor({state:'visible'});
+   await page.waitForFunction(()=>document.querySelectorAll('#careerFields .field').length===10);
    await page.waitForFunction(()=>document.querySelectorAll('#careerSpecialties .cr-list button').length===9);
    assert.equal(await page.locator('#notice').count(),0,'no verbose banner');
    assert.equal(await page.locator('#careerFields .field').count(),10,'legacy career fields unchanged');
