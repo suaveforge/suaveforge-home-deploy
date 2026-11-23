@@ -57,6 +57,16 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        overlap:document.querySelector('#ganttCaption')?.textContent?.includes('실제 날짜 겹침 0구간'),
        sameMonth:document.querySelector('#ganttCaption')?.textContent?.includes('같은 달에 회사가 바뀐 사례 3개월'),
        gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
+       activityCount:sec.querySelectorAll('[data-gantt-activity]').length,
+       activityKeys:[...sec.querySelectorAll('[data-gantt-activity]')].map(x=>x.dataset.ganttActivity),
+       visibleNames:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>x.querySelector('.cg-bar-label')?.textContent===x.dataset.ganttCompany),
+       activityColors:[...sec.querySelectorAll('.cg-bar.activity')].every(x=>getComputedStyle(x).backgroundColor==='rgb(132, 120, 178)'),
+       allBarNamesInRail:[...sec.querySelectorAll('.cg-bar-label')].every(x=>{
+        const r=x.closest('.cg-rail').getBoundingClientRect(),b=x.getBoundingClientRect();
+        return b.left>=r.left-3&&b.right<=r.right+3;
+       }),
+       multiIntervals:sec.querySelector('[data-gantt-activity="multiasset"]')?.querySelectorAll('.cg-bar.activity').length,
+       unknownIsActivity:!!sec.querySelector('[data-gantt-activity="unknown"] .cg-bar.activity'),
        railContained:boxes.every((x,i)=>x.left>=rails[i].left-2&&x.right<=rails[i].right+2),
        scrollable:s.scrollWidth>=s.clientWidth};
      })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,clip,mobileGaps,
@@ -78,6 +88,14 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.twoDays,'two-day gap appears in gap list');
    assert.ok(stats.gantt.railContained,'Gantt bars remain inside timeline rails');
    assert.ok(stats.gantt.scrollable,'horizontal scroll available when needed');
+   assert.equal(stats.gantt.activityCount,7,'seven groups of evidenced non-paid/non-insured development activity');
+   assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|arttest|multiasset|investment|suaveforge|unknown');
+   assert.ok(stats.gantt.visibleNames,'each insured employer name stays attached to its bar');
+   assert.ok(stats.gantt.activityColors,'unverified activity has distinct purple color');
+   assert.ok(stats.gantt.allBarNamesInRail,'short-bar labels remain visible and not clipped');
+   assert.equal(stats.gantt.multiIntervals,5,'do not fill unproven gaps in multiaset development');
+   assert.ok(stats.gantt.unknownIsActivity,'unknown-client code is not an employer record');
+
    assert.equal(stats.cards,9);assert.ok(stats.allMatches,'monthly insured totals appear');
    assert.ok(stats.rosterValid,'only nine insured company identifiers appear');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');

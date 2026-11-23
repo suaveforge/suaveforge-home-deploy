@@ -17,7 +17,7 @@ const ctx={document:{getElementById:el},localStorage:{getItem:k=>k==='suaveforge
  fetch:async()=>({ok:true,json:async()=>data}),setTimeout,clearTimeout,console,URL,Blob,Date,Intl,Math,Set,Map,Array,Object,String,Number,
  alert(){},confirm(){return true}};
 const source=block[1].replace('main();\n})();',
- 'globalThis.__careerQA={getAxis:()=>axis,allRows,careerMasterCompanies,fieldEmployerContributions,careerCreditedMonths,renderFields};\nmain();\n})();');
+ 'globalThis.__careerQA={getAxis:()=>axis,allRows,careerMasterCompanies,fieldEmployerContributions,careerCreditedMonths,renderFields,companyGanttModel,ganttActivityGroups};\nmain();\n})();');
 assert.notEqual(source,block[1],'test harness hook exists');
 vm.runInNewContext(source,ctx,{timeout:5000});
 setImmediate(()=>{
@@ -59,6 +59,25 @@ setImmediate(()=>{
  assert.ok(el('ganttGaps').innerHTML.includes('2016.08.20 ~ 2016.08.21'),'2-day gap not lost in monthly buckets');
  assert.ok(el('ganttGaps').innerHTML.includes('2018.11.17 ~ 2019.02.17'),'93-day break');
  assert.equal((el('ganttGaps').innerHTML.match(/class="cg-gap"/g)||[]).length,7,'initial, interim and final uncovered slices');
+ const activityGroups=qa.ganttActivityGroups(qa.companyGanttModel());
+ assert.equal(activityGroups.length,7,'seven evidenced project/activity groups, not seven employers');
+ assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'zeromax|upodium|arttest|multiasset|investment|suaveforge|unknown');
+ assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,7,'display every evidenced group in a separate row');
+ assert.ok(gh.includes('data-gantt-activity="zeromax"')&&gh.includes('data-gantt-activity="multiasset"'),'unpaid source types displayed');
+ assert.ok(gh.includes('U.Podium 아트테스트')&&gh.includes('투자전략 대시보드'),'one-month activities retained');
+ assert.equal((gh.match(/class="cg-bar-label(?: edge-end)?"/g)||[]).length,16,'bar labels appear for nine employers plus seven evidence groups');
+ assert.equal((gh.match(/class="cg-bar activity"/g)||[]).length,activityGroups.reduce((n,g)=>n+g.intervals.length,0),
+  'one segment per continuous evidenced range; no invented continuous employment');
+ const zm=activityGroups.find(x=>x.id==='zeromax');
+ assert.equal([...zm.months].sort((a,b)=>a-b).length,6,'ZeroMax: Feb, Mar, May-Aug, not April planning');
+ assert.deepEqual(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-03|2023-05~2023-08');
+ const trader=activityGroups.find(x=>x.id==='multiasset');
+ assert.equal(trader.intervals.map(x=>x.start+'~'+x.end).join('|'),
+  '2024-01~2024-01|2024-04~2024-08|2024-10~2025-07|2025-12~2026-05|2026-07~2026-07',
+  'do not fill documented gaps between trading project commits');
+ assert.ok(trader.intervals.every(x=>new Date(x.a).toISOString().slice(0,7)===x.start),'starts exactly at first day of recorded month');
+ assert.ok(trader.intervals.every(x=>new Date(x.b-86400000).toISOString().slice(0,7)===x.end),'ends exactly at last day of recorded month');
+ assert.ok(!gh.includes('data-gantt-activity="메타크로스"'),'undated work not invented');
  const web=field('웹 개발');
  assert.ok(web.includes('개발활동 114개월 중 증빙대기 32개월'),'retains 32 project development months outside career count');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','zeromax','테스트회사'])
