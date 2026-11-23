@@ -134,7 +134,7 @@ setImmediate(()=>{
   const web=field('웹 개발');
  assert.ok(web.includes('미반영 개발활동 28개월'),'retains 28 other project months outside internal paid count');
  assert.equal((web.match(/class="field-source-chip unpaid"/g)||[]).length,2,'web shows exactly two unpaid company tags');
- assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 무급 · 개발기록 6개월"'),'ZeroMax has six distinct documented months, with April unfilled');
+ assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 무급 · 개발기록 5개월"'),'ZeroMax web development has five distinct dated months (February, May-August)');
  assert.ok(web.includes('data-master-company="u.podium" title="U.Podium · 무급 · 개발기록 10개월"'),'U.Podium shows ten documented months without double-counting September');
  assert.ok(web.includes('>제맥</span>')&&web.includes('>유포</span>'),'unpaid source names remain readable and concise');
  assert.equal((field('PC 응용SW').match(/class="field-source-chip unpaid"/g)||[]).length,1,'PC field shows ZeroMax dated Unity code only');
