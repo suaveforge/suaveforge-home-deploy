@@ -443,11 +443,11 @@ function fieldEmployerStates(rows,category,master){
    for(const month of months(row.start,row.end))item.unpaidMonths.add(month);
   }
  }
- const classified={credited:[],uncredited:[],unrelated:[]};
+ const classified={credited:[],uncredited:[],unpaid:[],unrelated:[]};
  for(const item of byId.values()){
   if(item.credited)classified.credited.push(item);
   else if(unpaidIds.has(item.id)){
-   if(item.unpaidMonths.size)classified.uncredited.push(item);
+   if(item.unpaidMonths.size)classified.unpaid.push(item);
    else classified.unrelated.push(item);
   }else if(item.uncredited)classified.uncredited.push(item);
   else classified.unrelated.push(item);
@@ -852,13 +852,15 @@ function renderFields(){
   const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
   const shares=contributions.entries;
-  const confirmed=shares.map((item,i)=>{
+  const creditedTags=shares.map((item,i)=>{
    const state=sources.byId.get(item.id);
    return sourceChip(item.company,'credited',item.percent,FIELD_SHARE_COLORS[i%FIELD_SHARE_COLORS.length],state?.uncredited||0,item.rawMonths,item.months);
   }).join('');
-  const pending=sources.uncredited.map(item=>item.unpaidMonths.size?
-   sourceChip(item.company,'unpaid',null,'',0,item.unpaidMonths.size):
-   sourceChip(item.company,'uncredited')).join('');
+  // Show dated unpaid work beside completed/recorded work; it must never
+  // contribute to the paid career gauge or the share percentages below.
+  const unpaidTags=sources.unpaid.map(item=>sourceChip(item.company,'unpaid',null,'',0,item.unpaidMonths.size)).join('');
+  const confirmed=creditedTags+unpaidTags;
+  const pending=sources.uncredited.map(item=>sourceChip(item.company,'uncredited')).join('');
   const unrelated=sources.unrelated.map(item=>sourceChip(item.company,'unrelated')).join('');
   const chart=shares.length?'<div class="field-share-block"><div class="field-share-track" role="img" aria-label="'+
    escape('반영된 경력 '+total+'개월의 회사별 비중 · '+shares.map(x=>x.company+' '+x.percent.toFixed(1)+'%').join(', '))+'">'+
