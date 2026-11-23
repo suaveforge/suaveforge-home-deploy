@@ -21,7 +21,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'87 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
@@ -36,10 +36,23 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const rosters=cards.map(card=>[...card.querySelectorAll('.field-source-chip')].map(x=>x.dataset.masterCompany).sort().join('|'));
     const rosterValid=cards.every(card=>{
      const nodes=[...card.querySelectorAll('.field-source-chip')];
-     return nodes.length===11&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===11&&
+     return nodes.length===13&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===13&&
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 28개월');
+    const unpaidEvidence=(()=>{
+      const web=field('웹 개발'),pc=field('PC 응용SW'),db=field('DB 개발');
+      const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
+      const gray=chips.every(el=>getComputedStyle(el).backgroundColor==='rgb(228, 232, 236)');
+      const webNames=chips.map(el=>el.textContent).join('|')==='제맥|유포';
+      const sourceDates=chips.some(el=>el.title==='ZeroMax · 무급 · 개발기록 6개월')&&
+        chips.some(el=>el.title==='U.Podium · 무급 · 개발기록 10개월');
+      return {gray,webNames,sourceDates,webCount:chips.length,
+        pc:pc?.querySelectorAll('.field-source-chip.unpaid').length,
+        db:db?.querySelectorAll('.field-source-chip.unpaid').length,
+        hasSeparateRow:!!web?.querySelector('.field-source-row.unpaid'),
+        sourcePercentIgnored:chips.every(el=>!el.querySelector('.field-share-percent'))};
+    })();
     const clip=cards.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(x=>{
       const a=x.getBoundingClientRect(),b=card.getBoundingClientRect();return a.left<b.left-1||a.right>b.right+1;
     }).map(x=>x.textContent));
@@ -99,7 +112,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        unknownIsActivity:!!sec.querySelector('[data-gantt-activity="unknown"] .cg-bar.activity'),
        railContained:boxes.every((x,i)=>x.left>=rails[i].left-2&&x.right<=rails[i].right+2),
        scrollable:s.scrollWidth>=s.clientWidth};
-     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,clip,mobileGaps,
+     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,unpaidEvidence,clip,mobileGaps,
       overflow:document.documentElement.scrollWidth>window.innerWidth+1,
       gridColumns:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
       tabActivityRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('멀티에셋 트레이더')&&r.textContent.includes('경력 미반영')),
@@ -167,7 +180,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.paidEducation,1);
    assert.equal(stats.gantt.paidEducationTooltip,'알지오 · 2013.07~2014.03 (유급 강의)');
    assert.ok(stats.gantt.insuredMonthlyUnchanged,'same-month paid teaching not duplicated into insured month count');
-   assert.ok(stats.rosterValid,'nine insured and one educational payer are consistently named');
+   assert.ok(stats.rosterValid,'eleven paid/insured/teaching and two explicitly unpaid sources are consistently named'); 
+   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,hasSeparateRow:true,sourcePercentIgnored:true},
+    'ZeroMax and U.Podium are visually distinct gray unpaid tags in the correct fields');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'28 remaining uncredited activity months are retained separately');
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
