@@ -50,7 +50,8 @@ assert.equal(counts.registered,9);assert.equal(counts.active,9);assert.equal(cou
    assert.equal(await rich.locator('.numbers').count(),10,'all field percentages/months preserved');
    assert.ok(await rich.locator('.track').count()>=9,'original progress bars preserved');
    assert.equal(await rich.locator('.field-sources').count(),10,'original company statuses and contribution UI preserved');
-   assert.match(await rich.first().textContent(),/82 \/ 120개월/,'original months unchanged');
+   assert.match(await rich.first().textContent(),/87 \/ 120개월/,'original insured months plus five paid user-confirmed months retained');
+   assert.match(await rich.first().textContent(),/온더라이브 유급 5개월 내부 반영/,'field explains paid status and documentation');
    assert.equal(await page.locator('#careerSpecialtyCards .field').count(),0);
    assert.equal(await page.locator('#careerGantt').count(),1);
    assert.equal(await page.locator('#careerTimeline').count(),1);
