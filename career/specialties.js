@@ -28,7 +28,7 @@
     const original=lookup("fields"),added=lookup("careerSpecialtyCards");
     original.hidden=tab!=="registered"&&tab!=="active";
     added.hidden=tab==="registered"||tab==="active";
-    if(tab==="registered")return;
+    if(tab==="registered"||tab==="active"){added.innerHTML="";return;}
     const list=info.items.filter(item=>tab==="queue"?(stage(item)==="queue"||stage(item)==="active"):stage(item)===tab);
     added.innerHTML=list.length?list.map(item=>{
       const companies=confirmedCompanies(item);
