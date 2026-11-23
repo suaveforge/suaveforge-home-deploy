@@ -45,11 +45,12 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
       const gray=chips.every(el=>getComputedStyle(el).backgroundColor==='rgb(228, 232, 236)');
       const webNames=chips.map(el=>el.textContent).join('|')==='제맥|유포';
-      const sourceDates=chips.some(el=>el.title==='ZeroMax · 무급 · 개발기록 5개월')&&
-        chips.some(el=>el.title==='U.Podium · 무급 · 개발기록 10개월');
+      const sourceDates=chips.some(el=>el.title==='ZeroMax · 5개월')&&
+        chips.some(el=>el.title==='U.Podium · 10개월');
       return {gray,webNames,sourceDates,webCount:chips.length,
         pc:pc?.querySelectorAll('.field-source-chip.unpaid').length,
         db:db?.querySelectorAll('.field-source-chip.unpaid').length,
+        inExistingUncreditedRow:chips.every(el=>el.closest('.field-source-row')?.querySelector('.field-source-label')?.textContent==='미반영'),
         hasSeparateRow:!!web?.querySelector('.field-source-row.unpaid'),
         sourcePercentIgnored:chips.every(el=>!el.querySelector('.field-share-percent'))};
     })();
@@ -181,7 +182,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.paidEducationTooltip,'알지오 · 2013.07~2014.03 (유급 강의)');
    assert.ok(stats.gantt.insuredMonthlyUnchanged,'same-month paid teaching not duplicated into insured month count');
    assert.ok(stats.rosterValid,'eleven paid/insured/teaching and two explicitly unpaid sources are consistently named'); 
-   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,hasSeparateRow:true,sourcePercentIgnored:true},
+   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,inExistingUncreditedRow:true,hasSeparateRow:false,sourcePercentIgnored:true},
     'ZeroMax and U.Podium are visually distinct gray unpaid tags in the correct fields');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'28 remaining uncredited activity months are retained separately');
