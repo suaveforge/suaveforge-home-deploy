@@ -109,7 +109,17 @@ setImmediate(()=>{
  assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,2,'MetaCross and OnTheLive are visible once each');
  assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross</strong>'),'MetaCross row shown');
  assert.ok(gh.includes('data-gantt-undated="OL"')&&gh.includes('>온더라이브</strong>'),'paid OnTheLive row shown');
- assert.ok(gh.includes('유급 확인 · 수행기간 미확정'),'paid status remains separate from credited months');
+ assert.ok(gh.includes('Git 2024.08.09~08.19 · 지급 09.13'),'Git work range and payment date displayed');
+ assert.ok(gh.includes('data-git-activity="OL"'),'exact Git activity marker is drawn for OnTheLive');
+ assert.ok(gh.includes('10커밋 (계약기간 아님)'),'Git mark is not treated as a full contract bar');
+ assert.equal((gh.match(/data-git-activity="OL"/g)||[]).length,1);
+ const navy=data.projects.find(p=>p.id==='p16');
+ assert.equal(navy.start,null,'unknown contract start remains null');
+ assert.equal(navy.end,null,'unknown contract end remains null');
+ assert.equal(navy.confirmedGitActivity.firstCommit,'2024-08-09');
+ assert.equal(navy.confirmedGitActivity.lastCommit,'2024-08-19');
+ assert.equal(navy.paidConfirmedByUser,true,'paid status user-confirmed');
+ 
  assert.ok(!gh.includes('data-gantt-undated="MF"'),'MetaFastest stays consolidated with U.Podium');
  for(const id of ['MC','OL']){
   const row=gh.slice(gh.indexOf('data-gantt-undated="'+id+'"'));
