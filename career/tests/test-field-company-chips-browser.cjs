@@ -124,7 +124,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.undatedRows[0].name,'MetaCross');
    assert.ok(!stats.gantt.undatedRows[0].hasBar&&!stats.gantt.undatedRows[0].gitMarker,'MetaCross does not gain invented dates');
    assert.ok(stats.gantt.olPeriod?.includes('2024.06.09~2024.10.09'),'user-confirmed work dates in short tooltip');
-   assert.ok(stats.gantt.olPeriod?.includes('서류 미검증'),'unapproved source is labeled');
+   assert.ok(stats.gantt.olPeriod?.includes(' · 유급'),'paid tooltip uses concise label');
    assert.equal(stats.gantt.olBarCount,1,'OnTheLive gets exactly one bar');
    assert.equal(stats.gantt.olOverlays,0,'Git marker is not drawn over paid bar');
    assert.equal(stats.gantt.olBarColors,'rgb(113, 146, 189)','OnTheLive paid bar is one consistent blue');
