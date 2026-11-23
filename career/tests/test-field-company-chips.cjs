@@ -29,10 +29,13 @@ setImmediate(()=>{
   return html.slice(begin,html.indexOf('</article>',begin));
  };
  const masters=qa.careerMasterCompanies(qa.allRows());
- assert.equal(masters.length,11,'nine insured, one paid education, and paid OnTheLive user-confirmed pending');
+ assert.equal(masters.length,13,'nine insured, one paid course, OnTheLive, and two unpaid activity sources');
  assert.equal(masters.slice(0,9).map(x=>x.company).join('|'),data.timeAxis.insurance.map(x=>x.company).join('|'));
  assert.equal(masters[9].company,'알지오');
  assert.equal(masters[10].company,'온더라이브');
+ assert.equal(masters[11].company,'ZeroMax');
+ assert.equal(masters[12].company,'U.Podium');
+ assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'only requested two unpaid companies');
  const expected={'웹 개발':[87,120],'모바일 앱':[95,192],'PC 응용SW':[69,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
@@ -46,8 +49,8 @@ setImmediate(()=>{
   const markup=field(name);
   assert.ok(markup.includes(months+' / '+target+'개월'),name+' counts insured and user-confirmed paid internal work');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
-  assert.equal(ids.length,11,name+' retains all eleven evidence-tracked sources');
-  assert.equal(new Set(ids).size,11,name+' labels each employer once');
+  assert.equal(ids.length,13,name+' retains all thirteen company-source identities');
+  assert.equal(new Set(ids).size,13,name+' labels each source exactly once');
   assert.deepEqual(ids.slice().sort().join('|'),masters.map(x=>x.id).sort().join('|'),name+' stable employer master');
   if(months){
    const chart=qa.fieldEmployerContributions(qa.allRows(),name);
@@ -130,7 +133,19 @@ setImmediate(()=>{
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p16')).length,5,'five calendar-month internal credit');
   const web=field('웹 개발');
  assert.ok(web.includes('미반영 개발활동 28개월'),'retains 28 other project months outside internal paid count');
- for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','zeromax','테스트회사'])
+ assert.equal((web.match(/class="field-source-chip unpaid"/g)||[]).length,2,'web shows exactly two unpaid company tags');
+ assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 무급 · 개발기록 6개월"'),'ZeroMax has six distinct documented months, with April unfilled');
+ assert.ok(web.includes('data-master-company="u.podium" title="U.Podium · 무급 · 개발기록 10개월"'),'U.Podium shows ten documented months without double-counting September');
+ assert.ok(web.includes('>제맥</span>')&&web.includes('>유포</span>'),'unpaid source names remain readable and concise');
+ assert.equal((field('PC 응용SW').match(/class="field-source-chip unpaid"/g)||[]).length,1,'PC field shows ZeroMax dated Unity code only');
+ assert.ok(field('PC 응용SW').includes('data-master-company="zeromax" title="ZeroMax · 무급 · 개발기록 1개월"'),'PC dated evidence is March 2023 only');
+ for(const category of ['모바일 앱','DB 개발','백엔드','블록체인','교육·강의']){
+  const card=field(category);
+  assert.ok(!card.includes('class="field-source-row unpaid"'),'no undated/unrelated company is mislabeled unpaid under '+category);
+ }
+ assert.ok(!web.includes('class="field-source-chip pending" data-master-company="zeromax"'),'ZeroMax is unpaid, not payment-pending');
+ assert.ok(!web.includes('class="field-source-chip pending" data-master-company="u.podium"'),'U.Podium is unpaid, not payment-pending');
+ for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','테스트회사'])
   assert.ok(!current().toLowerCase().includes('data-master-company="'+unknown+'"'),'unverified identity never becomes an employer chip: '+unknown);
  assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),'insured MORPG split retained');
  assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('title="온더라이브 · 5개월 · 유급 · 2024.06~10"'),'paid client shown in reflected field');
