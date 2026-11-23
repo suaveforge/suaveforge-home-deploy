@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const root=path.resolve(__dirname,'../..');
 const html=fs.readFileSync(path.join(root,'career/index.html'),'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8'));
-assert.equal(data.version,14);
+assert.equal(data.version,15);
 assert.deepEqual(data.timeAxis.verifiedPaidEngagements,[],'no paid contract is automatically proven');
 const block=html.match(/<script>\s*([\s\S]*?)<\/script>/);
 assert.ok(block);
@@ -29,18 +29,24 @@ setImmediate(()=>{
   return html.slice(begin,html.indexOf('</article>',begin));
  };
  const masters=qa.careerMasterCompanies(qa.allRows());
- assert.equal(masters.length,9,'nine insurance employers only');
- assert.equal(masters.map(x=>x.company).join('|'),data.timeAxis.insurance.map(x=>x.company).join('|'));
+ assert.equal(masters.length,10,'nine insured employers plus one user-confirmed paid education provider');
+ assert.equal(masters.slice(0,9).map(x=>x.company).join('|'),data.timeAxis.insurance.map(x=>x.company).join('|'));
+ assert.equal(masters[9].company,'알지오');
  const expected={'웹 개발':[82,120],'모바일 앱':[95,192],'PC 응용SW':[69,180],
   '서버 개발':[82,156],'DB 개발':[50,156],'백엔드':[82,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
- assert.equal((current().match(/<article class="field">/g)||[]).length,9);
+ assert.equal((current().match(/<article class="field">/g)||[]).length,10);
+ assert.ok(field('교육·강의').includes('>9개월</b>'),'separate nine-month education history');
+ assert.ok(field('교육·강의').includes('경력 기준 미설정'),'no invented procurement eligibility threshold');
+ assert.ok(!field('교육·강의').includes('9 / 0개월'),'no fake zero target');
+ assert.ok(field('교육·강의').includes('title="알지오 · 9개월"'),'ALZIO source month labeled');
+ assert.ok(!field('웹 개발').includes('title="알지오 · 9개월"'),'education does not inflate web development months');
  for(const [name,[months,target]] of Object.entries(expected)){
   const markup=field(name);
   assert.ok(markup.includes(months+' / '+target+'개월'),name+' counts only insured/verified work');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
-  assert.equal(ids.length,9,name+' has exactly nine employer labels');
-  assert.equal(new Set(ids).size,9,name+' labels each employer once');
+  assert.equal(ids.length,10,name+' retains all ten evidence-tracked sources');
+  assert.equal(new Set(ids).size,10,name+' labels each employer once');
   assert.deepEqual(ids.slice().sort().join('|'),masters.map(x=>x.id).sort().join('|'),name+' stable employer master');
   if(months){
    const chart=qa.fieldEmployerContributions(qa.allRows(),name);
@@ -49,7 +55,13 @@ setImmediate(()=>{
   }
  }
  const gh=el('ganttBoard').innerHTML;
- assert.equal((gh.match(/data-gantt-company=/g)||[]).length,9,'all nine insured companies in the Gantt');
+ assert.ok(gh.includes('data-gantt-education="E01"'),'ALZIO teaching period appears as month-precision paid row');
+ assert.ok(gh.includes('알지오 · 2013.07~2014.03 (유급 강의)'),'ALZIO short paid teaching tooltip');
+ assert.equal((gh.match(/data-gantt-education=/g)||[]).length,1,'one paid teaching Gantt row');
+ assert.equal(data.projects.length,55,'original 54 software/activity records preserved');
+ assert.equal(data.projects.find(x=>x.id==='p55').categories.join('|'),'교육·강의');
+ assert.equal(data.timeAxis.userConfirmedPaidEducation[0].paymentReceiptVerified,false,'no fabricated payment receipt');
+ assert.equal((gh.match(/data-gantt-company=/g)||[]).length,9,'paid teaching does not duplicate insured-employer Gantt rows');
  assert.ok(gh.includes('2009.02.16 ~ 2013.04.30'),'Wemade exact dates');
  assert.ok(gh.includes('2016.08.19')&&gh.includes('2016.08.22'),'Studio/N2 exact transition');
  assert.ok(el('ganttKpis').innerHTML.includes('162개월'),'monthly overlap deduplicated');
@@ -107,6 +119,7 @@ setImmediate(()=>{
  }
  assert.equal(rows.find(x=>x.rowId==='p53')?.status,'linked');
  assert.equal(rows.find(x=>x.rowId==='p54')?.status,'linked');
+ assert.equal(rows.find(x=>x.rowId==='p55')?.status,'linked','self-reported paid course recorded solely under education');
  assert.ok(el('projects').innerHTML.includes('개발활동 확인 · 경력 증빙 대기'));
  assert.ok(el('projects').innerHTML.includes('참고자료 · 게이지 0개월'),'old umbrella still excluded');
  assert.ok(!current().includes('멀티에셋 트레이더'),'project name removed from company share chart');

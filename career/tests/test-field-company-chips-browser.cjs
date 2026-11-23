@@ -19,9 +19,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     return route.abort();
    });
    await page.goto('https://career.test/',{waitUntil:'load'});
-   await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===9);
+   await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'82 / 120개월','서버 개발':'82 / 156개월','DB 개발':'50 / 156개월',
@@ -36,7 +36,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const rosters=cards.map(card=>[...card.querySelectorAll('.field-source-chip')].map(x=>x.dataset.masterCompany).sort().join('|'));
     const rosterValid=cards.every(card=>{
      const nodes=[...card.querySelectorAll('.field-source-chip')];
-     return nodes.length===9&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===9&&
+     return nodes.length===10&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===10&&
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('개발활동 114개월 중 증빙대기 32개월');
@@ -45,7 +45,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     }).map(x=>x.textContent));
     const mobileGaps=[...document.querySelectorAll('.field-source-tags')].every(x=>getComputedStyle(x).flexWrap==='wrap');
     const allMatches=Object.entries(expected).every(([name,value])=>count(name)===value);
-    return {gantt:(()=>{
+    return {education:({title:field('교육·강의')?.querySelector('.numbers b')?.textContent,
+      noFakeProgress:!field('교육·강의')?.querySelector('.track'),
+      hasAlzio:!!field('교육·강의')?.querySelector('.field-source-chip.credited[data-master-company="알지오"]')}),
+     gantt:(()=>{
       const sec=document.querySelector('#careerGantt'),fieldSec=document.querySelector('#careerFields'),timeline=document.querySelector('#careerTimeline');
       const rows=[...sec.querySelectorAll('[data-gantt-company]')],boxes=rows.map(x=>x.querySelector('.cg-bar').getBoundingClientRect());
       const rails=rows.map(x=>x.querySelector('.cg-rail').getBoundingClientRect());
@@ -58,6 +61,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        sameMonth:document.querySelector('#ganttCaption')?.textContent?.includes('같은 달에 회사가 바뀐 사례 3개월'),
        gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
        activityCount:sec.querySelectorAll('[data-gantt-activity]').length,
+       paidEducation:sec.querySelectorAll('[data-gantt-education]').length,
+       paidEducationTooltip:sec.querySelector('[data-gantt-education] .cg-bar.user-paid')?.title,
+       insuredMonthlyUnchanged:sec.querySelector('#ganttKpis')?.textContent.includes('162개월'),
        compactRows:[...sec.querySelectorAll('.cg-row')].every(r=>r.getBoundingClientRect().height<=30),
        barGap:[...sec.querySelectorAll('[data-gantt-company]')].every(r=>{const rail=r.querySelector('.cg-rail'),bar=r.querySelector('.cg-bar');return rail.getBoundingClientRect().height-bar.getBoundingClientRect().height<=6;}),
        artTestMerged:!sec.querySelector('[data-gantt-activity="arttest"]')&&!!sec.querySelector('[data-gantt-activity="upodium"]'),
@@ -134,8 +140,14 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(hover.shown,'pointer displays exact date above vertical guide');
    assert.ok(hover.aligned,'vertical guide follows the pointer within 1.25 px');
    assert.ok(hover.clears,'guide disappears when pointer leaves the Gantt');
-   assert.equal(stats.cards,9);assert.ok(stats.allMatches,'monthly insured totals appear');
-   assert.ok(stats.rosterValid,'only nine insured company identifiers appear');
+   assert.equal(stats.cards,10);assert.ok(stats.allMatches,'monthly insured totals appear');
+   assert.equal(stats.education.title,'9개월');
+   assert.ok(stats.education.noFakeProgress,'no artificial requirement percentage');
+   assert.ok(stats.education.hasAlzio,'ALZIO is only credited as education');
+   assert.equal(stats.gantt.paidEducation,1);
+   assert.equal(stats.gantt.paidEducationTooltip,'알지오 · 2013.07~2014.03 (유급 강의)');
+   assert.ok(stats.gantt.insuredMonthlyUnchanged,'same-month paid teaching not duplicated into insured month count');
+   assert.ok(stats.rosterValid,'nine insured and one educational payer are consistently named');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'unverified 32 months are retained with clear label');
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
