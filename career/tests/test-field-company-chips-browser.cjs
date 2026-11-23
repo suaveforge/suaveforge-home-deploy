@@ -58,6 +58,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        sameMonth:document.querySelector('#ganttCaption')?.textContent?.includes('같은 달에 회사가 바뀐 사례 3개월'),
        gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
        activityCount:sec.querySelectorAll('[data-gantt-activity]').length,
+       compactRows:[...sec.querySelectorAll('.cg-row')].every(r=>r.getBoundingClientRect().height<=30),
+       barGap:[...sec.querySelectorAll('[data-gantt-company]')].every(r=>{const rail=r.querySelector('.cg-rail'),bar=r.querySelector('.cg-bar');return rail.getBoundingClientRect().height-bar.getBoundingClientRect().height<=6;}),
+       artTestMerged:!sec.querySelector('[data-gantt-activity="arttest"]')&&!!sec.querySelector('[data-gantt-activity="upodium"]'),
        activityKeys:[...sec.querySelectorAll('[data-gantt-activity]')].map(x=>x.dataset.ganttActivity),
        visibleNames:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>x.querySelector('.cg-name strong')?.textContent===x.dataset.ganttCompany)&&
         [...sec.querySelectorAll('[data-gantt-activity]')].every(x=>x.querySelector('.cg-name strong')?.textContent?.trim().length>0),
@@ -98,8 +101,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.twoDays,'two-day gap appears in gap list');
    assert.ok(stats.gantt.railContained,'Gantt bars remain inside timeline rails');
    assert.ok(stats.gantt.scrollable,'horizontal scroll available when needed');
-   assert.equal(stats.gantt.activityCount,7,'seven groups of evidenced non-paid/non-insured development activity');
-   assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|arttest|multiasset|investment|suaveforge|unknown');
+   assert.equal(stats.gantt.activityCount,6,'art test merged with U.Podium development group');
+   assert.ok(stats.gantt.artTestMerged,'no duplicate art-test Gantt row');
+   assert.ok(stats.gantt.compactRows,'Gantt rows are single-line and compact');
+   assert.ok(stats.gantt.barGap,'bars nearly fill each row; no large vertical gaps');
+   assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|multiasset|investment|suaveforge|unknown');
    assert.ok(stats.gantt.visibleNames,'each insured employer name stays attached to its bar');
    assert.ok(stats.gantt.activityColors,'unverified activity has distinct purple color');
    assert.ok(stats.gantt.barLabelsRemoved,'no names inside progress bars');
@@ -112,6 +118,22 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.multiIntervals,5,'do not fill unproven gaps in multiaset development');
    assert.ok(stats.gantt.unknownIsActivity,'unknown-client code is not an employer record');
 
+   const hover=await page.evaluate(()=>{
+    const rail=document.querySelector('[data-gantt-company="위메이드"] .cg-rail');
+    const rect=rail.getBoundingClientRect(),board=document.querySelector('#ganttBoard');
+    const clientX=rect.left+Math.min(50,rect.width/4),clientY=rect.top+rect.height/2;
+    rail.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,clientX,clientY}));
+    const guide=document.querySelector('#ganttGuide'),chip=document.querySelector('#ganttGuideDate');
+    const guideX=guide.getBoundingClientRect().left;
+    const shown=!guide.hidden&&/^\d{4}\.\d{2}\.\d{2}$/.test(chip.textContent||'');
+    const aligned=Math.abs(clientX-guideX)<1.25;
+    board.dispatchEvent(new PointerEvent('pointerleave'));
+    const clears=guide.hidden;
+    return {shown,aligned,clears,label:chip.textContent,guideX,clientX};
+   });
+   assert.ok(hover.shown,'pointer displays exact date above vertical guide');
+   assert.ok(hover.aligned,'vertical guide follows the pointer within 1.25 px');
+   assert.ok(hover.clears,'guide disappears when pointer leaves the Gantt');
    assert.equal(stats.cards,9);assert.ok(stats.allMatches,'monthly insured totals appear');
    assert.ok(stats.rosterValid,'only nine insured company identifiers appear');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');

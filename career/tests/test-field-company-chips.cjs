@@ -59,12 +59,16 @@ setImmediate(()=>{
  assert.ok(el('ganttGaps').innerHTML.includes('2016.08.20 ~ 2016.08.21'),'2-day gap not lost in monthly buckets');
  assert.ok(el('ganttGaps').innerHTML.includes('2018.11.17 ~ 2019.02.17'),'93-day break');
  assert.equal((el('ganttGaps').innerHTML.match(/class="cg-gap"/g)||[]).length,7,'initial, interim and final uncovered slices');
+ assert.ok(gh.includes('id="ganttGuide"')&&gh.includes('id="ganttGuideDate"'),'hover date guide mounted');
  const activityGroups=qa.ganttActivityGroups(qa.companyGanttModel());
- assert.equal(activityGroups.length,7,'seven evidenced project/activity groups, not seven employers');
- assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'zeromax|upodium|arttest|multiasset|investment|suaveforge|unknown');
- assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,7,'display every evidenced group in a separate row');
+ assert.equal(activityGroups.length,6,'art test merged into U.Podium, no duplicate company-style row');
+ assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'zeromax|upodium|multiasset|investment|suaveforge|unknown');
+ assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,6,'one U.Podium row combines art test and game development');
  assert.ok(gh.includes('data-gantt-activity="zeromax"')&&gh.includes('data-gantt-activity="multiasset"'),'unpaid source types displayed');
- assert.ok(gh.includes('U.Podium 아트테스트')&&gh.includes('투자전략 대시보드'),'one-month activities retained');
+ assert.ok(!gh.includes('data-gantt-activity="arttest"')&&gh.includes('투자전략 대시보드'),'art test is not an independent Gantt row');
+ const up=activityGroups.find(x=>x.id==='upodium');
+ assert.ok(up.projects.includes('p26')&&up.projects.includes('p49'),'U.Podium art test evidence p26 preserved within U.Podium p49');
+ assert.ok(up.months.has(2023*12+8),'September 2023 art test month retained once');
  assert.ok(!gh.includes('cg-bar-label'),'no company or project name inside a progress bar');
  for(const group of activityGroups){
   assert.ok(gh.includes('data-gantt-activity="'+group.id+'"'),'all activity identities remain in left-hand name column');
