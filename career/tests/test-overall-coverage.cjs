@@ -70,6 +70,7 @@ setImmediate(()=>{
  assert.equal((el('timelineGapList').innerHTML.match(/data-gap-start=/g)||[]).length,6);
  assert.ok(el('timelineYearList').innerHTML.indexOf('data-timeline-month="2009-02"')<el('timelineYearList').innerHTML.indexOf('data-timeline-month="2026-11"'));
  assert.equal((el('fields').innerHTML.match(/<article class="field">/g)||[]).length,10,'education field added without changing existing nine card values');
- assert.ok(el('fields').innerHTML.includes('82 / 120개월'),'only insured and paid-verified web work fills career progress');
+ assert.ok(el('fields').innerHTML.includes('87 / 120개월'),'insured and user-confirmed paid OnTheLive months both fill internal career progress');
+ assert.ok(el('fields').innerHTML.includes('온더라이브 유급 5개월 내부 반영'),'paid user-confirmed source disclosed');
  console.log('CAREER_OVERALL_TIMELINE_214_MONTHS_203_DATED_ACTIVITY_11_UNASSIGNED_PASS');
 });
