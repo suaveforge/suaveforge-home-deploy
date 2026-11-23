@@ -19,14 +19,14 @@
   }
   function render(){
     if(!info)return;
-    const count={active:0,done:0,queue:0,registered:10};
+    const count={active:10,done:0,queue:0,registered:10};
     for(const item of info.items)if(stage(item)!=="registered")count[stage(item)]++;
     document.querySelectorAll("#careerSpecialtyTabs button[data-tab]").forEach(button=>{
       const choice=button.dataset.tab;button.setAttribute("aria-selected",String(choice===tab));
       button.querySelector("strong").textContent=count[choice];
     });
     const original=lookup("fields"),added=lookup("careerSpecialtyCards");
-    original.hidden=tab!=="registered";
+    original.hidden=tab!=="registered"&&tab!=="active";
     added.hidden=tab==="registered";
     if(tab==="registered")return;
     const list=info.items.filter(item=>stage(item)===tab);
