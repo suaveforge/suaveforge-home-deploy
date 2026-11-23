@@ -20,16 +20,16 @@
   function render(){
     if(!info)return;
     const count={active:10,done:0,queue:0,registered:10};
-    for(const item of info.items)if(stage(item)!=="registered")count[stage(item)]++;
+    for(const item of info.items)if(stage(item)!=="registered")count[stage(item)==="active"?"queue":stage(item)]++;
     document.querySelectorAll("#careerSpecialtyTabs button[data-tab]").forEach(button=>{
       const choice=button.dataset.tab;button.setAttribute("aria-selected",String(choice===tab));
       button.querySelector("strong").textContent=count[choice];
     });
     const original=lookup("fields"),added=lookup("careerSpecialtyCards");
     original.hidden=tab!=="registered"&&tab!=="active";
-    added.hidden=tab==="registered";
+    added.hidden=tab==="registered"||tab==="active";
     if(tab==="registered")return;
-    const list=info.items.filter(item=>stage(item)===tab);
+    const list=info.items.filter(item=>tab==="queue"?(stage(item)==="queue"||stage(item)==="active"):stage(item)===tab);
     added.innerHTML=list.length?list.map(item=>{
       const companies=confirmedCompanies(item);
       const source=companies.length?'<div class="specialty-sources">'+companies.map(name=>'<span class="specialty-company">'+escape(name)+'</span>').join("")+'</div>':"";
