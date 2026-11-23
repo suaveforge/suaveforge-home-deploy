@@ -333,7 +333,7 @@
       ],
       "start": null,
       "end": null,
-      "note": "원본 프리랜서 경력기술서는 방산 전투 시뮬레이터와 프리랜서 전체 스택을 함께 기재하여 개별 매핑이 불분명했음. 2026-11-22 사용자 직접 확인으로 온더라이브 프로젝트 기술스택 5종 연결. 수행기간 미확정이므로 모든 분야에서 미반영 유지.",
+      "note": "원본 프리랜서 경력기술서는 방산 전투 시뮬레이터와 프리랜서 전체 스택을 함께 기재하여 개별 매핑이 불분명했음. 2026-11-22 사용자 직접 확인으로 온더라이브 프로젝트 기술스택 5종 연결. Git 2024.08.09~08.19 해군국방본부 관련 개발활동 1개월 확인, 2024.09.13 유급 지급일은 본인 진술. 계약 전체 기간 미확정이므로 보험/KOSA 인정기간은 별개.",
       "evidence": [
         {
           "type": "resume",
@@ -342,8 +342,22 @@
         {
           "type": "user_statement",
           "note": "2026-11-22: 온더라이브에서 React, Node.js, Go, MySQL, Three.js 사용 직접 확인"
+        },
+        {
+          "type": "git_direct_code_commit",
+          "note": "programmer119/react-three-cybersec: 2024-08-09~2024-08-19 본인 작성 Git 커밋 10건. src/field/1000.json fieldName '해군국방본부 - 양방향 훈련 test'. 온더라이브 계약의 동일 납품 저장소 여부는 추가 대조 필요.",
+          "url": "https://github.com/programmer119/react-three-cybersec/commits/master/"
         }
-      ]
+      ],
+      "confirmedGitActivity": {
+        "repository": "programmer119/react-three-cybersec",
+        "firstCommit": "2024-08-09",
+        "lastCommit": "2024-08-19",
+        "commitCount": 10,
+        "firstRecordedActivityMonth": "2024-08",
+        "sourceProjectLink": "해군국방본부 테스트 필드명 및 React/Three.js 코드로 연관성 확인. 온더라이브 계약 원본 저장소와 동일함은 미검증"
+      },
+      "paidConfirmedByUser": true
     },
     {
       "company": "유비펀",
@@ -1982,7 +1996,7 @@
         "relatedProjects": [
           "p16"
         ],
-        "dateStatus": "수행 시작·종료월 미확정",
+        "dateStatus": "Git 개발기록 2024.08.09~08.19 확인 · 계약 전체 기간 미확정",
         "work": "해군 전투 시뮬레이터 웹 프론트·Three.js·React·Node.js·Go·MySQL 작업",
         "tags": [
           "웹 개발",
@@ -1992,13 +2006,20 @@
         ],
         "activity": [
           {
+            "month": "2024-08",
+            "desc": "해군국방본부 양방향훈련 React/Three.js 소스 Git 커밋 10건 (08.09~08.19)",
+            "evidence": "programmer119/react-three-cybersec",
+            "proof": "git",
+            "url": "https://github.com/programmer119/react-three-cybersec/commits/master/"
+          },
+          {
             "month": "2024-09",
             "desc": "2024.09.13 방산 업무 지급일(본인 진술, 계약 대응 검증 전)",
             "evidence": "2026-11-22 사용자 진술",
             "proof": "statement"
           }
         ],
-        "note": "지급일은 개발 시작/종료일이 아님. 해당 지급 건과 온더라이브 동일 계약 여부도 아직 불확실."
+        "note": "온더라이브 유급 수행은 본인 확인. GitHub 해군국방본부 관련 시뮬레이션 2024.08.09~19 개발활동 확인. 2024.09.13 지급일은 작업기간의 종료일이 아님. 계약 원본 저장소 연결 및 전체 계약 시작·종료일 추가 확인 필요."
       },
       {
         "id": "SC",
