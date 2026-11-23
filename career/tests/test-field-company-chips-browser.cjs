@@ -21,7 +21,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'82 / 120개월','서버 개발':'82 / 156개월','DB 개발':'50 / 156개월',
@@ -36,10 +36,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const rosters=cards.map(card=>[...card.querySelectorAll('.field-source-chip')].map(x=>x.dataset.masterCompany).sort().join('|'));
     const rosterValid=cards.every(card=>{
      const nodes=[...card.querySelectorAll('.field-source-chip')];
-     return nodes.length===10&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===10&&
+     return nodes.length===11&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===11&&
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
-    const sourceHelp=field('웹 개발')?.textContent?.includes('개발활동 114개월 중 증빙대기 32개월');
+    const sourceHelp=field('웹 개발')?.textContent?.includes('개발활동 115개월 중 증빙대기 33개월');
     const clip=cards.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(x=>{
       const a=x.getBoundingClientRect(),b=card.getBoundingClientRect();return a.left<b.left-1||a.right>b.right+1;
     }).map(x=>x.textContent));
@@ -62,6 +62,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        gaps:sec.querySelectorAll('.cg-gap').length,twoDays:document.querySelector('#ganttGaps')?.textContent?.includes('2016.08.20 ~ 2016.08.21'),
        activityCount:sec.querySelectorAll('[data-gantt-activity]').length,
        paidEducation:sec.querySelectorAll('[data-gantt-education]').length,
+       olPeriod:sec.querySelector('[data-gantt-user-period="OL"]')?.title,
        undatedRows:[...sec.querySelectorAll('[data-gantt-undated]')].map(r=>({
         id:r.dataset.ganttUndated,
         name:r.querySelector('.cg-name strong')?.textContent,
@@ -118,10 +119,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.deepEqual(stats.gantt.undatedRows.map(r=>r.id).join('|'),'MC|OL','two missing named projects stay on Gantt');
    assert.equal(stats.gantt.undatedRows[0].name,'MetaCross');
    assert.equal(stats.gantt.undatedRows[1].name,'온더라이브');
-   assert.ok(stats.gantt.undatedRows[1].status.includes('Git 2024.08.09~08.19 · 지급 09.13'));
+   assert.ok(stats.gantt.undatedRows[1].status.includes('유급 최소 2024.06~10 · 증빙대기'));
    assert.ok(stats.gantt.undatedRows[1].gitMarker,'OnTheLive Git activity marker present');
+   assert.ok(stats.gantt.olPeriod?.includes('2024-06-09~2024-10-09'),'five user-confirmed months with exact dates');
    assert.ok(!stats.gantt.undatedRows[0].gitMarker,'MetaCross remains without invented dates');
-   assert.ok(stats.gantt.undatedRows.every(r=>!r.hasBar),'unknown dates do not become continuous work bars');
+   assert.ok(!stats.gantt.undatedRows[0].hasBar&&stats.gantt.undatedRows[1].hasBar,'only OnTheLive has a user-confirmed paid interval');
  
    assert.ok(stats.gantt.artTestMerged,'no duplicate art-test Gantt row');
    assert.ok(stats.gantt.compactRows,'Gantt rows are single-line and compact');
