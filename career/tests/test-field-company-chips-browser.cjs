@@ -56,7 +56,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
         sourcePercentShown:chips.every(el=>!!el.querySelector('.field-share-percent')),
         graySegments:[...web.querySelectorAll('.field-share-segment')].filter(el=>/^(ZeroMax|U.Podium)/.test(el.title))
          .every(el=>getComputedStyle(el).backgroundColor==='rgb(140, 149, 159)'),
-        totalShares:[...web.querySelectorAll('.field-source-chip.credited .field-share-percent')].reduce((a,el)=>a+Number(el.textContent.replace('%','')),0)};
+        totalSharesValid:Math.abs([...web.querySelectorAll('.field-source-chip.credited .field-share-percent')].reduce((a,el)=>a+Number(el.textContent.replace('%','')),0)-100)<.001};
     })();
     const clip=cards.flatMap(card=>[...card.querySelectorAll('.field-source-chip')].filter(x=>{
       const a=x.getBoundingClientRect(),b=card.getBoundingClientRect();return a.left<b.left-1||a.right>b.right+1;
@@ -186,7 +186,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.paidEducationTooltip,'알지오 · 2013.07~2014.03 (유급 강의)');
    assert.ok(stats.gantt.insuredMonthlyUnchanged,'same-month paid teaching not duplicated into insured month count');
    assert.ok(stats.rosterValid,'eleven paid/insured/teaching and two explicitly unpaid sources are consistently named'); 
-   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,inExistingCreditedRow:true,hasSeparateRow:false,sourcePercentShown:true,graySegments:true,totalShares:100},
+   assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,inExistingCreditedRow:true,hasSeparateRow:false,sourcePercentShown:true,graySegments:true,totalSharesValid:true},
     'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'14 remaining uncredited activity months are retained separately');
