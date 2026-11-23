@@ -65,6 +65,12 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        barLabelsRemoved:sec.querySelectorAll('.cg-bar-label').length===0,
        zeroMaxBars:sec.querySelector('[data-gantt-activity="zeromax"]')?.querySelectorAll('.cg-bar.activity').length,
        zeroMaxTooltip:sec.querySelector('[data-gantt-activity="zeromax"] .cg-bar.activity')?.title||'',
+       insuredTooltipsValid:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>{
+        const title=x.querySelector('.cg-bar')?.title||'';
+        return title.startsWith(x.dataset.ganttCompany+' · ')&&title.includes('~')&&title.length<70&&!title.includes('개월');
+       }),
+       activityTooltipsBrief:[...sec.querySelectorAll('[data-gantt-activity] .cg-bar.activity')].every(x=>x.title.length<=66&&x.title.includes('~')&&!/경력|근거 확인|일자 미확정|연결/.test(x.title)),
+       overviewTooltipsBrief:[...sec.querySelectorAll('.cg-summary-bar')].every(x=>x.title.length<50&&x.title.includes('~')&&!x.title.includes('증빙')),
        leftNamesVisible:[...sec.querySelectorAll('[data-gantt-company], [data-gantt-activity]')].every(x=>{
         const label=x.querySelector('.cg-name strong'),rect=label?.getBoundingClientRect();
         return !!label&&!!rect&&rect.width>0&&rect.height>0;
@@ -99,8 +105,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.barLabelsRemoved,'no names inside progress bars');
    assert.ok(stats.gantt.leftNamesVisible,'all company and project labels appear in left column');
    assert.equal(stats.gantt.zeroMaxBars,1,'ZeroMax one continuous visible period');
-   assert.ok(stats.gantt.zeroMaxTooltip.includes('2023-02 ~ 2023-08'));
-   assert.ok(stats.gantt.zeroMaxTooltip.includes('2023-04는 기록 공백을 차트에서만 연결'));
+   assert.equal(stats.gantt.zeroMaxTooltip,'ZeroMax · 2023.02~2023.08 (4월 미확인)','compact ZeroMax tooltip');
+   assert.ok(stats.gantt.insuredTooltipsValid,'insured Gantt tooltips contain only name and date range');
+   assert.ok(stats.gantt.activityTooltipsBrief,'other activity Gantt tooltips are short');
+   assert.ok(stats.gantt.overviewTooltipsBrief,'overview tooltips are short');
    assert.equal(stats.gantt.multiIntervals,5,'do not fill unproven gaps in multiaset development');
    assert.ok(stats.gantt.unknownIsActivity,'unknown-client code is not an employer record');
 

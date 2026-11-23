@@ -78,7 +78,9 @@ setImmediate(()=>{
  assert.equal([...zm.months].sort((a,b)=>a-b).length,6,'ZeroMax: Feb, Mar, May-Aug, not April planning');
  assert.equal(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-08','ZeroMax short gap merged visually');
  assert.deepEqual(zm.visualGaps.join('|'),'2023-04','April is explicitly recorded as visually bridged, not independently proven');
- assert.ok(gh.includes('2023-04는 기록 공백을 차트에서만 연결'),'chart tooltip discloses displayed continuity without crediting April');
+ assert.ok(gh.includes('ZeroMax · 2023.02~2023.08 (4월 미확인)'),'ZeroMax compact tooltip identifies the visually bridged unverified month');
+ assert.ok(gh.includes('위메이드 · 2009.02.16~2013.04.30'),'insured bar tooltip contains only company and exact dates');
+ assert.ok(!gh.includes('월 단위 근거, 일자 미확정')&&!gh.includes('기록 공백을 차트에서만 연결')&&!gh.includes('월 걸침)'),'verbose native bar titles removed');
  assert.equal((gh.match(/data-gantt-activity="zeromax"/g)||[]).length,1);
  assert.equal((gh.match(/class="cg-bar activity"/g)||[]).length,activityGroups.reduce((n,g)=>n+g.intervals.length,0));
  const trader=activityGroups.find(x=>x.id==='multiasset');

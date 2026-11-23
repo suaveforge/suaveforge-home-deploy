@@ -638,7 +638,7 @@ function renderCareerGantt(){
   g.years.map(y=>'<span class="cg-axis-year" style="left:'+y.position.toFixed(5)+'%">'+y.name+'</span>').join('')+'</div></div>';
  const items=g.periods.map(p=>{
   const left=g.percent(p.first),width=100*((p.last+g.DAY-p.first)/g.span);
-  const label=p.company+' · '+p.start+' ~ '+p.end+' · '+g.workedMonths(p)+'개월(월 걸침)';
+  const label=p.company+' · '+fmt(p.start)+'~'+fmt(p.end);
    return '<div class="cg-row" data-gantt-company="'+esc(p.company)+'"><div class="cg-name"><strong>'+esc(p.company)+'</strong>'+
    '<small>'+fmt(p.start)+' ~ '+fmt(p.end)+' · '+g.workedMonths(p)+'개월</small></div><div class="cg-rail">'+rules()+
    '<span class="cg-bar'+(p.kind==='paid'?' paid':'')+'" tabindex="0" title="'+esc(label)+'" aria-label="'+esc(label)+
@@ -646,9 +646,9 @@ function renderCareerGantt(){
  }).join('');
  const summary='<div class="cg-row"><div class="cg-name cg-overview-name"><strong>전체 날짜 현황</strong><small>겹침·공백 동시 확인</small></div>'+
   '<div class="cg-rail cg-overview-rail">'+rules()+g.segments.map(p=>{
-   const name=p.kind==='covered'?'재직·계약 증빙':p.kind==='overlap'?'실제 날짜 겹침':'재직·계약 증빙 미연결';
+   const name=p.kind==='covered'?'확인':p.kind==='overlap'?'중복':'미확인';
    return '<span class="cg-summary-bar '+p.kind+'" style="left:'+g.percent(p.start).toFixed(5)+'%;width:'+
-    (100*(p.end-p.start)/g.span).toFixed(5)+'%" title="'+esc(name+' · '+g.iso(p.start)+' ~ '+g.iso(p.end-g.DAY))+'"></span>';
+    (100*(p.end-p.start)/g.span).toFixed(5)+'%" title="'+esc(name+' · '+fmt(g.iso(p.start))+'~'+fmt(g.iso(p.end-g.DAY)))+'"></span>';
   }).join('')+'</div></div>';
  const activity=ganttActivityGroups(g);
  const activityHeader=activity.length?'<div class="cg-row cg-activity-divider"><div class="cg-name"><strong>그 외 개발활동</strong><small>경력 개월수 미산정</small></div>'+
@@ -659,8 +659,8 @@ function renderCareerGantt(){
    const start=Math.max(g.from,i.a),end=Math.min(g.until,i.b);
    if(end<=start)return '';
    const left=g.percent(start),width=100*((end-start)/g.span);
-   const bridged=entry.visualGaps.length?' · '+entry.visualGaps.join(', ')+'는 기록 공백을 차트에서만 연결 (경력·활동개월 미가산)':'';
-   const tip=entry.label+' · '+i.start+' ~ '+i.end+' · 근거 확인 '+entry.months.size+'개월 (월 단위 근거, 일자 미확정)'+bridged+' · '+entry.detail;
+   const bridged=entry.visualGaps.length?' ('+entry.visualGaps.map(m=>Number(m.slice(5))+'월 미확인').join(', ')+')':'';
+   const tip=entry.label+' · '+fmt(i.start)+'~'+fmt(i.end)+bridged;
    return '<span class="cg-bar activity" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+'" style="left:'+
     left.toFixed(5)+'%;width:'+width.toFixed(5)+'%"></span>';
   }).join('');
