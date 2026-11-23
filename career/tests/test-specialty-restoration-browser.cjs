@@ -36,7 +36,7 @@ assert.equal(counts.registered,9);assert.equal(counts.active,9);assert.equal(cou
    assert.equal(await page.locator('#careerSpecialtyCards .field .name').first().textContent(),'빌드·CI/CD·형상관리');
    assert.equal(await page.locator('#careerSpecialtyCards input').count(),0,'no new forms');
    const tabs=page.locator('#careerSpecialtyTabs');
-   assert.deepEqual(await tabs.locator('button strong').allTextContents(),['9','0','45','10']);
+   assert.deepEqual(await tabs.locator('button strong').allTextContents(),['19','0','45','10']);
    await tabs.getByRole('tab',{name:/대기 45/}).click();
    assert.equal(await page.locator('#careerSpecialtyCards .field').count(),45);
    await tabs.getByRole('tab',{name:/확인 완료 0/}).click();
@@ -44,8 +44,13 @@ assert.equal(counts.registered,9);assert.equal(counts.active,9);assert.equal(cou
    await tabs.getByRole('tab',{name:/기존 등록 10/}).click();
    assert.equal(await page.locator('#fields .field:visible').count(),10,'the original progress cards remain intact');
    assert.equal(await page.locator('#careerSpecialtyCards:visible').count(),0);
-   await tabs.getByRole('tab',{name:/복원 중 9/}).click();
-   assert.equal(await page.locator('#fields:visible').count(),0);
+   await tabs.getByRole('tab',{name:/복원 중 19/}).click();
+   assert.equal(await page.locator('#fields .field:visible').count(),10,'original ten rich progress cards must remain visible on active tab');
+   const rich=page.locator('#fields .field');
+   assert.equal(await rich.locator('.numbers').count(),10,'all field percentages/months preserved');
+   assert.ok(await rich.locator('.track').count()>=9,'original progress bars preserved');
+   assert.equal(await rich.locator('.field-sources').count(),10,'original company statuses and contribution UI preserved');
+   assert.match(await rich.first().textContent(),/82 \/ 120개월/,'original months unchanged');
    assert.equal(await page.locator('#careerSpecialtyCards .field').count(),9);
    assert.equal(await page.locator('#careerGantt').count(),1);
    assert.equal(await page.locator('#careerTimeline').count(),1);
