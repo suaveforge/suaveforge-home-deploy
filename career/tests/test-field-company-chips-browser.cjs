@@ -45,7 +45,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
       const gray=chips.every(el=>getComputedStyle(el).backgroundColor==='rgb(228, 232, 236)');
       const webNames=chips.map(el=>el.textContent).join('|')==='제맥|유포';
-      const sourceDates=chips.some(el=>el.title==='ZeroMax · 무급 · 개발기록 6개월')&&
+      const sourceDates=chips.some(el=>el.title==='ZeroMax · 무급 · 개발기록 5개월')&&
         chips.some(el=>el.title==='U.Podium · 무급 · 개발기록 10개월');
       return {gray,webNames,sourceDates,webCount:chips.length,
         pc:pc?.querySelectorAll('.field-source-chip.unpaid').length,
