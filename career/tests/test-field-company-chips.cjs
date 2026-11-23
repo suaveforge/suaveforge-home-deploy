@@ -112,7 +112,7 @@ setImmediate(()=>{
  assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross</strong>'),'MetaCross unverified row remains');
  assert.ok(gh.includes('data-gantt-company="온더라이브"'),'paid OnTheLive has one dated employer row');
  assert.ok(gh.includes('data-gantt-user-period="OL2024"'),'single user-confirmed paid bar drawn');
- assert.ok(gh.includes('온더라이브 · 2024.06.09~2024.10.09 · 유급 본인확인 (서류 미검증)'),'short accurate tooltip');
+ assert.ok(gh.includes('온더라이브 · 2024.06.09~2024.10.09 · 유급'),'short accurate tooltip');
  assert.ok(!gh.includes('data-git-activity="OL"')&&!gh.includes('cg-git-evidence'),'overlaid Git marker removed');
  assert.equal((gh.match(/data-gantt-user-period="OL2024"/g)||[]).length,1,'OnTheLive only one period bar');
  assert.ok(!gh.includes('data-gantt-undated="MF"'),'MetaFastest stays consolidated in U.Podium');
@@ -133,8 +133,8 @@ setImmediate(()=>{
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','zeromax','테스트회사'])
   assert.ok(!current().toLowerCase().includes('data-master-company="'+unknown+'"'),'unverified identity never becomes an employer chip: '+unknown);
  assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),'insured MORPG split retained');
- assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('title="온더라이브 · 5개월 · 유급/기간 본인확인 · 공식 증빙 미검증"'),'paid client shown in reflected field');
- assert.ok(web.includes('온더라이브 유급 5개월 내부 반영'),'provenance displayed alongside field progress');
+ assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('title="온더라이브 · 5개월 · 유급 · 2024.06~10"'),'paid client shown in reflected field');
+ assert.ok(!web.includes('field-paid-note')&&!web.includes('KOSA 공식 증빙 별도'),'unnecessary bureaucratic note not shown');
  assert.equal(field('AI 개발').includes('0 / 60개월'),true,'local non-employer must not create credited history');
  assert.ok(el('projects').innerHTML.includes('&lt;img src=x onerror=alert(1)&gt;'),'table escapes unsafe local company input');
  const rows=qa.allRows();
