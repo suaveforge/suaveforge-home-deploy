@@ -106,6 +106,16 @@ setImmediate(()=>{
  assert.ok(trader.intervals.every(x=>new Date(x.a).toISOString().slice(0,7)===x.start),'starts exactly at first day of recorded month');
  assert.ok(trader.intervals.every(x=>new Date(x.b-86400000).toISOString().slice(0,7)===x.end),'ends exactly at last day of recorded month');
  assert.ok(!gh.includes('data-gantt-activity="메타크로스"'),'undated work not invented');
+ assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,2,'MetaCross and OnTheLive are visible once each');
+ assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross</strong>'),'MetaCross row shown');
+ assert.ok(gh.includes('data-gantt-undated="OL"')&&gh.includes('>온더라이브</strong>'),'paid OnTheLive row shown');
+ assert.ok(gh.includes('유급 확인 · 수행기간 미확정'),'paid status remains separate from credited months');
+ assert.ok(!gh.includes('data-gantt-undated="MF"'),'MetaFastest stays consolidated with U.Podium');
+ for(const id of ['MC','OL']){
+  const row=gh.slice(gh.indexOf('data-gantt-undated="'+id+'"'));
+  assert.ok(!row.slice(0,row.indexOf('</div></div>')).includes('class="cg-bar'),'unknown dates never become invented duration bars');
+ }
+ 
  const web=field('웹 개발');
  assert.ok(web.includes('개발활동 114개월 중 증빙대기 32개월'),'retains 32 project development months outside career count');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','zeromax','테스트회사'])
