@@ -872,6 +872,15 @@ function renderTimeline(){
  ).join(''):'<div class="timeline-gap"><strong>현재 미연결 월 없음</strong><span>전체 조회기간에 수행월 기록이 있습니다.</span></div>';
 }
 
+// Progress color follows the accumulated confirmed field duration, not the
+// target-completion percent. Exactly 5/10/15 years changes color at 60/120/180 months.
+function careerProgressBand(value){
+ const n=Math.max(0,Number(value)||0);
+ if(n>=180)return {color:'#18845b',label:'15년 이상'};
+ if(n>=120)return {color:'#267a9d',label:'10년 이상 · 15년 미만'};
+ if(n>=60)return {color:'#c88b37',label:'5년 이상 · 10년 미만'};
+ return {color:'#c45152',label:'5년 미만'};
+}
 function renderFields(){
  const rows=allRows(),master=careerMasterCompanies(rows);
  $('fields').innerHTML=fields.map(f=>{
@@ -880,7 +889,8 @@ function renderFields(){
   const activity=new Set(related.filter(isCreditable).flatMap(t=>months(t.start,t.end)));
   const total=actual.size,activityMonths=activity.size,waiting=activityMonths-total;
   const hasTarget=Number(f.target)>0,target=hasTarget?Number(f.target):0;
-  const pct=hasTarget?Math.min(100,Math.max(0,100*total/target)):0,ok=hasTarget&&total>=target;
+  const pct=hasTarget?Math.min(100,Math.max(0,100*total/target)):0;
+  const band=careerProgressBand(total);
   const diff=waiting>0?'미반영 개발활동 '+waiting+'개월':'미반영 개발활동 없음';
   const sources=fieldEmployerStates(rows,f.name,master);
   const contributions=fieldEmployerContributions(rows,f.name);
@@ -899,7 +909,7 @@ function renderFields(){
   const sourceList='<div class="field-sources"><div class="field-source-row"><span class="field-source-label">반영</span><div class="field-source-tags">'+(confirmed||'<span class="field-source-empty">기간 확정 경력 없음</span>')+'</div></div>'+
    chart+'<div class="field-source-row"><span class="field-source-label">미반영</span><div class="field-source-tags">'+(pending||'<span class="field-source-empty">미반영 경력 없음</span>')+'</div></div>'+
    '<div class="field-source-row unrelated"><span class="field-source-label">해당 X</span><div class="field-source-tags">'+(unrelated||'<span class="field-source-empty">해당 X 회사 없음</span>')+'</div></div></div>';
-  const progress=hasTarget?'<div class="numbers"><b style="color:'+(ok?'#16804a':'#be3d3d')+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+(ok?'#16804a':'#d14d4d')+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>':
+  const progress=hasTarget?'<div class="numbers"><b style="color:'+band.color+'">'+pct.toFixed(1)+'%</b><small>'+total+' / '+target+'개월</small></div><div class="track" title="'+band.label+'" role="progressbar" aria-label="'+escape(f.name)+' · '+band.label+'" aria-valuenow="'+total+'" aria-valuemin="0" aria-valuemax="'+target+'"><div class="fill" data-career-duration-band="'+(total>=180?'15':total>=120?'10':total>=60?'5':'under-5')+'" style="width:'+pct+'%;background:'+band.color+'"></div></div><div class="foot"><span>부족 '+Math.max(0,target-total)+'개월</span><span>'+diff+'</span></div>':
    '<div class="numbers"><b style="color:#337e98">'+total+'개월</b><small>별도 교육·강의 경력</small></div><div class="foot"><span>경력 기준 미설정 · 유급 본인 확인</span><span>기존 개발경력에 미가산</span></div>';
   return '<article class="field"><div class="name">'+escape(f.name)+'</div>'+progress+sourceList+'</article>';
  }).join('');
