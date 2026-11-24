@@ -17,11 +17,20 @@ const ctx={document:{getElementById:el},localStorage:{getItem:k=>k==='suaveforge
  fetch:async()=>({ok:true,json:async()=>data}),setTimeout,clearTimeout,console,URL,Blob,Date,Intl,Math,Set,Map,Array,Object,String,Number,
  alert(){},confirm(){return true}};
 const source=block[1].replace('main();\n})();',
- 'globalThis.__careerQA={getAxis:()=>axis,allRows,careerMasterCompanies,fieldEmployerContributions,careerCreditedMonths,renderFields,companyGanttModel,ganttActivityGroups};\nmain();\n})();');
+ 'globalThis.__careerQA={getAxis:()=>axis,allRows,careerMasterCompanies,fieldEmployerContributions,careerCreditedMonths,careerProgressBand,renderFields,companyGanttModel,ganttActivityGroups};\nmain();\n})();');
 assert.notEqual(source,block[1],'test harness hook exists');
 vm.runInNewContext(source,ctx,{timeout:5000});
 setImmediate(()=>{
  const qa=ctx.__careerQA;assert.ok(qa);
+ for(const [n,color,band] of [
+  [0,'#c45152','5년 미만'],[59,'#c45152','5년 미만'],
+  [60,'#c88b37','5년 이상 · 10년 미만'],[119,'#c88b37','5년 이상 · 10년 미만'],
+  [120,'#267a9d','10년 이상 · 15년 미만'],[179,'#267a9d','10년 이상 · 15년 미만'],
+  [180,'#18845b','15년 이상'],[240,'#18845b','15년 이상']
+ ]){
+  assert.equal(qa.careerProgressBand(n).color,color,n+' months uses the correct 5/10/15-year progress color');
+  assert.equal(qa.careerProgressBand(n).label,band,n+' months uses the correct duration description');
+ }
  const current=()=>el('fields').innerHTML;
  const field=name=>{
   const html=current(),begin=html.indexOf('<div class="name">'+name+'</div>');
@@ -51,6 +60,10 @@ setImmediate(()=>{
  for(const [name,[months,target]] of Object.entries(expected)){
   const markup=field(name);
   assert.ok(markup.includes(months+' / '+target+'개월'),name+' includes dated ZeroMax and U.Podium irrespective of remuneration');
+  const band=qa.careerProgressBand(months);
+  assert.ok(markup.includes('class="fill" data-career-duration-band='),'all target-based fields have an annotated bar');
+  assert.ok(markup.includes('background:'+band.color),'progress color follows credited months in '+name);
+  assert.ok(markup.includes('title="'+band.label+'" role="progressbar"'),'field progress band is discoverable and accessible');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
   assert.equal(ids.length,11,name+' displays eleven grouped work-history company identities');
   assert.equal(new Set(ids).size,11,name+' labels each grouped source exactly once');
