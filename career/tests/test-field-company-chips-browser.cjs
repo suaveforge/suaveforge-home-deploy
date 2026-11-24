@@ -26,6 +26,18 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'101 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
       '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'92 / 180개월'};
+    const progressBandsValid=cards.every(card=>{
+     const bar=card.querySelector('.track[role="progressbar"]');
+     if(!bar)return card.querySelector('.name')?.textContent==='교육·강의';
+     const fill=bar.querySelector('.fill'),months=Number(bar.getAttribute('aria-valuenow'));
+     const color=months>=180?'rgb(24, 132, 91)':months>=120?'rgb(38, 122, 157)':
+       months>=60?'rgb(200, 139, 55)':'rgb(196, 81, 82)';
+     const token=months>=180?'15':months>=120?'10':months>=60?'5':'under-5';
+     return !!fill&&getComputedStyle(fill).backgroundColor===color&&
+       getComputedStyle(card.querySelector('.numbers b')).color===color&&
+       fill.dataset.careerDurationBand===token&&
+       bar.getAttribute('aria-valuemax')===card.querySelector('.numbers small')?.textContent?.split(' / ')[1]?.replace('개월','');
+    });
     const sharesValid=cards.every(card=>{
      const chips=[...card.querySelectorAll('.field-source-chip.credited')],segments=[...card.querySelectorAll('.field-share-segment')];
      if(!chips.length)return segments.length===0;
@@ -75,7 +87,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     }).map(x=>x.textContent));
     const mobileGaps=[...document.querySelectorAll('.field-source-tags')].every(x=>getComputedStyle(x).flexWrap==='wrap');
     const allMatches=Object.entries(expected).every(([name,value])=>count(name)===value);
-    return {education:({title:field('교육·강의')?.querySelector('.numbers b')?.textContent,
+    return {progressBandsValid,education:({title:field('교육·강의')?.querySelector('.numbers b')?.textContent,
       noFakeProgress:!field('교육·강의')?.querySelector('.track'),
       hasAlzio:!!field('교육·강의')?.querySelector('.field-source-chip.credited[data-master-company="알지오"]')}),
      gantt:(()=>{
@@ -191,6 +203,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(hover.aligned,'vertical guide follows the pointer within 1.25 px');
    assert.ok(hover.clears,'guide disappears when pointer leaves the Gantt');
    assert.equal(stats.cards,10);assert.ok(stats.allMatches,'monthly insured totals appear');
+   assert.ok(stats.progressBandsValid,'all desktop/mobile progress bars and labels follow 5/10/15-year credited-month colors');
    assert.equal(stats.education.title,'9개월');
    assert.ok(stats.education.noFakeProgress,'no artificial requirement percentage');
    assert.ok(stats.education.hasAlzio,'ALZIO is only credited as education');
