@@ -346,17 +346,9 @@ function careerEmployers(company){
 function careerCompanyKey(company){
  return String(company||'').normalize('NFKC').replace(/\s+/g,'').toLowerCase();
 }
-// One work-history employer can span different legal/insurance entity labels.
-// Use the grouped identity only for source badges and contribution shares,
-// never for insurance-based date eligibility or the original Gantt records.
-function careerCompanyGroup(company){
- const id=careerCompanyKey(company);
- for(const group of axis.companyGroups||[]){
-  if((group.sourceNames||[]).some(name=>careerCompanyKey(name)===id))return group.displayName;
- }
- return company;
-}
-function careerGroupKey(company){return careerCompanyKey(careerCompanyGroup(company));}
+// Continuity between GameHi, UbiFun and UbiFunStudio belongs to the work
+// history, not to the per-company labels or attribution calculations.
+// Keep the insurance company names distinct in source chips and shares.
 // Confirmed dated work contributes to internal career progress regardless of
 // remuneration. Other Git activity remains in the separate activity timeline.
 function isVerifiedEmployerMonth(company,n,scope='software'){
@@ -414,31 +406,31 @@ function careerMasterCompanies(rows){
  // never arbitrary Git project labels or unknown customer placeholders.
  const names=new Map();
  for(const employer of axis.insurance||[]){
-  const id=careerGroupKey(employer.company);
-  if(id&&!names.has(id))names.set(id,careerCompanyGroup(employer.company));
+  const id=careerCompanyKey(employer.company);
+  if(id&&!names.has(id))names.set(id,employer.company);
  }
  for(const payer of axis.verifiedPaidEngagements||[]){
   if(payer.verified!==true||payer.proofType!=='paid_contract_or_payment')continue;
-  const id=careerGroupKey(payer.company);
-  if(id&&!names.has(id))names.set(id,careerCompanyGroup(payer.company));
+  const id=careerCompanyKey(payer.company);
+  if(id&&!names.has(id))names.set(id,payer.company);
  }
  for(const course of axis.userConfirmedPaidEducation||[]){
   if(course.paidConfirmedByUser!==true)continue;
-  const id=careerGroupKey(course.company);
-  if(id&&!names.has(id))names.set(id,careerCompanyGroup(course.company));
+  const id=careerCompanyKey(course.company);
+  if(id&&!names.has(id))names.set(id,course.company);
  }
  // User-confirmed paid client with a dated minimum work period: preserve it in
  // all field source chips, even before document-backed credited months exist.
  for(const row of rows){
   if(row.paidConfirmedByUser!==true||!row.confirmedMinimumPeriod)continue;
   for(const company of careerEmployers(row.company)){
-   const id=careerGroupKey(company);
-   if(id&&!names.has(id))names.set(id,careerCompanyGroup(company));
+   const id=careerCompanyKey(company);
+   if(id&&!names.has(id))names.set(id,company);
   }
  }
  for(const unpaid of axis.unpaidActivityCompanies||[]){
-  const id=careerGroupKey(unpaid.company);
-  if(unpaid.status==='unpaid'&&id&&!names.has(id))names.set(id,careerCompanyGroup(unpaid.company));
+  const id=careerCompanyKey(unpaid.company);
+  if(unpaid.status==='unpaid'&&id&&!names.has(id))names.set(id,unpaid.company);
  }
  return [...names].map(([id,company])=>({id,company}));
 }
@@ -447,7 +439,7 @@ function fieldEmployerStates(rows,category,master){
  for(const row of rows){
   if(!Array.isArray(row.categories)||!row.categories.includes(category))continue;
   for(const employer of careerEmployers(row.company)){
-   const item=byId.get(careerGroupKey(employer));
+   const item=byId.get(careerCompanyKey(employer));
    if(item){
     if(careerCreditedMonths(row).length&&careerCreditedMonths(row).some(n=>isVerifiedEmployerMonth(employer,n,row.categories?.includes('교육·강의')?'education':'software')))item.credited++;
     else item.uncredited++;
@@ -459,7 +451,7 @@ function fieldEmployerStates(rows,category,master){
  const unpaidIds=new Set();
  for(const entry of axis.unpaidActivityCompanies||[]){
   if(entry.status!=='unpaid')continue;
-  const id=careerGroupKey(entry.company),item=byId.get(id);
+  const id=careerCompanyKey(entry.company),item=byId.get(id);
   if(!item)continue;
   unpaidIds.add(id);
   for(const row of rows){
@@ -501,8 +493,8 @@ function fieldEmployerContributions(rows,category){
    let active=byMonth.get(month);
    if(!active){active=new Set();byMonth.set(month,active)}
    for(const employer of verified){
-    const identity=careerGroupKey(employer);
-    if(identity){active.add(identity);if(!names.has(identity))names.set(identity,careerCompanyGroup(employer))}
+    const identity=careerCompanyKey(employer);
+    if(identity){active.add(identity);if(!names.has(identity))names.set(identity,employer)}
    }
   }
  }
