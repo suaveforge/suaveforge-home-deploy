@@ -21,7 +21,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','유비펀','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'101 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
@@ -48,21 +48,26 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const rosters=cards.map(card=>[...card.querySelectorAll('.field-source-chip')].map(x=>x.dataset.masterCompany).sort().join('|'));
     const rosterValid=cards.every(card=>{
      const nodes=[...card.querySelectorAll('.field-source-chip')];
-     return nodes.length===11&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===11&&
+     return nodes.length===13&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===13&&
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 14개월');
     const pcField=field('PC 응용SW');
     const wemadePC=pcField?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
+    const gameHiPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="넥슨gt"]');
     const ubiFunPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="유비펀"]');
-    const pcMaintenanceDetails={wemade:wemadePC?.title||null,ubifun:ubiFunPC?.title||null,
-      splitLegalChips:pcField?.querySelectorAll('[data-master-company="넥슨gt"],[data-master-company="유비펀스튜디오"]').length,
-      sourceCount:pcField?.querySelectorAll('.field-source-chip.credited[data-master-company="유비펀"]').length,
-      months:pcField?.querySelector('.numbers small')?.textContent||null};
+    const studioPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="유비펀스튜디오"]');
+    const pcMaintenanceDetails={
+      wemade:wemadePC?.title||null,gamehi:gameHiPC?.title||null,
+      ubifun:ubiFunPC?.title||null,studio:studioPC?.title||null,
+      distinctChips:pcField?.querySelectorAll('.field-source-chip.credited[data-master-company="넥슨gt"], .field-source-chip.credited[data-master-company="유비펀"], .field-source-chip.credited[data-master-company="유비펀스튜디오"]').length,
+      months:pcField?.querySelector('.numbers small')?.textContent||null
+    };
     const wemadePCValid=pcMaintenanceDetails.wemade==='위메이드 · 51개월' &&
-      pcMaintenanceDetails.ubifun==='유비펀 · 40개월' &&
-      pcMaintenanceDetails.splitLegalChips===0 &&
-      pcMaintenanceDetails.sourceCount===1 &&
+      pcMaintenanceDetails.gamehi==='넥슨GT · 2개월' &&
+      pcMaintenanceDetails.ubifun==='유비펀 · 32개월' &&
+      pcMaintenanceDetails.studio==='유비펀스튜디오 · 7개월' &&
+      pcMaintenanceDetails.distinctChips===3 &&
       pcMaintenanceDetails.months==='92 / 180개월';
     const unpaidEvidence=(()=>{
       const web=field('웹 개발'),pc=field('PC 응용SW'),db=field('DB 개발');
@@ -210,7 +215,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.paidEducation,1);
    assert.equal(stats.gantt.paidEducationTooltip,'알지오 · 2013.07~2014.03 (유급 강의)');
    assert.ok(stats.gantt.insuredMonthlyUnchanged,'same-month paid teaching not duplicated into insured month count');
-   assert.ok(stats.rosterValid,'GameHi, UbiFun and UbiFunStudio display as one work-history company'); 
+   assert.ok(stats.rosterValid,'GameHi NexonGT, UbiFun, and UbiFunStudio each retain their own source badge across all fields'); 
    assert.deepEqual(stats.unpaidEvidence,{gray:true,webNames:true,sourceDates:true,webCount:2,pc:1,db:0,inExistingCreditedRow:true,hasSeparateRow:false,sourcePercentShown:true,graySegments:true,totalSharesValid:true},
     'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
