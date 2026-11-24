@@ -29,14 +29,17 @@ setImmediate(()=>{
   return html.slice(begin,html.indexOf('</article>',begin));
  };
  const masters=qa.careerMasterCompanies(qa.allRows());
- assert.equal(masters.length,13,'nine insured, one paid course, OnTheLive, and two unpaid activity sources');
- assert.equal(masters.slice(0,9).map(x=>x.company).join('|'),data.timeAxis.insurance.map(x=>x.company).join('|'));
- assert.equal(masters[9].company,'알지오');
- assert.equal(masters[10].company,'온더라이브');
- assert.equal(masters[11].company,'ZeroMax');
- assert.equal(masters[12].company,'U.Podium');
+ assert.equal(masters.length,11,'seven work-history company groups plus course, paid client and two unpaid sources');
+ assert.equal(masters.slice(0,7).map(x=>x.company).join('|'),
+ ['위메이드','유비펀','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터'].join('|'));
+ assert.equal(masters[7].company,'알지오');
+ assert.equal(masters[8].company,'온더라이브');
+ assert.equal(masters[9].company,'ZeroMax');
+ assert.equal(masters[10].company,'U.Podium');
+ assert.deepEqual(data.timeAxis.insurance.filter(x=>['넥슨GT','유비펀','유비펀스튜디오'].includes(x.company)).map(x=>x.company),['넥슨GT','유비펀','유비펀스튜디오'],'original insurer legal entity names preserved');
+ assert.deepEqual(data.timeAxis.companyGroups[0].insuranceCompanyNames,['넥슨GT','유비펀','유비펀스튜디오'],'one grouped work-history source');
  assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'only requested two unpaid companies');
- const expected={'웹 개발':[101,120],'모바일 앱':[95,192],'PC 응용SW':[85,180],
+ const expected={'웹 개발':[101,120],'모바일 앱':[95,192],'PC 응용SW':[92,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
  assert.equal((current().match(/<article class="field">/g)||[]).length,10);
@@ -49,8 +52,8 @@ setImmediate(()=>{
   const markup=field(name);
   assert.ok(markup.includes(months+' / '+target+'개월'),name+' includes dated ZeroMax and U.Podium irrespective of remuneration');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
-  assert.equal(ids.length,13,name+' retains all thirteen company-source identities');
-  assert.equal(new Set(ids).size,13,name+' labels each source exactly once');
+  assert.equal(ids.length,11,name+' displays eleven grouped work-history company identities');
+  assert.equal(new Set(ids).size,11,name+' labels each grouped source exactly once');
   assert.deepEqual(ids.slice().sort().join('|'),masters.map(x=>x.id).sort().join('|'),name+' stable employer master');
   if(months){
    const chart=qa.fieldEmployerContributions(qa.allRows(),name);
@@ -62,7 +65,7 @@ setImmediate(()=>{
  assert.ok(gh.includes('data-gantt-education="E01"'),'ALZIO teaching period appears as month-precision paid row');
  assert.ok(gh.includes('알지오 · 2013.07~2014.03 (유급 강의)'),'ALZIO short paid teaching tooltip');
  assert.equal((gh.match(/data-gantt-education=/g)||[]).length,1,'one paid teaching Gantt row');
- assert.equal(data.projects.length,57,'56 existing records preserved plus continuous UbiFun PC maintenance');
+ assert.equal(data.projects.length,58,'57 existing records preserved plus UbiFunStudio continuous PC maintenance');
  const gameHi=data.projects.find(p=>p.id==='p05');
  assert.ok(gameHi.evidence.some(e=>e.type==='user_confirmed_continuous_maintenance'),'GameHi maintenance work verified by user');
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p05')).length,2,'GameHi full 2 employment months already credited');
@@ -72,18 +75,28 @@ setImmediate(()=>{
  assert.equal(ubiFunMaintenance.end,'2016-01');
  assert.deepEqual(ubiFunMaintenance.categories,['PC 응용SW']);
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p57')).length,32,'UbiFun maintenance spans 32 employment calendar months');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.find(x=>x.company==='유비펀').rawMonths,32,'UbiFun PC maintenance continues through January 2016');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.find(x=>x.company==='넥슨GT').rawMonths,2,'GameHi/NexonGT PC coverage is preserved');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').total,85,'eight additional months without double counting other PC work');
- assert.ok(field('PC 응용SW').includes('title="유비펀 · 32개월"'),'PC card shows complete UbiFun period');
- assert.ok(field('PC 응용SW').includes('title="넥슨GT · 2개월"'),'PC card retains GameHi/NexonGT period');
+ const studioMaintenance=data.projects.find(p=>p.id==='p58');
+ assert.equal(studioMaintenance.company,'유비펀스튜디오','original studio legal source remains intact');
+ assert.equal(studioMaintenance.start,'2016-02');
+ assert.equal(studioMaintenance.end,'2016-08');
+ assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p58')).length,7,'seven studio PC maintenance calendar months');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.find(x=>x.company==='유비펀').rawMonths,40,
+  'GameHi, UbiFun and UbiFunStudio combine into one 40-month PC contributor');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.filter(x=>['넥슨GT','유비펀스튜디오'].includes(x.company)).length,0,
+  'grouped company contributes once, not through duplicate chips');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').total,92,
+  'seven new studio months, keeping overlap-free field total');
+ assert.ok(field('PC 응용SW').includes('title="유비펀 · 40개월"'),'single grouped company chip shows 40 months');
+ assert.ok(!field('PC 응용SW').includes('data-master-company="넥슨gt"') &&
+  !field('PC 응용SW').includes('data-master-company="유비펀스튜디오"'),
+  'no split company chips for the same work-history group');
  const wemadeMaint=data.projects.find(p=>p.id==='p56');
  assert.equal(wemadeMaint.company,'위메이드');
  assert.equal(wemadeMaint.start,'2009-02');
  assert.equal(wemadeMaint.end,'2013-04');
  assert.deepEqual(wemadeMaint.categories,['PC 응용SW']);
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p56')).length,51,'Wemade PC maintenance spans 51 employment calendar months');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').total,85,'PC gauge counts 8 further UbiFun months and existing Wemade/ZeroMax work');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').total,92,'PC includes full UbiFun group through August 2016');
  assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.find(x=>x.company==='위메이드').rawMonths,51,'Wemade PC contribution reflects full 2009-2013 employment');
  assert.ok(field('PC 응용SW').includes('title="위메이드 · 51개월"'),'Wemade full PC work duration shown in PC card');
  assert.equal(data.projects.find(x=>x.id==='p55').categories.join('|'),'교육·강의');
@@ -179,7 +192,9 @@ setImmediate(()=>{
  assert.ok(!web.includes('class="field-source-chip pending" data-master-company="u.podium"'),'U.Podium is unpaid, not payment-pending');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','테스트회사'])
   assert.ok(!current().toLowerCase().includes('data-master-company="'+unknown+'"'),'unverified identity never becomes an employer chip: '+unknown);
- assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),'insured MORPG split retained');
+ assert.ok(web.includes('title="유비펀 · 16개월"'),'MORPG web activity attributed to one 16-month group');
+ assert.ok(!web.includes('data-master-company="유비펀스튜디오"')&&!web.includes('data-master-company="넥슨gt"'),
+  'web activity source chips consolidate all three names');
  assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('title="온더라이브 · 5개월 · 유급 · 2024.06~10"'),'paid client shown in reflected field');
  assert.ok(!web.includes('field-paid-note')&&!web.includes('KOSA 공식 증빙 별도'),'unnecessary bureaucratic note not shown');
  assert.equal(field('AI 개발').includes('0 / 60개월'),true,'local non-employer must not create credited history');
@@ -197,6 +212,7 @@ setImmediate(()=>{
  assert.equal(rows.find(x=>x.rowId==='p55')?.status,'linked','self-reported paid course recorded solely under education');
  assert.equal(rows.find(x=>x.rowId==='p56')?.status,'linked','continuous Wemade PC maintenance is reflected');
  assert.equal(rows.find(x=>x.rowId==='p57')?.status,'linked','continuous UbiFun PC maintenance is reflected');
+ assert.equal(rows.find(x=>x.rowId==='p58')?.status,'linked','continuous UbiFunStudio PC maintenance is reflected');
  assert.ok(el('projects').innerHTML.includes('개발활동 확인 · 경력 증빙 대기'));
  assert.ok(el('projects').innerHTML.includes('참고자료 · 게이지 0개월'),'old umbrella still excluded');
  assert.ok(!current().includes('멀티에셋 트레이더'),'project name removed from company share chart');
