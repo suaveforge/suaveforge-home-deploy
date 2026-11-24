@@ -43,7 +43,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const pcField=field('PC 응용SW');
     const wemadePC=pcField?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
     const ubiFunPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="유비펀"]');
-    const gameHiPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="넥슨GT"]');
+    const gameHiPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="넥슨gt"]');
     const pcMaintenanceDetails={wemade:wemadePC?.title||null,ubifun:ubiFunPC?.title||null,
       gamehi:gameHiPC?.title||null,months:pcField?.querySelector('.numbers small')?.textContent||null};
     const wemadePCValid=pcMaintenanceDetails.wemade==='위메이드 · 51개월' &&
