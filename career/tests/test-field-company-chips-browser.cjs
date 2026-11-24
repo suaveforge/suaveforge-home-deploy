@@ -25,7 +25,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'101 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
-      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'77 / 180개월'};
+      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'85 / 180개월'};
     const sharesValid=cards.every(card=>{
      const chips=[...card.querySelectorAll('.field-source-chip.credited')],segments=[...card.querySelectorAll('.field-share-segment')];
      if(!chips.length)return segments.length===0;
@@ -40,9 +40,14 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 14개월');
-    const wemadePC=field('PC 응용SW')?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
+    const pcField=field('PC 응용SW');
+    const wemadePC=pcField?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
+    const ubiFunPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="유비펀"]');
+    const gameHiPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="넥슨GT"]');
     const wemadePCValid=wemadePC?.title==='위메이드 · 51개월' &&
-      field('PC 응용SW')?.querySelector('.numbers small')?.textContent==='77 / 180개월';
+      ubiFunPC?.title==='유비펀 · 32개월' &&
+      gameHiPC?.title==='넥슨GT · 2개월' &&
+      pcField?.querySelector('.numbers small')?.textContent==='85 / 180개월';
     const unpaidEvidence=(()=>{
       const web=field('웹 개발'),pc=field('PC 응용SW'),db=field('DB 개발');
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
@@ -193,7 +198,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'14 remaining uncredited activity months are retained separately');
-   assert.ok(stats.wemadePCValid,'Wemade continuously maintained PC games for all 51 employment months');
+   assert.ok(stats.wemadePCValid,'Wemade 51, GameHi 2, and UbiFun 32 confirmed PC maintenance months all reflected');
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
    assert.ok(stats.mobileGaps,'company tags wrap');assert.equal(stats.overflow,false,'no horizontal scroll');
    assert.equal(stats.tabActivityRow,true,'Git project stays in archive as unverified career');
