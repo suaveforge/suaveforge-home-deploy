@@ -48,7 +48,7 @@ setImmediate(()=>{
  assert.deepEqual(data.timeAxis.insurance.filter(x=>['넥슨GT','유비펀','유비펀스튜디오'].includes(x.company)).map(x=>x.company),['넥슨GT','유비펀','유비펀스튜디오'],'original insurer legal entity names preserved');
  assert.deepEqual(data.timeAxis.companyGroups[0].insuranceCompanyNames,['넥슨GT','유비펀','유비펀스튜디오'],'one grouped work-history source');
  assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'only requested two unpaid companies');
- const expected={'웹 개발':[101,120],'모바일 앱':[95,192],'PC 응용SW':[92,180],
+ const expected={'웹 개발':[103,120],'모바일 앱':[95,192],'PC 응용SW':[92,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
  assert.equal((current().match(/<article class="field">/g)||[]).length,10);
@@ -78,7 +78,19 @@ setImmediate(()=>{
  assert.ok(gh.includes('data-gantt-education="E01"'),'ALZIO teaching period appears as month-precision paid row');
  assert.ok(gh.includes('알지오 · 2013.07~2014.03 (유급 강의)'),'ALZIO short paid teaching tooltip');
  assert.equal((gh.match(/data-gantt-education=/g)||[]).length,1,'one paid teaching Gantt row');
- assert.equal(data.projects.length,58,'57 existing records preserved plus UbiFunStudio continuous PC maintenance');
+ assert.equal(data.projects.length,59,'original 58 company projects preserved plus GameHi web work');
+ const gameHiWeb=data.projects.find(p=>p.id==='p59');
+ assert.ok(gameHiWeb,'GameHi web work is recorded');
+ assert.equal(gameHiWeb.company,'넥슨GT','GameHi web work retains original insurance entity');
+ assert.deepEqual(gameHiWeb.categories,['웹 개발'],'web work does not alter PC classification');
+ assert.equal(gameHiWeb.start,'2013-05');
+ assert.equal(gameHiWeb.end,'2013-06');
+ assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p59')).length,2,
+  'GameHi web work adds two verified employment calendar months');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'웹 개발').total,103,
+  'web gauge counts GameHi May-Jun without double-counting');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'웹 개발').entries.find(x=>x.company==='넥슨GT')?.rawMonths,2,
+  'GameHi now appears in reflected web-company contributions');
  const gameHi=data.projects.find(p=>p.id==='p05');
  assert.ok(gameHi.evidence.some(e=>e.type==='user_confirmed_continuous_maintenance'),'GameHi maintenance work verified by user');
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p05')).length,2,'GameHi full 2 employment months already credited');
@@ -186,7 +198,11 @@ setImmediate(()=>{
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p16')).length,5,'five calendar-month internal credit');
   const web=field('웹 개발');
  assert.ok(web.includes('미반영 개발활동 14개월'),'dated ZeroMax/U.Podium activity resolves 14 web career months');
- assert.ok(web.includes('101 / 120개월'),'web gauge must include both unpaid companies');
+ assert.ok(web.includes('103 / 120개월'),'web gauge includes GameHi May-Jun work plus existing employers');
+ assert.ok(web.includes('class="field-source-chip credited" data-master-company="넥슨gt"'),
+  'GameHi appears as a reflected company, not unrelated');
+ assert.ok(web.includes('title="넥슨GT · 2개월"'),
+  'GameHi web experience is two months');
  assert.equal((web.match(/class="field-source-chip credited unpaid"/g)||[]).length,2,'web shows exactly two unpaid company tags');
  assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 5개월"'),'ZeroMax web development has five distinct dated months (February, May-August)');
  assert.ok(web.includes('data-master-company="u.podium" title="U.Podium · 10개월"'),'U.Podium shows ten documented months without double-counting September');
@@ -212,7 +228,7 @@ setImmediate(()=>{
  assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),
   'web development shows each company period independently');
  assert.ok(web.includes('data-master-company="유비펀스튜디오"')&&web.includes('data-master-company="넥슨gt"'),
-  'all three legal companies remain in the roster even when unrelated to a particular field');
+  'all three legal companies remain separate as source identities');
  assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('title="온더라이브 · 5개월 · 유급 · 2024.06~10"'),'paid client shown in reflected field');
  assert.ok(!web.includes('field-paid-note')&&!web.includes('KOSA 공식 증빙 별도'),'unnecessary bureaucratic note not shown');
  assert.equal(field('AI 개발').includes('0 / 60개월'),true,'local non-employer must not create credited history');
@@ -231,21 +247,24 @@ setImmediate(()=>{
  assert.equal(rows.find(x=>x.rowId==='p56')?.status,'linked','continuous Wemade PC maintenance is reflected');
  assert.equal(rows.find(x=>x.rowId==='p57')?.status,'linked','continuous UbiFun PC maintenance is reflected');
  assert.equal(rows.find(x=>x.rowId==='p58')?.status,'linked','continuous UbiFunStudio PC maintenance is reflected');
+ assert.equal(rows.find(x=>x.rowId==='p59')?.status,'linked','GameHi web activity is reflected without affecting PC maintenance');
  assert.ok(el('projects').innerHTML.includes('개발활동 확인 · 경력 증빙 대기'));
  assert.ok(el('projects').innerHTML.includes('참고자료 · 게이지 0개월'),'old umbrella still excluded');
  assert.ok(!current().includes('멀티에셋 트레이더'),'project name removed from company share chart');
  const pay=qa.getAxis().verifiedPaidEngagements;
  pay.push({company:'ZeroMax',start:'2023-02',end:'2023-08',verified:true,proofType:'paid_contract_or_payment'});
  qa.renderFields();
- assert.ok(field('웹 개발').includes('101 / 120개월'),'pay flag must not change already reflected dated work');
+ assert.ok(field('웹 개발').includes('103 / 120개월'),'pay flag must not change already reflected dated work');
  assert.ok(field('웹 개발').includes('data-master-company="zeromax"'));
  const distribution=qa.fieldEmployerContributions(qa.allRows(),'웹 개발');
- assert.equal(distribution.total,101,'source shares use same distinct months as gauge');
+ assert.equal(distribution.total,103,'source shares use same distinct months as gauge');
+ assert.equal(distribution.entries.find(x=>x.company==='넥슨GT')?.rawMonths,2,
+  'GameHi retained in web shares after paid-source test');
  assert.equal(distribution.entries.find(x=>x.company==='ZeroMax').rawMonths,5);
  assert.equal(distribution.entries.find(x=>x.company==='U.Podium').rawMonths,10);
  assert.ok(Math.abs(distribution.entries.reduce((sum,x)=>sum+x.percent,0)-100)<0.00001,'shared months allocated once');
  assert.ok(field('웹 개발').includes('background:#8c959f'),'unpaid contributors also receive gray percentage segments');
  pay.pop();qa.renderFields();
- assert.ok(field('웹 개발').includes('101 / 120개월'),'dated unpaid work remains reflected regardless of pay flag');
+ assert.ok(field('웹 개발').includes('103 / 120개월'),'dated unpaid work and GameHi both remain reflected regardless of pay flag');
  console.log('CAREER_INSURANCE_PAID_GATED_9_FIELDS_54_RECORDS_PASS');
 });
