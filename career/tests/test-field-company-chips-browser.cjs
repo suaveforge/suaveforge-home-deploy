@@ -25,7 +25,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'101 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
-      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'70 / 180개월'};
+      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'77 / 180개월'};
     const sharesValid=cards.every(card=>{
      const chips=[...card.querySelectorAll('.field-source-chip.credited')],segments=[...card.querySelectorAll('.field-share-segment')];
      if(!chips.length)return segments.length===0;
@@ -40,6 +40,9 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 14개월');
+    const wemadePC=field('PC 응용SW')?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
+    const wemadePCValid=wemadePC?.title==='위메이드 · 51개월' &&
+      field('PC 응용SW')?.querySelector('.numbers small')?.textContent==='77 / 180개월';
     const unpaidEvidence=(()=>{
       const web=field('웹 개발'),pc=field('PC 응용SW'),db=field('DB 개발');
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
@@ -117,7 +120,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        unknownIsActivity:!!sec.querySelector('[data-gantt-activity="unknown"] .cg-bar.activity'),
        railContained:boxes.every((x,i)=>x.left>=rails[i].left-2&&x.right<=rails[i].right+2),
        scrollable:s.scrollWidth>=s.clientWidth};
-     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,unpaidEvidence,clip,mobileGaps,
+     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,wemadePCValid,unpaidEvidence,clip,mobileGaps,
       overflow:document.documentElement.scrollWidth>window.innerWidth+1,
       gridColumns:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
       tabActivityRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('멀티에셋 트레이더')&&r.textContent.includes('경력 미반영')),
@@ -190,6 +193,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'14 remaining uncredited activity months are retained separately');
+   assert.ok(stats.wemadePCValid,'Wemade continuously maintained PC games for all 51 employment months');
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
    assert.ok(stats.mobileGaps,'company tags wrap');assert.equal(stats.overflow,false,'no horizontal scroll');
    assert.equal(stats.tabActivityRow,true,'Git project stays in archive as unverified career');
