@@ -44,10 +44,12 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const wemadePC=pcField?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
     const ubiFunPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="유비펀"]');
     const gameHiPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="넥슨GT"]');
-    const wemadePCValid=wemadePC?.title==='위메이드 · 51개월' &&
-      ubiFunPC?.title==='유비펀 · 32개월' &&
-      gameHiPC?.title==='넥슨GT · 2개월' &&
-      pcField?.querySelector('.numbers small')?.textContent==='85 / 180개월';
+    const pcMaintenanceDetails={wemade:wemadePC?.title||null,ubifun:ubiFunPC?.title||null,
+      gamehi:gameHiPC?.title||null,months:pcField?.querySelector('.numbers small')?.textContent||null};
+    const wemadePCValid=pcMaintenanceDetails.wemade==='위메이드 · 51개월' &&
+      pcMaintenanceDetails.ubifun==='유비펀 · 32개월' &&
+      pcMaintenanceDetails.gamehi==='넥슨GT · 2개월' &&
+      pcMaintenanceDetails.months==='85 / 180개월';
     const unpaidEvidence=(()=>{
       const web=field('웹 개발'),pc=field('PC 응용SW'),db=field('DB 개발');
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
@@ -125,7 +127,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        unknownIsActivity:!!sec.querySelector('[data-gantt-activity="unknown"] .cg-bar.activity'),
        railContained:boxes.every((x,i)=>x.left>=rails[i].left-2&&x.right<=rails[i].right+2),
        scrollable:s.scrollWidth>=s.clientWidth};
-     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,wemadePCValid,unpaidEvidence,clip,mobileGaps,
+     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,wemadePCValid,pcMaintenanceDetails,unpaidEvidence,clip,mobileGaps,
       overflow:document.documentElement.scrollWidth>window.innerWidth+1,
       gridColumns:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
       tabActivityRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('멀티에셋 트레이더')&&r.textContent.includes('경력 미반영')),
@@ -198,7 +200,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'14 remaining uncredited activity months are retained separately');
-   assert.ok(stats.wemadePCValid,'Wemade 51, GameHi 2, and UbiFun 32 confirmed PC maintenance months all reflected');
+   assert.ok(stats.wemadePCValid,'Wemade / GameHi / UbiFun PC field: '+JSON.stringify(stats.pcMaintenanceDetails));
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
    assert.ok(stats.mobileGaps,'company tags wrap');assert.equal(stats.overflow,false,'no horizontal scroll');
    assert.equal(stats.tabActivityRow,true,'Git project stays in archive as unverified career');
