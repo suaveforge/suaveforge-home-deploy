@@ -24,7 +24,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
-    const expected={'웹 개발':'101 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
+    const expected={'웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
       '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'92 / 180개월'};
     const progressBandsValid=cards.every(card=>{
      const bar=card.querySelector('.track[role="progressbar"]');
@@ -52,6 +52,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 14개월');
+    const gameHiWeb=field('웹 개발')?.querySelector('.field-source-chip.credited[data-master-company="넥슨gt"]');
+    const gameHiWebValid=gameHiWeb?.title==='넥슨GT · 2개월'&&
+      !!gameHiWeb.querySelector('.field-share-percent')&&
+      !field('웹 개발')?.querySelector('.field-source-row.unrelated [data-master-company="넥슨gt"]')&&
+      field('웹 개발')?.querySelector('.numbers small')?.textContent==='103 / 120개월';
     const pcField=field('PC 응용SW');
     const wemadePC=pcField?.querySelector('.field-source-chip.credited[data-master-company="위메이드"]');
     const gameHiPC=pcField?.querySelector('.field-source-chip.credited[data-master-company="넥슨gt"]');
@@ -146,7 +151,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        unknownIsActivity:!!sec.querySelector('[data-gantt-activity="unknown"] .cg-bar.activity'),
        railContained:boxes.every((x,i)=>x.left>=rails[i].left-2&&x.right<=rails[i].right+2),
        scrollable:s.scrollWidth>=s.clientWidth};
-     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,wemadePCValid,pcMaintenanceDetails,unpaidEvidence,clip,mobileGaps,
+     })(),cards:cards.length,allMatches,rosterValid,sharesValid,sourceHelp,gameHiWebValid,wemadePCValid,pcMaintenanceDetails,unpaidEvidence,clip,mobileGaps,
       overflow:document.documentElement.scrollWidth>window.innerWidth+1,
       gridColumns:getComputedStyle(document.querySelector('#fields')).gridTemplateColumns.split(' ').length,
       tabActivityRow:[...document.querySelectorAll('#projects tr')].some(r=>r.textContent.includes('멀티에셋 트레이더')&&r.textContent.includes('경력 미반영')),
@@ -220,6 +225,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     'ZeroMax and U.Podium count toward reflected career percentages and gray source segments');
    assert.ok(stats.sharesValid,'share badges and stacked bar agree');
    assert.ok(stats.sourceHelp,'14 remaining uncredited activity months are retained separately');
+   assert.ok(stats.gameHiWebValid,'GameHi NexonGT two-month web work is reflected as an independent company chip');
    assert.ok(stats.wemadePCValid,'Wemade / GameHi / UbiFun PC field: '+JSON.stringify(stats.pcMaintenanceDetails));
    assert.deepEqual(stats.clip,[],'no company label falls outside cards');
    assert.ok(stats.mobileGaps,'company tags wrap');assert.equal(stats.overflow,false,'no horizontal scroll');
