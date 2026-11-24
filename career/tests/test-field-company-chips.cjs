@@ -38,13 +38,13 @@ setImmediate(()=>{
   return html.slice(begin,html.indexOf('</article>',begin));
  };
  const masters=qa.careerMasterCompanies(qa.allRows());
- assert.equal(masters.length,11,'seven work-history company groups plus course, paid client and two unpaid sources');
- assert.equal(masters.slice(0,7).map(x=>x.company).join('|'),
- ['위메이드','유비펀','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터'].join('|'));
- assert.equal(masters[7].company,'알지오');
- assert.equal(masters[8].company,'온더라이브');
- assert.equal(masters[9].company,'ZeroMax');
- assert.equal(masters[10].company,'U.Podium');
+ assert.equal(masters.length,13,'nine original legal-company identities plus course, paid client and two unpaid sources');
+ assert.equal(masters.slice(0,9).map(x=>x.company).join('|'),
+ data.timeAxis.insurance.map(x=>x.company).join('|'));
+ assert.equal(masters[9].company,'알지오');
+ assert.equal(masters[10].company,'온더라이브');
+ assert.equal(masters[11].company,'ZeroMax');
+ assert.equal(masters[12].company,'U.Podium');
  assert.deepEqual(data.timeAxis.insurance.filter(x=>['넥슨GT','유비펀','유비펀스튜디오'].includes(x.company)).map(x=>x.company),['넥슨GT','유비펀','유비펀스튜디오'],'original insurer legal entity names preserved');
  assert.deepEqual(data.timeAxis.companyGroups[0].insuranceCompanyNames,['넥슨GT','유비펀','유비펀스튜디오'],'one grouped work-history source');
  assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'only requested two unpaid companies');
@@ -65,8 +65,8 @@ setImmediate(()=>{
   assert.ok(markup.includes('background:'+band.color),'progress color follows credited months in '+name);
   assert.ok(markup.includes('title="'+band.label+'" role="progressbar"'),'field progress band is discoverable and accessible');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
-  assert.equal(ids.length,11,name+' displays eleven grouped work-history company identities');
-  assert.equal(new Set(ids).size,11,name+' labels each grouped source exactly once');
+  assert.equal(ids.length,13,name+' retains all thirteen original company identities');
+  assert.equal(new Set(ids).size,13,name+' shows each company exactly once');
   assert.deepEqual(ids.slice().sort().join('|'),masters.map(x=>x.id).sort().join('|'),name+' stable employer master');
   if(months){
    const chart=qa.fieldEmployerContributions(qa.allRows(),name);
@@ -93,16 +93,20 @@ setImmediate(()=>{
  assert.equal(studioMaintenance.start,'2016-02');
  assert.equal(studioMaintenance.end,'2016-08');
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p58')).length,7,'seven studio PC maintenance calendar months');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.find(x=>x.company==='유비펀').rawMonths,40,
-  'GameHi, UbiFun and UbiFunStudio combine into one 40-month PC contributor');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').entries.filter(x=>['넥슨GT','유비펀스튜디오'].includes(x.company)).length,0,
-  'grouped company contributes once, not through duplicate chips');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW').total,92,
-  'seven new studio months, keeping overlap-free field total');
- assert.ok(field('PC 응용SW').includes('title="유비펀 · 40개월"'),'single grouped company chip shows 40 months');
- assert.ok(!field('PC 응용SW').includes('data-master-company="넥슨gt"') &&
-  !field('PC 응용SW').includes('data-master-company="유비펀스튜디오"'),
-  'no split company chips for the same work-history group');
+ const pcContributions=qa.fieldEmployerContributions(qa.allRows(),'PC 응용SW');
+ for(const [name,months] of [['넥슨GT',2],['유비펀',32],['유비펀스튜디오',7]]){
+  assert.equal(pcContributions.entries.find(x=>x.company===name)?.rawMonths,months,
+   name+' keeps an independent confirmed PC-game-maintenance share');
+  assert.ok(field('PC 응용SW').includes('title="'+name+' · '+months+'개월"'),
+   name+' has its own credited source chip');
+ }
+ assert.equal(pcContributions.total,92,'restoring legal company shares does not change distinct career months');
+ assert.ok(field('PC 응용SW').includes('data-master-company="넥슨gt"') &&
+  field('PC 응용SW').includes('data-master-company="유비펀"') &&
+  field('PC 응용SW').includes('data-master-company="유비펀스튜디오"'),
+  'three company badges remain separate although maintenance is continuous');
+ assert.ok(Math.abs(pcContributions.entries.reduce((n,x)=>n+x.percent,0)-100)<.0001,
+  'same-month GameHi-to-UbiFun transition is distributed without counting an extra month');
  const wemadeMaint=data.projects.find(p=>p.id==='p56');
  assert.equal(wemadeMaint.company,'위메이드');
  assert.equal(wemadeMaint.start,'2009-02');
@@ -205,9 +209,10 @@ setImmediate(()=>{
  assert.ok(!web.includes('class="field-source-chip pending" data-master-company="u.podium"'),'U.Podium is unpaid, not payment-pending');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','테스트회사'])
   assert.ok(!current().toLowerCase().includes('data-master-company="'+unknown+'"'),'unverified identity never becomes an employer chip: '+unknown);
- assert.ok(web.includes('title="유비펀 · 16개월"'),'MORPG web activity attributed to one 16-month group');
- assert.ok(!web.includes('data-master-company="유비펀스튜디오"')&&!web.includes('data-master-company="넥슨gt"'),
-  'web activity source chips consolidate all three names');
+ assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),
+  'web development shows each company period independently');
+ assert.ok(web.includes('data-master-company="유비펀스튜디오"')&&web.includes('data-master-company="넥슨gt"'),
+  'all three legal companies remain in the roster even when unrelated to a particular field');
  assert.ok(web.includes('data-master-company="온더라이브"')&&web.includes('title="온더라이브 · 5개월 · 유급 · 2024.06~10"'),'paid client shown in reflected field');
  assert.ok(!web.includes('field-paid-note')&&!web.includes('KOSA 공식 증빙 별도'),'unnecessary bureaucratic note not shown');
  assert.equal(field('AI 개발').includes('0 / 60개월'),true,'local non-employer must not create credited history');
