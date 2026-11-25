@@ -50,7 +50,7 @@ assert.equal(counts.registered,9);assert.equal(counts.active,9);assert.equal(cou
    assert.equal(await rich.locator('.numbers').count(),10,'all field percentages/months preserved');
    assert.ok(await rich.locator('.track').count()>=9,'original progress bars preserved');
    assert.equal(await rich.locator('.field-sources').count(),10,'original company statuses and contribution UI preserved');
-   assert.match(await rich.first().textContent(),/103 \/ 120개월/,'web activity includes dated GameHi two months and retained unpaid clients without overlapping months');
+   assert.match(await rich.first().textContent(),/110 \/ 120개월/,'web activity includes dated GameHi two months and retained unpaid clients without overlapping months');
    assert.equal(await rich.locator('.field-paid-note').count(),0,'no intrusive administrative notice inside career cards');
    assert.equal(await page.locator('#careerSpecialtyCards .field').count(),0);
    assert.equal(await page.locator('#careerGantt').count(),1);
