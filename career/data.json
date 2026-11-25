@@ -1,6 +1,6 @@
 {
-  "version": 15,
-  "updatedAt": "2026-11-24",
+  "version": 16,
+  "updatedAt": "2026-11-25",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
   "notice": "분야별 경력은 유급·무급 여부와 상관없이 수행기간이 확인된 회사별 개발활동월을 중복 없이 계산합니다. 건강보험 재직, 본인 확인 유급 온더라이브, 제로맥스(ZeroMax) 및 U.Podium의 날짜가 확인된 활동만 분야별로 연결합니다. 기간이 확인되지 않은 기타 개발활동과 포괄 프리랜서 기록은 별도 보관합니다. 공식 제출 증빙 요건은 별도 확인합니다.",
   "fields": [
@@ -12,7 +12,7 @@
     {
       "name": "모바일 앱",
       "target": 192,
-      "linked": 95
+      "linked": 96
     },
     {
       "name": "PC 응용SW",
@@ -1524,6 +1524,41 @@
         }
       ],
       "note": "웹 개발 분야에 확인된 2개 월 반영. 기존 p05 PC 응용SW 경력은 그대로 유지하며 같은 달의 다른 분야 경력을 제한하지 않음. 외부 공식 증빙 여부와 세부 구현 내용은 별개."
+    },
+    {
+      "id": "p60",
+      "company": "U.Podium (서비스, 법적 발주처 미확인)",
+      "title": "U.Podium 모바일 앱 WebView 클라이언트 — React Native",
+      "period": "2024.04",
+      "start": "2024-04",
+      "end": "2024-04",
+      "categories": [
+        "모바일 앱"
+      ],
+      "status": "linked",
+      "work": "2024.04.02 React Native 0.73.6 기반 Android·iOS 앱 소스에서 react-native-webview를 추가하고 U.Podium 개발 서비스(https://dev-seoul.u-podium.com/)를 앱 화면에 연결. Android 세로 화면 방향 및 Gradle 설정 변경을 직접 커밋. Android·iOS 네이티브 프로젝트 구조가 존재함.",
+      "note": "직접 코드 커밋으로 확인된 2024.04 활동월 1개월만 내부 모바일 앱 분야에 잠정 반영. Android/iOS 스토어 출시·서명·실제 빌드 성공 또는 정식 계약기간을 입증한 것은 아님. 같은 2024.04의 U.Podium 웹 개발(p49)과 분야별로만 병행 표시하며 전체 수행월에는 중복 가산하지 않음. 발주 법인명 미확정. 공식 KOSA 승인 경력이 아님.",
+      "evidence": [
+        {
+          "type": "git_direct_code_commit",
+          "url": "https://github.com/programmer119/reactnativetest2/commit/064b6e81897ace6ef59d48a38cc3e4e888558522",
+          "note": "2024-04-02 App.tsx WebView·U.Podium 개발 서버 직접 연결, AndroidManifest 및 React Native 의존성·Gradle 수정"
+        },
+        {
+          "type": "git_source",
+          "url": "https://github.com/programmer119/reactnativetest2/blob/main/App.tsx",
+          "note": "U.Podium 개발 서버 URL 코드 확인; Android/iOS 프로젝트 구조·package.json 확인"
+        },
+        {
+          "type": "git_followup",
+          "url": "https://github.com/programmer119/reactnativetest2/commit/5e339984b75cb69e52303a4027ce1fd062533cbe",
+          "note": "2024-04-02 앱 소스 후속 수정"
+        }
+      ],
+      "sourceRepo": "programmer119/reactnativetest2",
+      "verifiedCommitMonths": [
+        "2024-04"
+      ]
     }
   ],
   "baselineRanges": {
@@ -1782,7 +1817,8 @@
         "month": "2024-04",
         "names": [
           "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
-          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)"
+          "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)",
+          "U.Podium React Native 모바일 앱 WebView 연동 직접 커밋(2024.04.02) — 앱 개발 분야 활동월"
         ]
       },
       {
