@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const root=path.resolve(__dirname,'../..');
 const html=fs.readFileSync(path.join(root,'career/index.html'),'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8'));
-assert.equal(data.version,15);
+assert.equal(data.version,17);
 assert.deepEqual(data.timeAxis.verifiedPaidEngagements,[],'no paid contract is automatically proven');
 const block=html.match(/<script>\s*([\s\S]*?)<\/script>/);
 assert.ok(block);
@@ -44,11 +44,11 @@ setImmediate(()=>{
  assert.equal(masters[9].company,'알지오');
  assert.equal(masters[10].company,'온더라이브');
  assert.equal(masters[11].company,'ZeroMax');
- assert.equal(masters[12].company,'U.Podium');
+ assert.equal(masters[12].company,'MetaCross');
  assert.deepEqual(data.timeAxis.insurance.filter(x=>['넥슨GT','유비펀','유비펀스튜디오'].includes(x.company)).map(x=>x.company),['넥슨GT','유비펀','유비펀스튜디오'],'original insurer legal entity names preserved');
  assert.deepEqual(data.timeAxis.companyGroups[0].insuranceCompanyNames,['넥슨GT','유비펀','유비펀스튜디오'],'one grouped work-history source');
- assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'only requested two unpaid companies');
- const expected={'웹 개발':[103,120],'모바일 앱':[95,192],'PC 응용SW':[92,180],
+ assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','MetaCross'],'U.Podium confirmed under MetaCross, no duplicate employer');
+ const expected={'웹 개발':[103,120],'모바일 앱':[96,192],'PC 응용SW':[92,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
  assert.equal((current().match(/<article class="field">/g)||[]).length,10);
@@ -78,7 +78,13 @@ setImmediate(()=>{
  assert.ok(gh.includes('data-gantt-education="E01"'),'ALZIO teaching period appears as month-precision paid row');
  assert.ok(gh.includes('알지오 · 2013.07~2014.03 (유급 강의)'),'ALZIO short paid teaching tooltip');
  assert.equal((gh.match(/data-gantt-education=/g)||[]).length,1,'one paid teaching Gantt row');
- assert.equal(data.projects.length,59,'original 58 company projects preserved plus GameHi web work');
+ assert.equal(data.projects.length,60,'prior 59 project records preserved plus verified U.Podium mobile app');
+ const mobileU=data.projects.find(p=>p.id==='p60');
+ assert.ok(mobileU&&mobileU.company==='MetaCross'&&mobileU.start==='2024-04'&&mobileU.end==='2024-04');
+ assert.deepEqual(mobileU.categories,['모바일 앱']);
+ assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p60')).length,1,'U.Podium app directly committed one documented month');
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'모바일 앱').total,96,'existing 95 mobile months plus verified U.Podium April work');
+ assert.equal(data.projects.find(p=>p.id==='p49').company,'MetaCross','U.Podium Sep 2023 to Jun 2024 attributed to MetaCross');
  const gameHiWeb=data.projects.find(p=>p.id==='p59');
  assert.ok(gameHiWeb,'GameHi web work is recorded');
  assert.equal(gameHiWeb.company,'넥슨GT','GameHi web work retains original insurance entity');
@@ -176,8 +182,8 @@ setImmediate(()=>{
  assert.ok(trader.intervals.every(x=>new Date(x.a).toISOString().slice(0,7)===x.start),'starts exactly at first day of recorded month');
  assert.ok(trader.intervals.every(x=>new Date(x.b-86400000).toISOString().slice(0,7)===x.end),'ends exactly at last day of recorded month');
  assert.ok(!gh.includes('data-gantt-activity="메타크로스"'),'undated work not invented');
- assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,1,'MetaCross remains undated; OnTheLive is now in verified-date rows');
- assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross</strong>'),'MetaCross unverified row remains');
+ assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,1,'the separate MetaCross casino project remains undated while U.Podium has a dated activity row');
+ assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross · 카지노 개발</strong>'),'separate MetaCross casino undated record remains');
  assert.ok(gh.includes('data-gantt-company="온더라이브"'),'paid OnTheLive has one dated employer row');
  assert.ok(gh.includes('data-gantt-user-period="OL2024"'),'single user-confirmed paid bar drawn');
  assert.ok(gh.includes('온더라이브 · 2024.06.09~2024.10.09 · 유급'),'short accurate tooltip');
@@ -205,12 +211,12 @@ setImmediate(()=>{
   'GameHi web experience is two months');
  assert.equal((web.match(/class="field-source-chip credited unpaid"/g)||[]).length,2,'web shows exactly two unpaid company tags');
  assert.ok(web.includes('data-master-company="zeromax" title="ZeroMax · 5개월"'),'ZeroMax web development has five distinct dated months (February, May-August)');
- assert.ok(web.includes('data-master-company="u.podium" title="U.Podium · 10개월"'),'U.Podium shows ten documented months without double-counting September');
- assert.ok(web.includes('>제맥</span>')&&web.includes('>유포</span>'),'unpaid source names remain readable and concise');
+ assert.ok(web.includes('data-master-company="metacross" title="MetaCross · 10개월"'),'U.Podium shows ten documented months without double-counting September');
+ assert.ok(web.includes('>제맥</span>')&&web.includes('>메크</span>'),'unpaid source names remain readable and concise');
  assert.ok(!web.includes('class="field-source-row unpaid"'),'no separate unpaid row is created');
  const creditedPart=web.slice(web.indexOf('<span class="field-source-label">반영</span>'),web.indexOf('<span class="field-source-label">미반영</span>'));
  assert.ok(creditedPart.includes('class="field-source-chip credited unpaid" data-master-company="zeromax"')&&
-  creditedPart.includes('class="field-source-chip credited unpaid" data-master-company="u.podium"'),
+  creditedPart.includes('class="field-source-chip credited unpaid" data-master-company="metacross"'),
   'gray ZeroMax and U.Podium are reflected career contributors, with percentage shares');
  const pendingPart=web.slice(web.indexOf('<span class="field-source-label">미반영</span>'),web.indexOf('<div class="field-source-row unrelated">'));
  assert.ok(!pendingPart.includes('class="field-source-chip credited unpaid"'),'dated unpaid companies must never appear in 미반영');
@@ -222,7 +228,7 @@ setImmediate(()=>{
   assert.ok(!card.includes('class="field-source-row unpaid"'),'no undated/unrelated company is mislabeled unpaid under '+category);
  }
  assert.ok(!web.includes('class="field-source-chip pending" data-master-company="zeromax"'),'ZeroMax verified work is reflected, not pending');
- assert.ok(!web.includes('class="field-source-chip pending" data-master-company="u.podium"'),'U.Podium is unpaid, not payment-pending');
+ assert.ok(!web.includes('class="field-source-chip pending" data-master-company="metacross"'),'U.Podium is unpaid, not payment-pending');
  for(const unknown of ['멀티에셋트레이더','발주처미확인','투자전략대시보드','upodium아트테스트','suaveforge','테스트회사'])
   assert.ok(!current().toLowerCase().includes('data-master-company="'+unknown+'"'),'unverified identity never becomes an employer chip: '+unknown);
  assert.ok(web.includes('title="유비펀 · 9개월"')&&web.includes('title="유비펀스튜디오 · 7개월"'),
@@ -261,7 +267,7 @@ setImmediate(()=>{
  assert.equal(distribution.entries.find(x=>x.company==='넥슨GT')?.rawMonths,2,
   'GameHi retained in web shares after paid-source test');
  assert.equal(distribution.entries.find(x=>x.company==='ZeroMax').rawMonths,5);
- assert.equal(distribution.entries.find(x=>x.company==='U.Podium').rawMonths,10);
+ assert.equal(distribution.entries.find(x=>x.company==='MetaCross').rawMonths,10);
  assert.ok(Math.abs(distribution.entries.reduce((sum,x)=>sum+x.percent,0)-100)<0.00001,'shared months allocated once');
  assert.ok(field('웹 개발').includes('background:#8c959f'),'unpaid contributors also receive gray percentage segments');
  pay.pop();qa.renderFields();

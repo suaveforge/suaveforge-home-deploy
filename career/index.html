@@ -669,7 +669,7 @@ function ganttActivityGroups(g){
  const documented=new Set(['git_direct_code_commit','telegram_dated_work','git_commit','assigned_task']);
  const keys=[
   {id:'zeromax',label:'ZeroMax',detail:'조직 연관 개발기록 · 고용·유상 증빙 미연결'},
-  {id:'upodium',label:'U.Podium',detail:'서비스 개발기록 · 발주 법인 미확인'},
+  {id:'upodium',label:'U.Podium',detail:'MetaCross(메타크로스) 협업 개발기록 · 법적 계약서 별도 확인'},
   {id:'multiasset',label:'멀티에셋 트레이더',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'investment',label:'투자전략 대시보드',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'suaveforge',label:'SuaveForge',detail:'자체 개발활동 · 유상 고객사 증빙 미연결'},
@@ -682,6 +682,7 @@ function ganttActivityGroups(g){
   const c=String(p.company||'');
   if(c==='ZeroMax'||c==='프리랜서 / ZeroMax')return 'zeromax';
   if(c==='프리랜서 / Upodium 아트테스트')return 'upodium';
+  if(c==='MetaCross'&&/U\.Podium/.test(p.title||''))return 'upodium';
   if(c==='발주처 미확인'&&/U\.Podium/.test(p.title||''))return 'upodium';
   if(c==='프리랜서 / 멀티에셋 트레이더')return 'multiasset';
   if(c==='프리랜서 / 투자전략 대시보드')return 'investment';
@@ -793,7 +794,7 @@ function renderCareerGantt(){
 
  const undatedEntries=(axis.reconstructionCandidates||[]).filter(item=>item.id==='MC');
  const undatedRows=undatedEntries.map(item=>{
-  const label='MetaCross',state='수행기간 미확정';
+  const label='MetaCross · 카지노 개발',state='별도 카지노 개발기간 미확정';
   return '<div class="cg-row cg-activity-row cg-undated-row" data-gantt-undated="'+esc(item.id)+'">'+
    '<div class="cg-name"><strong title="'+esc(item.work||state)+'">'+esc(label)+'</strong></div>'+
    '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(state)+'">'+esc(state)+'</span></div></div>';

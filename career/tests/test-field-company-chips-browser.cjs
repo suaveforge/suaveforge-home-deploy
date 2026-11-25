@@ -21,11 +21,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','MetaCross'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
-      '백엔드':'87 / 120개월','모바일 앱':'95 / 192개월','PC 응용SW':'92 / 180개월'};
+      '백엔드':'87 / 120개월','모바일 앱':'96 / 192개월','PC 응용SW':'92 / 180개월'};
     const progressBandsValid=cards.every(card=>{
      const bar=card.querySelector('.track[role="progressbar"]');
      if(!bar)return card.querySelector('.name')?.textContent==='교육·강의';
@@ -79,16 +79,16 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
       const gray=chips.every(el=>getComputedStyle(el).backgroundColor==='rgb(228, 232, 236)');
       const names=chips.map(el=>el.querySelector('.field-chip-name')?.textContent);
-      const webNames=names.length===2&&names.includes('제맥')&&names.includes('유포');
+      const webNames=names.length===2&&names.includes('제맥')&&names.includes('메크');
       const sourceDates=chips.some(el=>el.title==='ZeroMax · 5개월')&&
-        chips.some(el=>el.title==='U.Podium · 10개월');
+        chips.some(el=>el.title==='MetaCross · 10개월');
       return {gray,webNames,sourceDates,webCount:chips.length,
         pc:pc?.querySelectorAll('.field-source-chip.unpaid').length,
         db:db?.querySelectorAll('.field-source-chip.unpaid').length,
         inExistingCreditedRow:chips.every(el=>el.closest('.field-source-row')?.querySelector('.field-source-label')?.textContent==='반영'),
         hasSeparateRow:!!web?.querySelector('.field-source-row.unpaid'),
         sourcePercentShown:chips.every(el=>!!el.querySelector('.field-share-percent')),
-        graySegments:[...web.querySelectorAll('.field-share-segment')].filter(el=>/^(ZeroMax|U.Podium)/.test(el.title))
+        graySegments:[...web.querySelectorAll('.field-share-segment')].filter(el=>/^(ZeroMax|MetaCross)/.test(el.title))
          .every(el=>getComputedStyle(el).backgroundColor==='rgb(140, 149, 159)'),
         totalSharesValid:Math.abs([...web.querySelectorAll('.field-source-chip.credited .field-share-percent')].reduce((a,el)=>a+Number(el.textContent.replace('%','')),0)-100)<.001};
     })();
@@ -173,7 +173,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.scrollable,'horizontal scroll available when needed');
    assert.equal(stats.gantt.activityCount,6,'art test merged with U.Podium development group');
    assert.deepEqual(stats.gantt.undatedRows.map(r=>r.id).join('|'),'MC','only MetaCross remains without dates');
-   assert.equal(stats.gantt.undatedRows[0].name,'MetaCross');
+   assert.equal(stats.gantt.undatedRows[0].name,'MetaCross · 카지노 개발');
    assert.ok(!stats.gantt.undatedRows[0].hasBar&&!stats.gantt.undatedRows[0].gitMarker,'MetaCross does not gain invented dates');
    assert.ok(stats.gantt.olPeriod?.includes('2024.06.09~2024.10.09'),'user-confirmed work dates in short tooltip');
    assert.ok(stats.gantt.olPeriod?.includes(' · 유급'),'paid tooltip uses concise label');
