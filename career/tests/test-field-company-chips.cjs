@@ -152,6 +152,7 @@ setImmediate(()=>{
  const activityGroups=qa.ganttActivityGroups(qa.companyGanttModel());
  assert.equal(activityGroups.length,7,'art test merged into U.Podium, no duplicate company-style row');
  assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'upodium|zeromax|metacross|multiasset|investment|suaveforge|unknown');
+ assert.ok(gh.indexOf('data-gantt-activity="upodium"')<gh.indexOf('data-gantt-activity="zeromax"')&&gh.indexOf('data-gantt-activity="zeromax"')<gh.indexOf('data-gantt-activity="metacross"'),'rendered rows follow U.Podium, ZeroMax, MetaCross order');
  assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,7,'one U.Podium row combines art test and game development');
  assert.ok(gh.includes('data-gantt-activity="zeromax"')&&gh.includes('data-gantt-activity="multiasset"'),'unpaid source types displayed');
  assert.ok(!gh.includes('data-gantt-activity="arttest"')&&gh.includes('투자전략 대시보드'),'art test is not an independent Gantt row');
