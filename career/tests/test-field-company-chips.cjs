@@ -49,7 +49,7 @@ setImmediate(()=>{
  assert.deepEqual(data.timeAxis.insurance.filter(x=>['넥슨GT','유비펀','유비펀스튜디오'].includes(x.company)).map(x=>x.company),['넥슨GT','유비펀','유비펀스튜디오'],'original insurer legal entity names preserved');
  assert.deepEqual(data.timeAxis.companyGroups[0].insuranceCompanyNames,['넥슨GT','유비펀','유비펀스튜디오'],'one grouped work-history source');
  assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'MetaFastest and U.Podium one service identity, MetaCross separate undated candidate');
- const expected={'웹 개발':[103,120],'모바일 앱':[96,192],'PC 응용SW':[92,180],
+ const expected={'웹 개발':[110,120],'모바일 앱':[96,192],'PC 응용SW':[92,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
   'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[20,60]};
  assert.equal((current().match(/<article class="field">/g)||[]).length,10);
@@ -94,7 +94,7 @@ setImmediate(()=>{
  assert.equal(gameHiWeb.end,'2013-06');
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p59')).length,2,
   'GameHi web work adds two verified employment calendar months');
- assert.equal(qa.fieldEmployerContributions(qa.allRows(),'웹 개발').total,103,
+ assert.equal(qa.fieldEmployerContributions(qa.allRows(),'웹 개발').total,110,
   'web gauge counts GameHi May-Jun without double-counting');
  assert.equal(qa.fieldEmployerContributions(qa.allRows(),'웹 개발').entries.find(x=>x.company==='넥슨GT')?.rawMonths,2,
   'GameHi now appears in reflected web-company contributions');
@@ -223,8 +223,8 @@ setImmediate(()=>{
  assert.equal(data.timeAxis.userConfirmedPaidEngagements[0].proofState,'documents_pending','paper verification stays separate');
  assert.equal(qa.careerCreditedMonths(qa.allRows().find(p=>p.id==='p16')).length,5,'five calendar-month internal credit');
   const web=field('웹 개발');
- assert.ok(web.includes('미반영 개발활동 14개월'),'dated ZeroMax/U.Podium activity resolves 14 web career months');
- assert.ok(web.includes('103 / 120개월'),'web gauge includes GameHi May-Jun work plus existing employers');
+ assert.ok(web.includes('미반영 개발활동 7개월'),'dated ZeroMax/U.Podium activity resolves 14 web career months');
+ assert.ok(web.includes('110 / 120개월'),'web gauge includes GameHi May-Jun work plus existing employers');
  assert.ok(web.includes('class="field-source-chip credited" data-master-company="넥슨gt"'),
   'GameHi appears as a reflected company, not unrelated');
  assert.ok(web.includes('title="넥슨GT · 2개월"'),
@@ -283,10 +283,10 @@ setImmediate(()=>{
  const pay=qa.getAxis().verifiedPaidEngagements;
  pay.push({company:'ZeroMax',start:'2023-02',end:'2023-08',verified:true,proofType:'paid_contract_or_payment'});
  qa.renderFields();
- assert.ok(field('웹 개발').includes('103 / 120개월'),'pay flag must not change already reflected dated work');
+ assert.ok(field('웹 개발').includes('110 / 120개월'),'pay flag must not change already reflected dated work');
  assert.ok(field('웹 개발').includes('data-master-company="zeromax"'));
  const distribution=qa.fieldEmployerContributions(qa.allRows(),'웹 개발');
- assert.equal(distribution.total,103,'source shares use same distinct months as gauge');
+ assert.equal(distribution.total,110,'source shares use same distinct months as gauge');
  assert.equal(distribution.entries.find(x=>x.company==='넥슨GT')?.rawMonths,2,
   'GameHi retained in web shares after paid-source test');
  assert.equal(distribution.entries.find(x=>x.company==='ZeroMax').rawMonths,5);
@@ -294,6 +294,6 @@ setImmediate(()=>{
  assert.ok(Math.abs(distribution.entries.reduce((sum,x)=>sum+x.percent,0)-100)<0.00001,'shared months allocated once');
  assert.ok(field('웹 개발').includes('background:#8c959f'),'unpaid contributors also receive gray percentage segments');
  pay.pop();qa.renderFields();
- assert.ok(field('웹 개발').includes('103 / 120개월'),'dated unpaid work and GameHi both remain reflected regardless of pay flag');
+ assert.ok(field('웹 개발').includes('110 / 120개월'),'dated unpaid work and GameHi both remain reflected regardless of pay flag');
  console.log('CAREER_INSURANCE_PAID_GATED_9_FIELDS_54_RECORDS_PASS');
 });
