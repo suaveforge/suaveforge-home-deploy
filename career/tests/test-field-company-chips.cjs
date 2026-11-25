@@ -151,7 +151,7 @@ setImmediate(()=>{
  assert.ok(gh.includes('id="ganttGuide"')&&gh.includes('id="ganttGuideDate"'),'hover date guide mounted');
  const activityGroups=qa.ganttActivityGroups(qa.companyGanttModel());
  assert.equal(activityGroups.length,7,'art test merged into U.Podium, no duplicate company-style row');
- assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'zeromax|upodium|metacross|multiasset|investment|suaveforge|unknown');
+ assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'upodium|zeromax|metacross|multiasset|investment|suaveforge|unknown');
  assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,7,'one U.Podium row combines art test and game development');
  assert.ok(gh.includes('data-gantt-activity="zeromax"')&&gh.includes('data-gantt-activity="multiasset"'),'unpaid source types displayed');
  assert.ok(!gh.includes('data-gantt-activity="arttest"')&&gh.includes('투자전략 대시보드'),'art test is not an independent Gantt row');
@@ -169,9 +169,12 @@ setImmediate(()=>{
   'one segment per continuous evidenced range; no invented continuous employment');
  const zm=activityGroups.find(x=>x.id==='zeromax');
  assert.equal([...zm.months].sort((a,b)=>a-b).length,6,'ZeroMax: Feb, Mar, May-Aug, not April planning');
- assert.equal(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-08','ZeroMax short gap merged visually');
- assert.deepEqual(zm.visualGaps.join('|'),'2023-04','April is explicitly recorded as visually bridged, not independently proven');
- assert.ok(gh.includes('ZeroMax · 2023.02~2023.08 (4월 미확인)'),'ZeroMax compact tooltip identifies the visually bridged unverified month');
+ assert.equal(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-03|2023-05~2023-08','only evidence-backed ZeroMax months are colored');
+ assert.equal(zm.gaps.map(x=>x.start+'~'+x.end).join('|'),'2023-04~2023-04','April 2023 gap remains visible as a connector');
+ assert.ok(gh.includes('data-activity-gap="zeromax"'),'April gap gets dashed connector');
+ assert.ok(gh.includes('data-activity-clue="upodium"'),'early MetaFastest sources appear as uncredited markers');
+ assert.equal((gh.match(/data-activity-gap=/g)||[]).length,activityGroups.reduce((n,x)=>n+x.gaps.length,0),'each noncontiguous gap linked consistently');
+ assert.ok(gh.includes('ZeroMax · 2023.02~2023.03')&&gh.includes('ZeroMax · 2023.05~2023.08'),'only verified intervals appear in solid purple');
  assert.ok(gh.includes('위메이드 · 2009.02.16~2013.04.30'),'insured bar tooltip contains only company and exact dates');
  assert.ok(!gh.includes('월 단위 근거, 일자 미확정')&&!gh.includes('기록 공백을 차트에서만 연결')&&!gh.includes('월 걸침)'),'verbose native bar titles removed');
  assert.equal((gh.match(/data-gantt-activity="zeromax"/g)||[]).length,1);

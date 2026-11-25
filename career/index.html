@@ -178,7 +178,11 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 
 /* Names stay anchored to the actual bars, including short dated periods. */
 .cg-bar{overflow:visible}
-.cg-bar.activity{background:#8478b2}
+.cg-bar.activity{background:#8478b2;z-index:3}
+.cg-activity-bridge{position:absolute;top:25px;height:0;border-top:3px dashed #a79bcf;z-index:2}
+.cg-activity-bridge:focus-visible{outline:2px solid #685793;outline-offset:2px}
+.cg-activity-clue{position:absolute;top:20px;width:10px;height:10px;border-radius:50%;border:2px solid #8478b2;background:#fff;z-index:4;transform:translateX(-50%)}
+.cg-activity-clue:focus-visible{outline:2px solid #685793;outline-offset:2px}
 .cg-activity-divider{background:#f5f2fa;min-height:38px}
 .cg-activity-divider .cg-name{background:#f5f2fa}
 .cg-activity-divider strong{color:#574976;font-size:12px}
@@ -681,8 +685,8 @@ function ganttActivityGroups(g){
  // Ignore undated/planning/reference-only, generic freelance umbrella and local tasks.
  const documented=new Set(['git_direct_code_commit','telegram_dated_work','git_commit','assigned_task','user_confirmed_project_period']);
  const keys=[
+  {id:'upodium',label:'U.Podium(메타페스트)',detail:'초기 자료 2022.11부터, 확인된 개발월만 보라색 표시 · 법적 발주 법인 미확정'},
   {id:'zeromax',label:'ZeroMax',detail:'조직 연관 개발기록 · 고용·유상 증빙 미연결'},
-  {id:'upodium',label:'U.Podium(메타페스트)',detail:'동일/연계 서비스 개발기록 · 법적 고용/발주 법인 미확정'},
   {id:'metacross',label:'MetaCross · 카지노 개발',detail:'2023.10~2024.03 사용자 확인 · 고용/급여 서류 별도'},
   {id:'multiasset',label:'멀티에셋 트레이더',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'investment',label:'투자전략 대시보드',detail:'프로젝트명 · 유상 증빙 미연결'},
@@ -723,20 +727,19 @@ function ganttActivityGroups(g){
    if(last&&last.final===n-1)last.final=n;
    else intervals.push({first:n,final:n});
   }
-  // ZeroMax: one short Git activity gap in April 2023 is bridged ONLY in the
-  // visual interval. Evidence-backed activity months remain the six recorded months.
-  const visualGaps=[];
-  if(group.id==='zeromax'&&intervals.length>1){
-   for(let i=1;i<intervals.length;i++){
-    const before=intervals[i-1],after=intervals[i];
-    for(let m=before.final+1;m<after.first;m++)visualGaps.push(yearMonth(m));
-   }
-   if(visualGaps.length<=1){
-    const first=intervals[0].first,last=intervals[intervals.length-1].final;
-    intervals.splice(0,intervals.length,{first,final:last});
-   }else visualGaps.length=0;
-  }
-  return {...group,visualGaps,intervals:intervals.map(x=>{
+  // Do not visually invent work in a missing month. All projects use the
+  // same evidence gap handling: a dashed connector between verified periods.
+  const gaps=intervals.slice(1).map((after,i)=>{
+   const before=intervals[i];
+   const start=yearMonth(before.final+1),end=yearMonth(after.first-1);
+   const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5))-1,1);
+   const b=Date.UTC(Number(end.slice(0,4)),Number(end.slice(5)),1);
+   return {start,end,a,b,months:after.first-before.final-1};
+  });
+  const mf=(axis.reconstructionCandidates||[]).find(item=>item.id==='MF');
+  const clues=group.id==='upodium'?(mf?.activity||[]).filter(item=>item.proof==='asset'||item.proof==='repo')
+   .map(item=>({month:item.month,desc:item.desc})):[];
+  return {...group,gaps,clues,intervals:intervals.map(x=>{
    const start=yearMonth(x.first),end=yearMonth(x.final);
    const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5))-1,1);
    const b=Date.UTC(Number(end.slice(0,4)),Number(end.slice(5)),1);
@@ -789,22 +792,35 @@ function renderCareerGantt(){
    '" style="left:'+g.percent(start).toFixed(5)+'%;width:'+(100*(end-start)/g.span).toFixed(5)+'%"></span></div></div>';
  }).join('');
  const activity=ganttActivityGroups(g);
- const activityHeader=activity.length?'<div class="cg-row cg-activity-divider"><div class="cg-name"><strong>그 외 개발활동</strong><small>경력 개월수 미산정</small></div>'+
-  '<div class="cg-activity-header">색상 구분 · 실제 수행월만 표시 (프로젝트명은 회사·발주처가 아닐 수 있음)</div></div>':'';
+ const activityHeader=activity.length?'<div class="cg-row cg-activity-divider"><div class="cg-name"><strong>프로젝트별 개발활동</strong><small>분야별 경력월과 중복 가능</small></div>'+
+  '<div class="cg-activity-header">회사 순서: U.Podium → ZeroMax → MetaCross · 보라색: 확인월 · 점선: 미확인 기간 · ○: 초기 참고자료</div></div>':'';
  const activityRows=activity.map(entry=>{
   const dates=entry.intervals.map(i=>i.start===i.end?i.start:i.start+' ~ '+i.end).join(', ');
   const bars=entry.intervals.map(i=>{
    const start=Math.max(g.from,i.a),end=Math.min(g.until,i.b);
    if(end<=start)return '';
    const left=g.percent(start),width=100*((end-start)/g.span);
-   const bridged=entry.visualGaps.length?' ('+entry.visualGaps.map(m=>Number(m.slice(5))+'월 미확인').join(', ')+')':'';
-   const tip=entry.label+' · '+fmt(i.start)+'~'+fmt(i.end)+bridged;
+   const tip=entry.label+' · '+fmt(i.start)+'~'+fmt(i.end);
    return '<span class="cg-bar activity" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+'" style="left:'+
     left.toFixed(5)+'%;width:'+width.toFixed(5)+'%"></span>';
   }).join('');
+  const bridges=entry.gaps.map(gap=>{
+   const start=Math.max(g.from,gap.a),end=Math.min(g.until,gap.b);
+   if(end<=start)return '';
+   const tip=fmt(gap.start)+(gap.start===gap.end?'':'~'+fmt(gap.end))+' · 개발활동 근거 미확인 · 경력월 미가산';
+   return '<span class="cg-activity-bridge" data-activity-gap="'+esc(entry.id)+'" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+
+    '" style="left:'+g.percent(start).toFixed(5)+'%;width:'+(100*(end-start)/g.span).toFixed(5)+'%"></span>';
+  }).join('');
+  const clues=entry.clues.map(clue=>{
+   const date=Date.UTC(Number(clue.month.slice(0,4)),Number(clue.month.slice(5))-1,15);
+   if(date<g.from||date>g.until)return '';
+   const tip=fmt(clue.month)+' · '+clue.desc+' (초기 자료, 개발월 미가산)';
+   return '<span class="cg-activity-clue" data-activity-clue="'+esc(entry.id)+'" tabindex="0" title="'+esc(tip)+'" aria-label="'+esc(tip)+
+    '" style="left:'+g.percent(date).toFixed(5)+'%"></span>';
+  }).join('');
   return '<div class="cg-row cg-activity-row" data-gantt-activity="'+esc(entry.id)+'">'+
    '<div class="cg-name"><strong title="'+esc(entry.detail)+'">'+esc(entry.label)+'</strong><small title="'+esc(dates)+'">'+
-   '개발활동 '+entry.months.size+'개월 · '+esc(dates.length>20?dates.slice(0,19)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bars+'</div></div>';
+   '확인된 활동 '+entry.months.size+'개월 · '+esc(dates.length>20?dates.slice(0,19)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bridges+bars+clues+'</div></div>';
  }).join('');
 
  const undatedEntries=(axis.reconstructionCandidates||[]).filter(item=>item.id==='MC'&&!base.some(p=>p.id==='p15'&&inMonths(p)));
@@ -834,7 +850,7 @@ function renderCareerGantt(){
  };
  board.onpointerleave=()=>{$('ganttGuide').hidden=true};
 
- $('ganttKpis').innerHTML+='<div class="cg-kpi"><b>'+activity.length+'개</b><span>추가 개발활동 기록 (경력 미산정)</span></div>';
+ $('ganttKpis').innerHTML+='<div class="cg-kpi"><b>'+activity.length+'개</b><span>개발활동 구분 행 (분야별 반영월과 중복 가능)</span></div>';
  const inner=g.gaps.filter(p=>p.start>g.periods[0].start&&p.end<g.periods[g.periods.length-1].end);
  $('ganttCaption').textContent='실제 날짜 겹침 '+g.overlaps.length+'구간 · 같은 달에 회사가 바뀐 사례 '+
   g.sameMonth.length+'개월'+(g.sameMonth.length?' ('+g.sameMonth.join(', ')+')':'')+

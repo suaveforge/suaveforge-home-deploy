@@ -136,6 +136,8 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        activityColors:[...sec.querySelectorAll('.cg-bar.activity')].every(x=>getComputedStyle(x).backgroundColor==='rgb(132, 120, 178)'),
        barLabelsRemoved:sec.querySelectorAll('.cg-bar-label').length===0,
        zeroMaxBars:sec.querySelector('[data-gantt-activity="zeromax"]')?.querySelectorAll('.cg-bar.activity').length,
+       zeroMaxBridge:sec.querySelector('[data-activity-gap="zeromax"]')?.title,
+       upodiumEarlyClues:sec.querySelectorAll('[data-activity-clue="upodium"]').length,
        zeroMaxTooltip:sec.querySelector('[data-gantt-activity="zeromax"] .cg-bar.activity')?.title||'',
        insuredTooltipsValid:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>{
         const title=x.querySelector('.cg-bar')?.title||'';
@@ -183,13 +185,15 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     assert.ok(stats.gantt.artTestMerged,'no duplicate art-test Gantt row');
    assert.ok(stats.gantt.compactRows,'Gantt rows are single-line and compact');
    assert.ok(stats.gantt.barGap,'bars nearly fill each row; no large vertical gaps');
-   assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|metacross|multiasset|investment|suaveforge|unknown');
+   assert.equal(stats.gantt.activityKeys.join('|'),'upodium|zeromax|metacross|multiasset|investment|suaveforge|unknown');
    assert.ok(stats.gantt.visibleNames,'each insured employer name stays attached to its bar');
    assert.ok(stats.gantt.activityColors,'unverified activity has distinct purple color');
    assert.ok(stats.gantt.barLabelsRemoved,'no names inside progress bars');
    assert.ok(stats.gantt.leftNamesVisible,'all company and project labels appear in left column');
-   assert.equal(stats.gantt.zeroMaxBars,1,'ZeroMax one continuous visible period');
-   assert.equal(stats.gantt.zeroMaxTooltip,'ZeroMax · 2023.02~2023.08 (4월 미확인)','compact ZeroMax tooltip');
+   assert.equal(stats.gantt.zeroMaxBars,2,'ZeroMax actual work spans have a dashed month between');
+   assert.equal(stats.gantt.zeroMaxTooltip,'ZeroMax · 2023.02~2023.03','first verified ZeroMax segment');
+   assert.ok(stats.gantt.zeroMaxBridge?.includes('2023.04')&&stats.gantt.zeroMaxBridge?.includes('미가산'),'April is bridged, not counted');
+   assert.ok(stats.gantt.upodiumEarlyClues>=2,'U.Podium prior documented artifacts appear before ZeroMax without counting them as worked months');
    assert.ok(stats.gantt.insuredTooltipsValid,'short Gantt tooltips identify name dates and paid confirmation');
    assert.ok(stats.gantt.activityTooltipsBrief,'other activity Gantt tooltips are short');
    assert.ok(stats.gantt.overviewTooltipsBrief,'overview tooltips are short');
