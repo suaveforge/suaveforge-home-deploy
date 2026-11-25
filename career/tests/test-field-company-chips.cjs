@@ -159,6 +159,13 @@ setImmediate(()=>{
  const up=activityGroups.find(x=>x.id==='upodium');
  assert.ok(up.projects.includes('p26')&&up.projects.includes('p49'),'U.Podium art test evidence p26 preserved within U.Podium p49');
  assert.ok(up.months.has(2023*12+8),'September 2023 art test month retained once');
+ assert.equal(up.window.start,'2022-11','MetaFastest earliest project material is visible before ZeroMax without adding work months');
+ assert.equal(up.window.end,'2024-06');
+ assert.ok(up.window.a<activityGroups.find(x=>x.id==='zeromax').window.a,'U.Podium footprint starts before ZeroMax evidence window');
+ assert.equal(up.months.size,10,'early source window is never added to work months');
+ assert.ok(gh.includes('data-activity-window="upodium"')&&gh.includes('data-activity-window="zeromax"'),'one continuous footprint per project');
+ assert.equal((gh.match(/data-activity-window=/g)||[]).length,activityGroups.length,'exactly one coherent project timeline per row');
+ assert.ok(gh.includes('초기 자료 2022.11 · 개발 확인 10개월'),'label separates document start and verified work months');
  assert.ok(!gh.includes('cg-bar-label'),'no company or project name inside a progress bar');
  for(const group of activityGroups){
   assert.ok(gh.includes('data-gantt-activity="'+group.id+'"'),'all activity identities remain in left-hand name column');
@@ -171,7 +178,10 @@ setImmediate(()=>{
  const zm=activityGroups.find(x=>x.id==='zeromax');
  assert.equal([...zm.months].sort((a,b)=>a-b).length,6,'ZeroMax: Feb, Mar, May-Aug, not April planning');
  assert.equal(zm.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-02~2023-03|2023-05~2023-08','only evidence-backed ZeroMax months are colored');
- assert.equal(zm.gaps.map(x=>x.start+'~'+x.end).join('|'),'2023-04~2023-04','April 2023 gap remains visible as a connector');
+ assert.equal(zm.gaps.map(x=>x.start+'~'+x.end).join('|'),'2023-04~2023-04','April 2023 remains pale and uncredited within the connected bar');
+ assert.equal(zm.window.start,'2023-02');
+ assert.equal(zm.window.end,'2023-08');
+ assert.ok(gh.includes('data-activity-window="metacross"'),'MetaCross has one continuous confirmed activity footprint');
  assert.ok(gh.includes('data-activity-gap="zeromax"'),'April gap gets dashed connector');
  assert.ok(gh.includes('data-activity-clue="upodium"'),'early MetaFastest sources appear as uncredited markers');
  assert.equal((gh.match(/data-activity-gap=/g)||[]).length,activityGroups.reduce((n,x)=>n+x.gaps.length,0),'each noncontiguous gap linked consistently');

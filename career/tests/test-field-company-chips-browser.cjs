@@ -138,6 +138,21 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        zeroMaxBars:sec.querySelector('[data-gantt-activity="zeromax"]')?.querySelectorAll('.cg-bar.activity').length,
        zeroMaxBridge:sec.querySelector('[data-activity-gap="zeromax"]')?.title,
        upodiumEarlyClues:sec.querySelectorAll('[data-activity-clue="upodium"]').length,
+       activityWindowCount:sec.querySelectorAll('[data-activity-window]').length,
+       upodiumWindowTitle:sec.querySelector('[data-activity-window="upodium"]')?.title||'',
+       continuousWindowStyle:[...sec.querySelectorAll('[data-activity-window]')].every(el=>{
+         const s=getComputedStyle(el);
+         return el.getBoundingClientRect().height>=20&&s.backgroundImage.includes('repeating-linear-gradient');
+       }),
+       upodiumFootprintFirst:(()=>{
+         const up=sec.querySelector('[data-activity-window="upodium"]')?.getBoundingClientRect();
+         const zm=sec.querySelector('[data-activity-window="zeromax"]')?.getBoundingClientRect();
+         return !!up&&!!zm&&up.left<zm.left-2;
+       })(),
+       zeroMaxGapStyle:(()=>{
+         const el=sec.querySelector('[data-activity-gap="zeromax"]');
+         return !!el&&getComputedStyle(el).backgroundImage.includes('repeating-linear-gradient')&&el.getBoundingClientRect().height>=18;
+       })(),
        zeroMaxTooltip:sec.querySelector('[data-gantt-activity="zeromax"] .cg-bar.activity')?.title||'',
        insuredTooltipsValid:[...sec.querySelectorAll('[data-gantt-company]')].every(x=>{
         const title=x.querySelector('.cg-bar')?.title||'';
@@ -194,6 +209,11 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.equal(stats.gantt.zeroMaxTooltip,'ZeroMax · 2023.02~2023.03','first verified ZeroMax segment');
    assert.ok(stats.gantt.zeroMaxBridge?.includes('2023.04')&&stats.gantt.zeroMaxBridge?.includes('미가산'),'April is bridged, not counted');
    assert.ok(stats.gantt.upodiumEarlyClues>=2,'U.Podium prior documented artifacts appear before ZeroMax without counting them as worked months');
+   assert.equal(stats.gantt.activityWindowCount,7,'one continuous footprint per active project');
+   assert.ok(stats.gantt.continuousWindowStyle,'each activity row has a single striped, continuous range beneath confirmed work');
+   assert.ok(stats.gantt.upodiumFootprintFirst,'U.Podium source footprint begins before ZeroMax even though confirmed code is later');
+   assert.ok(stats.gantt.upodiumWindowTitle.includes('2022.11~2024.06')&&stats.gantt.upodiumWindowTitle.includes('미가산'),'early reference range is not represented as completed work');
+   assert.ok(stats.gantt.zeroMaxGapStyle,'April 2023 is a full-height striped unknown region, not a disconnected line');
    assert.ok(stats.gantt.insuredTooltipsValid,'short Gantt tooltips identify name dates and paid confirmation');
    assert.ok(stats.gantt.activityTooltipsBrief,'other activity Gantt tooltips are short');
    assert.ok(stats.gantt.overviewTooltipsBrief,'overview tooltips are short');

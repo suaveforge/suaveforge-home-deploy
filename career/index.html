@@ -178,10 +178,12 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 
 /* Names stay anchored to the actual bars, including short dated periods. */
 .cg-bar{overflow:visible}
-.cg-bar.activity{background:#8478b2;z-index:3}
-.cg-activity-bridge{position:absolute;top:25px;height:0;border-top:3px dashed #a79bcf;z-index:2}
+.cg-bar.activity{background:#8478b2;z-index:3;top:16px;height:20px;border-radius:2px}
+.cg-activity-window{position:absolute;top:15px;height:22px;border:1px solid #ac9dcc;border-radius:4px;z-index:1;min-width:1px;background:repeating-linear-gradient(135deg,#eeeaf7 0px,#eeeaf7 6px,#ddd6ee 6px,#ddd6ee 12px)}
+.cg-activity-window:focus-visible{outline:2px solid #685793;outline-offset:2px}
+.cg-activity-bridge{position:absolute;top:16px;height:20px;z-index:2;background:repeating-linear-gradient(135deg,#eeeaf7 0px,#eeeaf7 6px,#ddd6ee 6px,#ddd6ee 12px)}
 .cg-activity-bridge:focus-visible{outline:2px solid #685793;outline-offset:2px}
-.cg-activity-clue{position:absolute;top:20px;width:10px;height:10px;border-radius:50%;border:2px solid #8478b2;background:#fff;z-index:4;transform:translateX(-50%)}
+.cg-activity-clue{position:absolute;top:20px;width:12px;height:12px;border-radius:50%;border:2px solid #8478b2;background:#fff;z-index:4;transform:translateX(-50%)}
 .cg-activity-clue:focus-visible{outline:2px solid #685793;outline-offset:2px}
 .cg-activity-divider{background:#f5f2fa;min-height:38px}
 .cg-activity-divider .cg-name{background:#f5f2fa}
@@ -739,7 +741,16 @@ function ganttActivityGroups(g){
   const mf=(axis.reconstructionCandidates||[]).find(item=>item.id==='MF');
   const clues=group.id==='upodium'?(mf?.activity||[]).filter(item=>item.proof==='asset'||item.proof==='repo')
    .map(item=>({month:item.month,desc:item.desc})):[];
-  return {...group,gaps,clues,intervals:intervals.map(x=>{
+  const earliestSource=Math.min(intervals[0].first,...clues.map(c=>codeMonth(c.month)).filter(n=>n!==null));
+  const finalMonth=intervals[intervals.length-1].final;
+  const windowStart=yearMonth(earliestSource),windowEnd=yearMonth(finalMonth);
+  const window={
+   start:windowStart,end:windowEnd,
+   a:Date.UTC(Number(windowStart.slice(0,4)),Number(windowStart.slice(5))-1,1),
+   b:Date.UTC(Number(windowEnd.slice(0,4)),Number(windowEnd.slice(5)),1),
+   hasEarlyClue:earliestSource<intervals[0].first
+  };
+  return {...group,gaps,clues,window,intervals:intervals.map(x=>{
    const start=yearMonth(x.first),end=yearMonth(x.final);
    const a=Date.UTC(Number(start.slice(0,4)),Number(start.slice(5))-1,1);
    const b=Date.UTC(Number(end.slice(0,4)),Number(end.slice(5)),1);
@@ -793,9 +804,15 @@ function renderCareerGantt(){
  }).join('');
  const activity=ganttActivityGroups(g);
  const activityHeader=activity.length?'<div class="cg-row cg-activity-divider"><div class="cg-name"><strong>프로젝트별 개발활동</strong><small>분야별 경력월과 중복 가능</small></div>'+
-  '<div class="cg-activity-header">회사 순서: U.Podium → ZeroMax → MetaCross · 보라색: 확인월 · 점선: 미확인 기간 · ○: 초기 참고자료</div></div>':'';
+  '<div class="cg-activity-header">회사 정렬: U.Podium → ZeroMax → MetaCross · 진한 보라: 개발 확인월 · 옅은 사선: 미확인 기간(미가산) · ○: 참고자료</div></div>':'';
  const activityRows=activity.map(entry=>{
   const dates=entry.intervals.map(i=>i.start===i.end?i.start:i.start+' ~ '+i.end).join(', ');
+  const windowStart=Math.max(g.from,entry.window.a),windowEnd=Math.min(g.until,entry.window.b);
+  const footprint=windowEnd>windowStart?'<span class="cg-activity-window" data-activity-window="'+esc(entry.id)+
+   '" tabindex="0" title="'+esc(entry.label+' · 표시범위 '+fmt(entry.window.start)+'~'+fmt(entry.window.end)+
+    ' (진한 보라색만 수행월 확인 · 나머지는 미가산)')+'" aria-label="'+esc(entry.label+'의 활동자료 범위, 미확인 월 제외')+
+   '" style="left:'+g.percent(windowStart).toFixed(5)+'%;width:'+(100*(windowEnd-windowStart)/g.span).toFixed(5)+'%"></span>':'';
+  const workSummary=(entry.window.hasEarlyClue?'초기 자료 '+fmt(entry.window.start)+' · ':'')+'개발 확인 '+entry.months.size+'개월';
   const bars=entry.intervals.map(i=>{
    const start=Math.max(g.from,i.a),end=Math.min(g.until,i.b);
    if(end<=start)return '';
@@ -820,7 +837,7 @@ function renderCareerGantt(){
   }).join('');
   return '<div class="cg-row cg-activity-row" data-gantt-activity="'+esc(entry.id)+'">'+
    '<div class="cg-name"><strong title="'+esc(entry.detail)+'">'+esc(entry.label)+'</strong><small title="'+esc(dates)+'">'+
-   '확인된 활동 '+entry.months.size+'개월 · '+esc(dates.length>20?dates.slice(0,19)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bridges+bars+clues+'</div></div>';
+   esc(workSummary)+'</small></div><div class="cg-rail">'+rules()+footprint+bridges+bars+clues+'</div></div>';
  }).join('');
 
  const undatedEntries=(axis.reconstructionCandidates||[]).filter(item=>item.id==='MC'&&!base.some(p=>p.id==='p15'&&inMonths(p)));
