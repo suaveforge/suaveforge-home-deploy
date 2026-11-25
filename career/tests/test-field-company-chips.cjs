@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const root=path.resolve(__dirname,'../..');
 const html=fs.readFileSync(path.join(root,'career/index.html'),'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8'));
-assert.equal(data.version,18);
+assert.equal(data.version,19);
 assert.deepEqual(data.timeAxis.verifiedPaidEngagements,[],'no paid contract is automatically proven');
 const block=html.match(/<script>\s*([\s\S]*?)<\/script>/);
 assert.ok(block);
@@ -38,19 +38,20 @@ setImmediate(()=>{
   return html.slice(begin,html.indexOf('</article>',begin));
  };
  const masters=qa.careerMasterCompanies(qa.allRows());
- assert.equal(masters.length,13,'nine original legal-company identities plus course, paid client and two unpaid sources');
+ assert.equal(masters.length,14,'nine original legal-company identities plus course, paid client and two unpaid sources');
  assert.equal(masters.slice(0,9).map(x=>x.company).join('|'),
  data.timeAxis.insurance.map(x=>x.company).join('|'));
  assert.equal(masters[9].company,'알지오');
  assert.equal(masters[10].company,'온더라이브');
  assert.equal(masters[11].company,'ZeroMax');
  assert.equal(masters[12].company,'U.Podium');
+ assert.equal(masters[13].company,'MetaCross');
  assert.deepEqual(data.timeAxis.insurance.filter(x=>['넥슨GT','유비펀','유비펀스튜디오'].includes(x.company)).map(x=>x.company),['넥슨GT','유비펀','유비펀스튜디오'],'original insurer legal entity names preserved');
  assert.deepEqual(data.timeAxis.companyGroups[0].insuranceCompanyNames,['넥슨GT','유비펀','유비펀스튜디오'],'one grouped work-history source');
  assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'MetaFastest and U.Podium one service identity, MetaCross separate undated candidate');
  const expected={'웹 개발':[103,120],'모바일 앱':[96,192],'PC 응용SW':[92,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
-  'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[0,60]};
+  'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[6,60]};
  assert.equal((current().match(/<article class="field">/g)||[]).length,10);
  assert.ok(field('교육·강의').includes('>9개월</b>'),'separate nine-month education history');
  assert.ok(field('교육·강의').includes('경력 기준 미설정'),'no invented procurement eligibility threshold');
@@ -65,8 +66,8 @@ setImmediate(()=>{
   assert.ok(markup.includes('background:'+band.color),'progress color follows credited months in '+name);
   assert.ok(markup.includes('title="'+band.label+'" role="progressbar"'),'field progress band is discoverable and accessible');
   const ids=[...markup.matchAll(/data-master-company="([^"]+)"/g)].map(x=>x[1]);
-  assert.equal(ids.length,13,name+' retains all thirteen original company identities');
-  assert.equal(new Set(ids).size,13,name+' shows each company exactly once');
+  assert.equal(ids.length,14,name+' retains all thirteen original company identities');
+  assert.equal(new Set(ids).size,14,name+' shows each company exactly once');
   assert.deepEqual(ids.slice().sort().join('|'),masters.map(x=>x.id).sort().join('|'),name+' stable employer master');
   if(months){
    const chart=qa.fieldEmployerContributions(qa.allRows(),name);
@@ -149,9 +150,9 @@ setImmediate(()=>{
  assert.equal((el('ganttGaps').innerHTML.match(/class="cg-gap"/g)||[]).length,8,'initial, interim and final uncovered slices after paid interval');
  assert.ok(gh.includes('id="ganttGuide"')&&gh.includes('id="ganttGuideDate"'),'hover date guide mounted');
  const activityGroups=qa.ganttActivityGroups(qa.companyGanttModel());
- assert.equal(activityGroups.length,6,'art test merged into U.Podium, no duplicate company-style row');
- assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'zeromax|upodium|multiasset|investment|suaveforge|unknown');
- assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,6,'one U.Podium row combines art test and game development');
+ assert.equal(activityGroups.length,7,'art test merged into U.Podium, no duplicate company-style row');
+ assert.deepEqual(activityGroups.map(x=>x.id).join('|'),'zeromax|upodium|metacross|multiasset|investment|suaveforge|unknown');
+ assert.equal((gh.match(/data-gantt-activity=/g)||[]).length,7,'one U.Podium row combines art test and game development');
  assert.ok(gh.includes('data-gantt-activity="zeromax"')&&gh.includes('data-gantt-activity="multiasset"'),'unpaid source types displayed');
  assert.ok(!gh.includes('data-gantt-activity="arttest"')&&gh.includes('투자전략 대시보드'),'art test is not an independent Gantt row');
  const up=activityGroups.find(x=>x.id==='upodium');
@@ -181,9 +182,13 @@ setImmediate(()=>{
   'do not fill documented gaps between trading project commits');
  assert.ok(trader.intervals.every(x=>new Date(x.a).toISOString().slice(0,7)===x.start),'starts exactly at first day of recorded month');
  assert.ok(trader.intervals.every(x=>new Date(x.b-86400000).toISOString().slice(0,7)===x.end),'ends exactly at last day of recorded month');
- assert.ok(!gh.includes('data-gantt-activity="메타크로스"'),'undated work not invented');
- assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,1,'the separate MetaCross casino project remains undated while U.Podium has a dated activity row');
- assert.ok(gh.includes('data-gantt-undated="MC"')&&gh.includes('>MetaCross · 카지노 개발</strong>'),'separate MetaCross casino undated record remains');
+ assert.ok(gh.includes('data-gantt-activity="metacross"'),'MetaCross now has a dated activity row');
+ const mcGroup=activityGroups.find(x=>x.id==='metacross');
+ assert.equal(mcGroup?.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-10~2024-03');
+ assert.ok(gh.includes('MetaCross · 카지노 개발 · 2023.10~2024.03'));
+ assert.equal(qa.careerCreditedMonths(qa.allRows().find(x=>x.rowId==='p15')).length,6);
+ assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,0,'MetaCross confirmed period no longer undated');
+ assert.ok(!gh.includes('data-gantt-undated="MC"'),'MetaCross no duplicate undated row');
  assert.ok(gh.includes('data-gantt-company="온더라이브"'),'paid OnTheLive has one dated employer row');
  assert.ok(gh.includes('data-gantt-user-period="OL2024"'),'single user-confirmed paid bar drawn');
  assert.ok(gh.includes('온더라이브 · 2024.06.09~2024.10.09 · 유급'),'short accurate tooltip');
@@ -240,6 +245,9 @@ setImmediate(()=>{
  assert.equal(field('AI 개발').includes('0 / 60개월'),true,'local non-employer must not create credited history');
  assert.ok(el('projects').innerHTML.includes('&lt;img src=x onerror=alert(1)&gt;'),'table escapes unsafe local company input');
  const rows=qa.allRows();
+ assert.equal(rows.find(x=>x.rowId==='p15')?.status,'linked');
+ assert.ok(field('블록체인').includes('6 / 60개월'));
+ assert.ok(field('웹 개발').includes('data-master-company="metacross" title="MetaCross · 6개월"'));
  for(const id of ['p24','p25','p26','p39','p42','p48','p49'])
   assert.equal(rows.find(x=>x.rowId===id)?.status,'linked','dated client work must be classified as reflected: '+id);
  assert.equal(qa.careerCreditedMonths(rows.find(x=>x.rowId==='p49')).length,10,'ten U.Podium months credited once');

@@ -21,10 +21,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium','MetaCross'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
-    const expected={'웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
+    const expected={'블록체인':'6 / 60개월','웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
       '백엔드':'87 / 120개월','모바일 앱':'96 / 192개월','PC 응용SW':'92 / 180개월'};
     const progressBandsValid=cards.every(card=>{
      const bar=card.querySelector('.track[role="progressbar"]');
@@ -48,7 +48,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const rosters=cards.map(card=>[...card.querySelectorAll('.field-source-chip')].map(x=>x.dataset.masterCompany).sort().join('|'));
     const rosterValid=cards.every(card=>{
      const nodes=[...card.querySelectorAll('.field-source-chip')];
-     return nodes.length===13&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===13&&
+     return nodes.length===14&&new Set(nodes.map(x=>x.dataset.masterCompany)).size===14&&
       nodes.every(x=>insured.some(name=>name.normalize('NFKC').replace(/\\s+/g,'').toLowerCase()===x.dataset.masterCompany));
     })&&rosters.every(s=>s===rosters[0]);
     const sourceHelp=field('웹 개발')?.textContent?.includes('미반영 개발활동 14개월');
@@ -171,10 +171,10 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.twoDays,'two-day gap appears in gap list');
    assert.ok(stats.gantt.railContained,'Gantt bars remain inside timeline rails');
    assert.ok(stats.gantt.scrollable,'horizontal scroll available when needed');
-   assert.equal(stats.gantt.activityCount,6,'art test merged with U.Podium development group');
-   assert.deepEqual(stats.gantt.undatedRows.map(r=>r.id).join('|'),'MC','only MetaCross remains without dates');
-   assert.equal(stats.gantt.undatedRows[0].name,'MetaCross · 카지노 개발');
-   assert.ok(!stats.gantt.undatedRows[0].hasBar&&!stats.gantt.undatedRows[0].gitMarker,'MetaCross does not gain invented dates');
+   assert.equal(stats.gantt.activityCount,7,'art test merged with U.Podium development group');
+    assert.deepEqual(stats.gantt.undatedRows.map(r=>r.id).join('|'),'','MetaCross has a confirmed period');
+    assert.ok(stats.gantt.activityKeys.includes('metacross'),'MetaCross dated project in Gantt');
+    assert.equal(stats.gantt.undatedRows.length,0,'no separate undated casino row');
    assert.ok(stats.gantt.olPeriod?.includes('2024.06.09~2024.10.09'),'user-confirmed work dates in short tooltip');
    assert.ok(stats.gantt.olPeriod?.includes(' · 유급'),'paid tooltip uses concise label');
    assert.equal(stats.gantt.olBarCount,1,'OnTheLive gets exactly one bar');
@@ -183,7 +183,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     assert.ok(stats.gantt.artTestMerged,'no duplicate art-test Gantt row');
    assert.ok(stats.gantt.compactRows,'Gantt rows are single-line and compact');
    assert.ok(stats.gantt.barGap,'bars nearly fill each row; no large vertical gaps');
-   assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|multiasset|investment|suaveforge|unknown');
+   assert.equal(stats.gantt.activityKeys.join('|'),'zeromax|upodium|metacross|multiasset|investment|suaveforge|unknown');
    assert.ok(stats.gantt.visibleNames,'each insured employer name stays attached to its bar');
    assert.ok(stats.gantt.activityColors,'unverified activity has distinct purple color');
    assert.ok(stats.gantt.barLabelsRemoved,'no names inside progress bars');

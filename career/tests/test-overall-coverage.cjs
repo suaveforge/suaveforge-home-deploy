@@ -43,7 +43,9 @@ setImmediate(()=>{
  assert.equal(data.projects.find(p=>p.id==='p16').confirmedMinimumPeriod.end,'2024-10-09','exact minimum end');
  assert.equal(data.projects.find(p=>p.id==='p16').confirmedMinimumPeriod.officialVerification,'pending','official proof remains pending');
  assert.equal(data.projects.find(p=>p.id==='p12').start,null,'MetaFastest source video does not invent start date');
- assert.equal(data.projects.find(p=>p.id==='p15').start,null,'MetaCross license does not invent start date');
+ assert.equal(data.projects.find(p=>p.id==='p15').start,'2023-10','MetaCross user-confirmed start month');
+ assert.equal(data.projects.find(p=>p.id==='p15').end,'2024-03','MetaCross user-confirmed end month');
+ assert.equal(data.projects.find(p=>p.id==='p15').confirmedPeriod.monthCount,6,'six calendar months');
  assert.equal(list.find(x=>x.ym==='2024-09').type,'project','user-confirmed OnTheLive paid work resolves September project activity gap');
  assert.equal(list.find(x=>x.ym==='2023-07').type,'project','3D customizer July actual code month credited, umbrella not');
  assert.equal(list.find(x=>x.ym==='2023-08').type,'project','ZeroMax Upodium August 2023 marked as project performance');
