@@ -1,8 +1,8 @@
 {
-  "version": 17,
+  "version": 18,
   "updatedAt": "2026-11-25",
   "source": "KOSA 경력마스터(2026-11-21) 및 SuaveForge 공개 포트폴리오",
-  "notice": "분야별 경력은 유급·무급 여부와 상관없이 수행기간이 확인된 회사별 개발활동월을 중복 없이 계산합니다. 건강보험 재직, 본인 확인 유급 온더라이브, 제로맥스(ZeroMax) 및 메타크로스(MetaCross, U.Podium 프로젝트)의 날짜가 확인된 활동만 분야별로 연결합니다. 기간이 확인되지 않은 기타 개발활동과 포괄 프리랜서 기록은 별도 보관합니다. 공식 제출 증빙 요건은 별도 확인합니다.",
+  "notice": "분야별 경력은 유급·무급 여부와 상관없이 수행기간이 확인된 회사별 개발활동월을 중복 없이 계산합니다. 건강보험 재직, 본인 확인 유급 온더라이브, 제로맥스(ZeroMax) 및 U.Podium(메타페스트 연계 프로젝트)의 날짜가 확인된 활동만 분야별로 연결합니다. 기간이 확인되지 않은 기타 개발활동과 포괄 프리랜서 기록은 별도 보관합니다. 공식 제출 증빙 요건은 별도 확인합니다.",
   "fields": [
     {
       "name": "웹 개발",
@@ -278,7 +278,8 @@
         "웹 개발"
       ],
       "start": null,
-      "end": null
+      "end": null,
+      "note": " 2026.11.25 사용자 기억과 repo 이관 알림에 따라 MetaFastest와 U.Podium을 연계·동일 서비스로 표기. p49의 확인된 개발월과 중복가산하지 않으며 MetaFastest 기존 자료는 삭제하지 않음."
     },
     {
       "company": "프리랜서 / ZeroMax",
@@ -597,8 +598,8 @@
     },
     {
       "id": "p26",
-      "company": "MetaCross",
-      "title": "U.Podium Unity WebGL 3D 아트테스트 (메타크로스)",
+      "company": "U.Podium",
+      "title": "U.Podium(메타페스트) Unity WebGL 3D 아트테스트",
       "period": "2023-09",
       "start": "2023-09",
       "end": "2023-09",
@@ -618,7 +619,7 @@
       "verifiedCommitMonths": [
         "2023-09"
       ],
-      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도. 2026.11.25 사용자 확인: 2023.09~2024.06 U.Podium 프로젝트의 업무 귀속은 MetaCross, 구 과장과 협업. 같은 2023.09의 p49와 웹 분야 활동월 중복 가산 없음."
+      "note": "확인된 해당 월 GitHub authored/committed 코드 작업만 내부 월단위 잠정 산정. 중간 공백월·전체 계약기간으로 확장하지 않음. 공식 KOSA 인정기간이 아니며 사업자/발주처 증빙 별도. 2026.11.25 사용자 경력 순서 재정정에 따라 U.Podium(메타페스트) 개발 프로젝트 귀속으로 되돌림. 2023.09의 p49와 웹 분야 활동월 중복가산 없음."
     },
     {
       "id": "p27",
@@ -1239,8 +1240,8 @@
     },
     {
       "id": "p49",
-      "company": "MetaCross",
-      "title": "U.Podium 레이싱·파워볼·릴게임 웹 개발·운영 (메타크로스)",
+      "company": "U.Podium",
+      "title": "U.Podium(메타페스트) 레이싱·파워볼·릴게임 웹 개발·운영",
       "start": "2023-09",
       "end": "2024-06",
       "period": "2023.09 ~ 2024.06",
@@ -1248,22 +1249,27 @@
         "웹 개발"
       ],
       "status": "linked",
-      "work": "유포디움 개발/외부팀 대화에서 2023.09~2024.06 매월 직접 수정·테스트·배포 보고 확인. 레이싱 마굿간·베팅·랭킹 UI, 파워볼, 릴게임, Spine 리소스, 사운드, 반응형, 중국어 등 서비스 기능 개발. 사용자 확인(2026.11.25): U.Podium의 2023.09~2024.06 개발·운영은 메타크로스(MetaCross)에서 구 과장과 함께 수행. MetaFastest가 아닌 MetaCross로 업무 귀속을 정정함. 프로젝트 서비스명은 U.Podium이며 계약서상 정확한 법인 표기는 별도 증빙 필요. 2023.12 별도 R3F 연구 저장소의 동일 프로젝트 귀속도 미확정.",
+      "work": "유포디움 개발/외부팀 대화에서 2023.09~2024.06 매월 직접 수정·테스트·배포 보고 확인. 레이싱 마굿간·베팅·랭킹 UI, 파워볼, 릴게임, Spine 리소스, 사운드, 반응형, 중국어 등 서비스 기능 개발. U.Podium은 MetaFastest(메타페스트)와 동일한 서비스/연계 프로젝트라는 사용자 기존 확인 및 2023.07 GitHub 저장소 이관(meta-F/metaf-racing→upodium/metaf-racing) 근거가 있다. 2023.09~2024.06 웹 개발·운영의 서비스 귀속은 U.Podium으로 표시한다. 이 기간 중 실제 고용/발주 법인의 변동일과 구 과장 소속 메타크로스의 계약 관계는 미확정. 2023.12 별도 R3F 연구 저장소의 동일 프로젝트 귀속도 미확정.",
       "evidence": [
         {
           "type": "telegram_dated_work",
           "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
         },
         {
-          "type": "user_company_attribution",
-          "note": "2026-11-25 사용자 직접 정정: 구 과장과 U.Podium 레이싱·파워볼·릴게임을 2023.09~2024.06 개발·운영한 소속/업무 귀속은 MetaCross(메타크로스), MetaFastest가 아님."
+          "type": "git_repo_transfer",
+          "url": "https://mail.google.com/mail/u/?authuser=programmer119%40gmail.com#all/1896d4bbd35d4b4f",
+          "note": "2023-07-19 meta-F/metaf-racing→upodium/metaf-racing 저장소 이전 GitHub 알림. MetaFastest/U.Podium 프로젝트 연결 근거(계약 법인/근무기간 증명은 아님)."
+        },
+        {
+          "type": "user_chronology_correction",
+          "note": "2026-11-25 사용자 직접 정정: U.Podium(메타페스트)→ZeroMax→MetaCross(구 과장과 같은 회사). 순서 기억은 유력하나 프로젝트별 정확한 법적 재직 경계는 미확정."
         }
       ],
-      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음. 2026.11.25 사용자 정정: 구 과장과 함께 한 U.Podium 2023.09~2024.06 수행 귀속은 MetaFastest가 아닌 MetaCross. 해당 월 10개월의 기존 웹 개발 이력은 보존하고 중복 가산하지 않음. 법적 계약서·PM 지위는 별도 검증."
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음. 2026.11.25 사용자 추가 정정: 전체 경력 순서는 U.Podium(메타페스트)→ZeroMax→MetaCross(구 과장과 같은 회사)로 기억함. 이에 U.Podium 2023.09~2024.06 개발기록 전체를 MetaCross 고용으로 간주한 이전 오분류를 취소. 메타크로스 별도 PM/카지노 개발 시기와 U.Podium 계약 관계는 추가 검증. 해당 웹 분야 활동월 10개월 보존 및 중복가산 금지."
     },
     {
       "id": "p50",
-      "company": "U.Podium (2024.09 회사 귀속 미확정)",
+      "company": "U.Podium",
       "title": "U.Podium 레이싱 라이브 패킷 점검 (2024.09)",
       "start": "",
       "end": "",
@@ -1281,7 +1287,7 @@
           "note": "원본 Telegram 날짜·메시지 ID 확인 (세부 근거는 사내 비공개 career/evidence/telegram-export-review-20261122.md에 보관)"
         }
       ],
-      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음. 2024.09 점검은 사용자 확인 MetaCross 2023.09~2024.06 기간 밖이므로 회사 근무기간으로 확대하지 않음."
+      "note": "내부 월 단위 소프트웨어 작업 단서이며 회사 고용계약·실제 계약기간·KOSA 공식 인정은 입증하지 않음. 공개 페이지에는 원문 채팅과 인증정보를 기재하지 않음. 2024.09 점검은 U.Podium 서비스 관련 단서이나 확정 개발기간 2023.09~2024.06 밖에 있으며 실제 별도 유상·고용기간으로 확대하지 않음."
     },
     {
       "id": "p51",
@@ -1531,8 +1537,8 @@
     },
     {
       "id": "p60",
-      "company": "MetaCross",
-      "title": "U.Podium 모바일 앱 WebView — React Native (메타크로스)",
+      "company": "U.Podium",
+      "title": "U.Podium(메타페스트) 모바일 앱 WebView — React Native",
       "period": "2024.04",
       "start": "2024-04",
       "end": "2024-04",
@@ -1541,7 +1547,7 @@
       ],
       "status": "linked",
       "work": "2024.04.02 React Native 0.73.6 기반 Android·iOS 앱 소스에서 react-native-webview를 추가하고 U.Podium 개발 서비스(https://dev-seoul.u-podium.com/)를 앱 화면에 연결. Android 세로 화면 방향 및 Gradle 설정 변경을 직접 커밋. Android·iOS 네이티브 프로젝트 구조가 존재함.",
-      "note": "직접 코드 커밋으로 확인된 2024.04 활동월 1개월만 내부 모바일 앱 분야에 잠정 반영. Android/iOS 스토어 출시·서명·실제 빌드 성공 또는 정식 계약기간을 입증한 것은 아님. 같은 2024.04의 U.Podium 웹 개발(p49)과 분야별로만 병행 표시하며 전체 수행월에는 중복 가산하지 않음. 발주 법인명 미확정. 공식 KOSA 승인 경력이 아님. 2026.11.25 사용자 확인: U.Podium 2023.09~2024.06 업무는 MetaCross의 구 과장과 함께 수행한 기간. 회사 귀속 표시를 MetaCross로 정정; 모바일 앱 2024.04 한 달은 기존 웹 개발 2024.04와 분야별로만 병행.",
+      "note": "직접 코드 커밋으로 확인된 2024.04 활동월 1개월만 내부 모바일 앱 분야에 잠정 반영. Android/iOS 스토어 출시·서명·실제 빌드 성공 또는 정식 계약기간을 입증한 것은 아님. 같은 2024.04의 U.Podium 웹 개발(p49)과 분야별로만 병행 표시하며 전체 수행월에는 중복 가산하지 않음. 발주 법인명 미확정. 공식 KOSA 승인 경력이 아님. 2026.11.25 사용자 경력 순서 재정정: U.Podium(메타페스트) 서비스 프로젝트로 복귀, MetaCross 소속 기간으로 단정하지 않음. 2024.04 앱 개발월은 U.Podium 웹 개발의 같은 달과 분야별로만 병행 표시.",
       "evidence": [
         {
           "type": "git_direct_code_commit",
@@ -1822,7 +1828,7 @@
         "names": [
           "직접 Git 코드: React·Node.js 멀티에셋 웹 트레이더 (2024.04~08)",
           "직접 Git 코드: Python 멀티에셋 데이터·API (2024.04~07)",
-          "MetaCross/U.Podium React Native 모바일 앱 WebView 연동 직접 커밋(2024.04.02)"
+          "U.Podium(메타페스트 관련) React Native 모바일 앱 WebView 연동 직접 커밋(2024.04.02)"
         ]
       },
       {
@@ -2046,13 +2052,17 @@
     "reconstructionCandidates": [
       {
         "id": "MF",
-        "label": "MetaFastest (메타페스트)",
+        "label": "U.Podium (메타페스트 / MetaFastest)",
         "kind": "웹게임 개발·운영",
         "relatedProjects": [
-          "p12"
+          "p12",
+          "p26",
+          "p49",
+          "p50",
+          "p60"
         ],
-        "dateStatus": "수행 시작·종료월 미확정",
-        "work": "3D 경마 웹게임·실시간 레이스·베팅·결제·운영관리. 기존 프로젝트 수행 기록",
+        "dateStatus": "초기 메타페스트/유포디움 관련자료 2022.11·2023.01·07; U.Podium 웹 개발·운영 확인된 활동월 2023.09~2024.06",
+        "work": "MetaFastest(메타페스트)→U.Podium 동일/연계 서비스로 사용자 기억 및 저장소 이관 확인. 레이싱·파워볼·릴게임 웹 개발·운영 2023.09~2024.06; U.Podium 모바일 앱 2024.04 직접 Git 커밋.",
         "tags": [
           "웹 개발",
           "서버 개발",
@@ -2076,9 +2086,31 @@
             "desc": "metaf-racing GitHub 저장소 이전 알림(7월 19일)",
             "evidence": "Gmail GitHub repository transfer",
             "proof": "repo"
+          },
+          {
+            "month": "2023-09",
+            "desc": "U.Podium 레이싱·파워볼·릴게임 직접 개발/테스트/배포 확인, 이후 2024.06까지 매월 작업기록",
+            "evidence": "경력마스터 p49 Telegram dated work",
+            "proof": "dated_work",
+            "creditedMonth": "2023-09"
+          },
+          {
+            "month": "2024-04",
+            "desc": "U.Podium React Native WebView 모바일 앱 개발 커밋",
+            "evidence": "GitHub programmer119/reactnativetest2",
+            "proof": "git",
+            "url": "https://github.com/programmer119/reactnativetest2/commit/064b6e81897ace6ef59d48a38cc3e4e888558522",
+            "creditedMonth": "2024-04"
+          },
+          {
+            "month": "2024-06",
+            "desc": "U.Podium 개발·운영 확인된 기록의 마지막 월",
+            "evidence": "경력마스터 p49 Telegram dated work",
+            "proof": "dated_work",
+            "creditedMonth": "2024-06"
           }
         ],
-        "note": "영상/저장소 시점은 관련 활동 단서이며 개인의 연속 수행기간 입증과는 별개. 2022년 11~12월 버드레터 재직기간과도 겹칠 수 있음. 구 과장과 2023.09~2024.06 U.Podium 개발을 수행한 회사는 사용자 2026.11.25 정정에 따라 MetaCross로 표시한다. meta-F/metaf-racing 저장소 인수 기록만으로 그 기간의 계약/근무 귀속이 MetaFastest였다고 판단하지 않는다."
+        "note": "사용자 2026.11.23 및 11.25: MetaFastest는 U.Podium과 동일/연계 서비스라는 기억. 2023.07.19 meta-F/metaf-racing→upodium/metaf-racing 이전 직접 알림 존재. 서비스/조직 연결은 강하나 법적 동일 법인 증거는 없음. 초기 2022.11~2023.07 산출물 활동 시점과 후속 2023.09~2024.06 실제 개발월을 구분하고, 제로맥스·메타크로스와 구분, 중복 경력 가산 금지."
       },
       {
         "id": "ZM",
@@ -2087,9 +2119,15 @@
         "relatedProjects": [
           "p13",
           "p14",
-          "p24"
+          "p24",
+          "p25",
+          "p39",
+          "p42",
+          "p48",
+          "p51",
+          "p52"
         ],
-        "dateStatus": "말 커스터마이징 웹 2023.08 1개월만 잠정 반영; 그 외 기간 미확정",
+        "dateStatus": "2023.02·03·05·06·07·08 작업 증거, 2023.04는 계획·협의만 확인; 연속 고용기간 미확정",
         "work": "3D 캐릭터/말 커스터마이징, 모바일 카드게임 관련, 블록체인 업무(본인 확인)",
         "tags": [
           "웹 개발",
@@ -2111,21 +2149,17 @@
             "creditedMonth": "2023-08"
           }
         ],
-        "note": "2023.08.03~06 해당 프로젝트·웹 업무 할당 근거와 사용자 직접 수행 확인을 결합해 웹 1개월만 반영. Unity·R&D 별도 분야는 보류. 2023.05 저장소 이관은 개발 수행월로 계산하지 않음."
+        "note": "2023.08.03~06 해당 프로젝트·웹 업무 할당 근거와 사용자 직접 수행 확인을 결합해 웹 1개월만 반영. Unity·R&D 별도 분야는 보류. 2023.05 저장소 이관은 개발 수행월로 계산하지 않음. 2026.11.25 사용자 기억상 U.Podium(메타페스트) 다음 ZeroMax, 그다음 MetaCross 순서. U.Podium과 ZeroMax의 프로젝트 산출물/작업시기가 겹치므로 완전히 단절된 재직기간이라고 단정하지 않음."
       },
       {
         "id": "MC",
         "label": "MetaCross (메타크로스)",
         "kind": "자체 웹게임",
         "relatedProjects": [
-          "p15",
-          "p26",
-          "p49",
-          "p50",
-          "p60"
+          "p15"
         ],
-        "dateStatus": "U.Podium 개발·운영 2023.09~2024.06(구 과장과 협업, 사용자 확인); 2024.04 모바일 앱 코드는 직접 Git 확인. 별도 자체 카지노 개발의 기간은 미확정",
-        "work": "메타크로스: 자체 3D 웹 카지노 및 U.Podium 레이싱·파워볼·릴게임 웹 개발·운영(2023.09~2024.06) 업무 귀속. 구 과장 협업은 사용자 2026.11.25 확인. U.Podium 모바일 앱 React Native WebView 소스 2024.04 직접 Git 확인.",
+        "dateStatus": "구 과장과 같은 회사(사용자 2026.11.25 확인), 자체 3D 웹 카지노 작업 시작·종료월 미확정",
+        "work": "MetaCross(메타크로스)는 구 과장과 같은 회사라는 사용자 확인. 자체 3D 웹 카지노·실시간 베팅 및 자산 관련 게임 개발 이력. 2023.10 저장소 협업 초대 및 2024.03 Unity Pro 라이선스 기록은 확인되나 별도 회사의 실제 개발수행 기간은 미확정.",
         "tags": [
           "웹 개발",
           "서버 개발",
@@ -2149,24 +2183,9 @@
             "desc": "Unity Pro 갱신 안내(개발기간 증거 아님)",
             "evidence": "Gmail Unity renewal",
             "proof": "license"
-          },
-          {
-            "month": "2023-09",
-            "desc": "U.Podium 레이싱·파워볼·릴게임 웹 개발·운영(2024.06까지 매월 Telegram 기록), 구 과장 협업은 사용자 확인",
-            "evidence": "기존 p49 월별 Telegram 작업 기록 + 사용자 2026.11.25 귀속 정정",
-            "proof": "dated_work_and_user_confirmation",
-            "creditedMonth": "2023-09"
-          },
-          {
-            "month": "2024-04",
-            "desc": "U.Podium React Native 모바일 앱 WebView 및 Android 설정 직접 개발",
-            "evidence": "GitHub programmer119/reactnativetest2 2024-04-02",
-            "proof": "git",
-            "url": "https://github.com/programmer119/reactnativetest2/commit/064b6e81897ace6ef59d48a38cc3e4e888558522",
-            "creditedMonth": "2024-04"
           }
         ],
-        "note": "자체 웹게임으로 구분. Unity 라이선스 보유·갱신만으로 실제 개발기간을 계산하지 않음. 2026.11.25 사용자 정정: 2023.09~2024.06 U.Podium 웹 개발·운영의 귀속 회사는 MetaFastest 아닌 MetaCross. 구 과장 협업. 계약 법인·PM/PL 공식 직책은 별도 미확인. p49(웹) 및 p60(모바일)로 구분하되 동일 프로젝트 기간 중복 가산 금지."
+        "note": "2026.11.25 사용자 경력 순서 정정: U.Podium(메타페스트)→ZeroMax→MetaCross(구 과장과 같은 회사). 이전에 2023.09~2024.06 U.Podium 업무 전체를 MetaCross 소속으로 이관한 것은 오분류여서 취소. 2023.10 저장소 초대와 2024.03 라이선스는 업무 연관 단서이나 정확한 고용·개발기간, PM/PL 경력은 입증하지 않음."
       },
       {
         "id": "OL",
@@ -2365,8 +2384,8 @@
       },
       {
         "id": "UP",
-        "company": "MetaCross",
-        "shortName": "메크",
+        "company": "U.Podium",
+        "shortName": "유포",
         "status": "unpaid",
         "origin": "user_specified_display_2026-11-23",
         "projectIds": [
@@ -2374,7 +2393,7 @@
           "p49",
           "p60"
         ],
-        "note": "사용자 2026.11.25 정정: U.Podium은 서비스/프로젝트 이름이며 2023.09~2024.06 구 과장과 함께 한 수행 업무는 MetaCross에 귀속. 기존 U.Podium 단독 회사 표시는 MetaCross로 통일; 2024.09 추가 점검은 기간 밖이라 미가산. 기존 해당 프로젝트 웹 및 모바일 활동월을 유지하며 동일 월·프로젝트 중복 가산 없음. 계약 법인명 및 KOSA 인정 별도."
+        "note": "U.Podium은 MetaFastest(메타페스트) 관련/동일 서비스로 사용자 기존 확인 및 2023.07 저장소 이전 근거 존재. ZeroMax와 MetaCross(구 과장과 같은 회사)는 별도 업무 조직/회사로 구분. 2023.09~2024.06 웹 개발 및 2024.04 앱 작업의 확인된 월만 내부 게이지에 반영, 법인명·계약기간은 미확정. 다른 회사와 중복가산 금지."
       }
     ],
     "companyGroups": [
@@ -2400,8 +2419,8 @@
     ]
   },
   "careerSourcePolicy": {
-    "counted": "분야별 내부 경력 게이지와 회사별 비중은 급여와 무관하게 수행월이 확인된 프로젝트만 월 중복 없이 반영한다. 현재 건강보험 재직 9사, 온더라이브 유급 2024.06~10, ZeroMax 확인된 2023.02·03·05~08, MetaCross의 U.Podium 프로젝트 확인된 2023.09~2024.06. 단 분야마다 해당 업무에 연결된 월만 반영한다.",
-    "uncounted": "기간 없는 프로젝트·기획안·포괄 프리랜서 이력·발주처 미확인 일반 개발활동은 별도 보관, 현재 무급 프로젝트 적용 대상은 ZeroMax/MetaCross(U.Podium 프로젝트) 두 곳에 한정한다. 급여 여부는 표시색으로만 구분.",
+    "counted": "분야별 내부 경력 게이지와 회사별 비중은 급여와 무관하게 수행월이 확인된 프로젝트만 월 중복 없이 반영한다. 현재 건강보험 재직 9사, 온더라이브 유급 2024.06~10, ZeroMax 확인된 2023.02·03·05~08, U.Podium(메타페스트 연계) 확인된 2023.09~2024.06. 단 분야마다 해당 업무에 연결된 월만 반영한다.",
+    "uncounted": "기간 없는 프로젝트·기획안·포괄 프리랜서 이력·발주처 미확인 일반 개발활동은 별도 보관, 현재 무급 프로젝트 적용 대상은 ZeroMax/U.Podium 두 곳에 한정한다. 급여 여부는 표시색으로만 구분.",
     "proofTypes": "건강보험 자격득실, 계약·용역확인, 입금·원천징수·세금계산서 등 근거와 사업별 업무기간",
     "caveat": "경력 게이지의 업무 수행월과 건강보험 고용기간 및 KOSA 공식 승인기간은 서로 다른 지표. 급여 여부는 수행경력월 자체를 제외하는 조건이 아님.",
     "education": "교육·강의는 본인 유급 확인+원본 강의파일 전송·업체 제작/정산 메일에 근거해 별도 9개월 기록. 실제 입금증빙 확보와 KOSA 인정은 별도. SW 개발경력에는 가산하지 않음."

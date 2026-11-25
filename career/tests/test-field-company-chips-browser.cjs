@@ -21,7 +21,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    await page.goto('https://career.test/',{waitUntil:'load'});
    await page.waitForFunction(()=>document.querySelectorAll('#fields .field').length===10);
    const stats=await page.evaluate(()=>{
-    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','MetaCross'];
+    const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
     const expected={'웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
@@ -79,16 +79,16 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
       const chips=[...(web?.querySelectorAll('.field-source-chip.unpaid')||[])];
       const gray=chips.every(el=>getComputedStyle(el).backgroundColor==='rgb(228, 232, 236)');
       const names=chips.map(el=>el.querySelector('.field-chip-name')?.textContent);
-      const webNames=names.length===2&&names.includes('제맥')&&names.includes('메크');
+      const webNames=names.length===2&&names.includes('제맥')&&names.includes('유포');
       const sourceDates=chips.some(el=>el.title==='ZeroMax · 5개월')&&
-        chips.some(el=>el.title==='MetaCross · 10개월');
+        chips.some(el=>el.title==='U.Podium · 10개월');
       return {gray,webNames,sourceDates,webCount:chips.length,
         pc:pc?.querySelectorAll('.field-source-chip.unpaid').length,
         db:db?.querySelectorAll('.field-source-chip.unpaid').length,
         inExistingCreditedRow:chips.every(el=>el.closest('.field-source-row')?.querySelector('.field-source-label')?.textContent==='반영'),
         hasSeparateRow:!!web?.querySelector('.field-source-row.unpaid'),
         sourcePercentShown:chips.every(el=>!!el.querySelector('.field-share-percent')),
-        graySegments:[...web.querySelectorAll('.field-share-segment')].filter(el=>/^(ZeroMax|MetaCross)/.test(el.title))
+        graySegments:[...web.querySelectorAll('.field-share-segment')].filter(el=>/^(ZeroMax|U.Podium)/.test(el.title))
          .every(el=>getComputedStyle(el).backgroundColor==='rgb(140, 149, 159)'),
         totalSharesValid:Math.abs([...web.querySelectorAll('.field-source-chip.credited .field-share-percent')].reduce((a,el)=>a+Number(el.textContent.replace('%','')),0)-100)<.001};
     })();
