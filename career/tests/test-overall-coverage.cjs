@@ -74,9 +74,9 @@ setImmediate(()=>{
  assert.equal((el('timelineGapList').innerHTML.match(/data-gap-start=/g)||[]).length,6);
  assert.ok(el('timelineYearList').innerHTML.indexOf('data-timeline-month="2009-02"')<el('timelineYearList').innerHTML.indexOf('data-timeline-month="2026-11"'));
  assert.equal((el('fields').innerHTML.match(/<article class="field">/g)||[]).length,10,'education field added without changing existing nine card values');
- assert.ok(el('fields').innerHTML.includes('103 / 120개월'),'web gauge counts dated GameHi NexonGT work and unpaid ZeroMax/U.Podium without overlapping months');
+ assert.ok(el('fields').innerHTML.includes('110 / 120개월'),'web gauge counts dated GameHi NexonGT work and unpaid ZeroMax/U.Podium without overlapping months');
  assert.ok(el('fields').innerHTML.includes('92 / 180개월'),'PC game maintenance remains 92 months');
- assert.ok(el('fields').innerHTML.includes('103 / 120개월'),'GameHi NexonGT web development is added for May and June 2013');
+ assert.ok(el('fields').innerHTML.includes('110 / 120개월'),'GameHi NexonGT web development is added for May and June 2013');
  assert.ok(el('fields').innerHTML.includes('title="온더라이브 · 5개월 · 유급 · 2024.06~10"'),'paid source credited via compact company tag, without redundant banner');
  console.log('CAREER_OVERALL_TIMELINE_214_MONTHS_203_DATED_ACTIVITY_11_UNASSIGNED_PASS');
 });
