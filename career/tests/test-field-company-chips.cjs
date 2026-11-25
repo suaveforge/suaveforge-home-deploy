@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const root=path.resolve(__dirname,'../..');
 const html=fs.readFileSync(path.join(root,'career/index.html'),'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8'));
-assert.equal(data.version,19);
+assert.equal(data.version,20);
 assert.deepEqual(data.timeAxis.verifiedPaidEngagements,[],'no paid contract is automatically proven');
 const block=html.match(/<script>\s*([\s\S]*?)<\/script>/);
 assert.ok(block);
@@ -51,7 +51,7 @@ setImmediate(()=>{
  assert.deepEqual(data.timeAxis.unpaidActivityCompanies.map(x=>x.company),['ZeroMax','U.Podium'],'MetaFastest and U.Podium one service identity, MetaCross separate undated candidate');
  const expected={'웹 개발':[103,120],'모바일 앱':[96,192],'PC 응용SW':[92,180],
   '서버 개발':[87,156],'DB 개발':[55,156],'백엔드':[87,120],
-  'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[6,60]};
+  'PM / 조직 리딩':[42,120],'AI 개발':[0,60],'블록체인':[20,60]};
  assert.equal((current().match(/<article class="field">/g)||[]).length,10);
  assert.ok(field('교육·강의').includes('>9개월</b>'),'separate nine-month education history');
  assert.ok(field('교육·강의').includes('경력 기준 미설정'),'no invented procurement eligibility threshold');
@@ -198,9 +198,10 @@ setImmediate(()=>{
  assert.ok(trader.intervals.every(x=>new Date(x.b-86400000).toISOString().slice(0,7)===x.end),'ends exactly at last day of recorded month');
  assert.ok(gh.includes('data-gantt-activity="metacross"'),'MetaCross now has a dated activity row');
  const mcGroup=activityGroups.find(x=>x.id==='metacross');
- assert.equal(mcGroup?.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-10~2024-03');
- assert.ok(gh.includes('MetaCross · 카지노 개발 · 2023.10~2024.03'));
- assert.equal(qa.careerCreditedMonths(qa.allRows().find(x=>x.rowId==='p15')).length,6);
+ assert.equal(mcGroup?.intervals.map(x=>x.start+'~'+x.end).join('|'),'2023-10~2025-05');
+ assert.ok(gh.includes('MetaCross · 카지노 개발 · 2023.10~2025.05'));
+ assert.equal(qa.careerCreditedMonths(qa.allRows().find(x=>x.rowId==='p15')).length,20);
+ assert.ok(gh.includes('종료 2025.05.15 · 사용자 확인 20개월'),'exact final day displayed in Gantt activity row');
  assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,0,'MetaCross confirmed period no longer undated');
  assert.ok(!gh.includes('data-gantt-undated="MC"'),'MetaCross no duplicate undated row');
  assert.ok(gh.includes('data-gantt-company="온더라이브"'),'paid OnTheLive has one dated employer row');
@@ -260,8 +261,8 @@ setImmediate(()=>{
  assert.ok(el('projects').innerHTML.includes('&lt;img src=x onerror=alert(1)&gt;'),'table escapes unsafe local company input');
  const rows=qa.allRows();
  assert.equal(rows.find(x=>x.rowId==='p15')?.status,'linked');
- assert.ok(field('블록체인').includes('6 / 60개월'));
- assert.ok(field('웹 개발').includes('data-master-company="metacross" title="MetaCross · 6개월"'));
+ assert.ok(field('블록체인').includes('20 / 60개월'));
+ assert.ok(field('웹 개발').includes('data-master-company="metacross" title="MetaCross · 20개월"'));
  for(const id of ['p24','p25','p26','p39','p42','p48','p49'])
   assert.equal(rows.find(x=>x.rowId===id)?.status,'linked','dated client work must be classified as reflected: '+id);
  assert.equal(qa.careerCreditedMonths(rows.find(x=>x.rowId==='p49')).length,10,'ten U.Podium months credited once');

@@ -689,7 +689,7 @@ function ganttActivityGroups(g){
  const keys=[
   {id:'upodium',label:'U.Podium(메타페스트)',detail:'초기 자료 2022.11부터, 확인된 개발월만 보라색 표시 · 법적 발주 법인 미확정'},
   {id:'zeromax',label:'ZeroMax',detail:'조직 연관 개발기록 · 고용·유상 증빙 미연결'},
-  {id:'metacross',label:'MetaCross · 카지노 개발',detail:'2023.10~2024.03 사용자 확인 · 고용/급여 서류 별도'},
+  {id:'metacross',label:'MetaCross · 카지노 개발',detail:'2023.10~2025.05.15 사용자 확인 종료일 · 고용/급여 서류 별도'},
   {id:'multiasset',label:'멀티에셋 트레이더',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'investment',label:'투자전략 대시보드',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'suaveforge',label:'SuaveForge',detail:'자체 개발활동 · 유상 고객사 증빙 미연결'},
@@ -812,7 +812,8 @@ function renderCareerGantt(){
    '" tabindex="0" title="'+esc(entry.label+' · 표시범위 '+fmt(entry.window.start)+'~'+fmt(entry.window.end)+
     ' (진한 보라색만 수행월 확인 · 나머지는 미가산)')+'" aria-label="'+esc(entry.label+'의 활동자료 범위, 미확인 월 제외')+
    '" style="left:'+g.percent(windowStart).toFixed(5)+'%;width:'+(100*(windowEnd-windowStart)/g.span).toFixed(5)+'%"></span>':'';
-  const workSummary=(entry.window.hasEarlyClue?'초기 자료 '+fmt(entry.window.start)+' · ':'')+'개발 확인 '+entry.months.size+'개월';
+  const workSummary=entry.id==='metacross'?'종료 2025.05.15 · 사용자 확인 '+entry.months.size+'개월':
+   (entry.window.hasEarlyClue?'초기 자료 '+fmt(entry.window.start)+' · ':'')+'개발 확인 '+entry.months.size+'개월';
   const bars=entry.intervals.map(i=>{
    const start=Math.max(g.from,i.a),end=Math.min(g.until,i.b);
    if(end<=start)return '';

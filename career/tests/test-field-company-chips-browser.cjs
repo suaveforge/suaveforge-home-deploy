@@ -24,7 +24,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
     const cards=[...document.querySelectorAll('#fields .field')],insured=['위메이드','넥슨GT','유비펀','유비펀스튜디오','엔투스튜디오','안드로메다게임즈','네오위즈','넥스터','버드레터','알지오','온더라이브','ZeroMax','U.Podium','MetaCross'];
     const field=name=>cards.find(x=>x.querySelector('.name')?.textContent===name);
     const count=name=>field(name)?.querySelector('.numbers small')?.textContent;
-    const expected={'블록체인':'6 / 60개월','웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
+    const expected={'블록체인':'20 / 60개월','웹 개발':'103 / 120개월','서버 개발':'87 / 156개월','DB 개발':'55 / 156개월',
       '백엔드':'87 / 120개월','모바일 앱':'96 / 192개월','PC 응용SW':'92 / 180개월'};
     const progressBandsValid=cards.every(card=>{
      const bar=card.querySelector('.track[role="progressbar"]');
