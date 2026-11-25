@@ -383,6 +383,11 @@ function eligibleEmployersInMonth(row,n){
  // Pay status selects styling, never whether a work month is counted.
  if(scope==='software'){
   const projectId=row.rowId||row.id;
+  for(const entry of axis.userConfirmedActivityCompanies||[]){
+   if(entry.status!=='confirmed_activity'||!entry.projectIds?.includes(projectId))continue;
+   if(!months(entry.start,entry.end).includes(n))continue;
+   if(!attributed.some(company=>careerCompanyKey(company)===careerCompanyKey(entry.company)))attributed.push(entry.company);
+  }
   for(const entry of axis.unpaidActivityCompanies||[]){
    if(entry.status!=='unpaid'||!entry.projectIds?.includes(projectId))continue;
    if(!months(row.start,row.end).includes(n))continue;
@@ -432,6 +437,9 @@ function careerMasterCompanies(rows){
   const id=careerCompanyKey(unpaid.company);
   if(unpaid.status==='unpaid'&&id&&!names.has(id))names.set(id,unpaid.company);
  }
+ for(const e of axis.userConfirmedActivityCompanies||[]){
+  const id=careerCompanyKey(e.company);if(e.status==='confirmed_activity'&&id&&!names.has(id))names.set(id,e.company);
+ }
  return [...names].map(([id,company])=>({id,company}));
 }
 function fieldEmployerStates(rows,category,master){
@@ -463,6 +471,11 @@ function fieldEmployerStates(rows,category,master){
    }
   }
   if(item.unpaidMonths.size)item.credited++;
+ }
+ for(const e of axis.userConfirmedActivityCompanies||[]){
+  if(e.status!=='confirmed_activity')continue;
+  const item=byId.get(careerCompanyKey(e.company));
+  if(item&&rows.some(r=>e.projectIds?.includes(r.rowId||r.id)&&r.categories?.includes(category)&&careerCreditedMonths(r).length))item.credited++;
  }
  const classified={credited:[],uncredited:[],unpaid:[],unrelated:[]};
  for(const item of byId.values()){
@@ -525,7 +538,7 @@ function sourceChip(company,state,share=null,color='',uncreditedCount=0,rawMonth
  const short=Array.from(company).slice(0,2).join('');
  const credited=state==='credited',uncredited=state==='uncredited',unpaid=state==='unpaid';
  const unpaidEntry=(axis.unpaidActivityCompanies||[]).find(p=>careerCompanyKey(p.company)===careerCompanyKey(company));
- const chipName=unpaidEntry?.shortName||Array.from(company).slice(0,2).join('');
+ const chipName=unpaidEntry?.shortName||(company==='MetaCross'?'메크':Array.from(company).slice(0,2).join(''));
  const userPaid=company==='온더라이브'&&(axis.userConfirmedPaidEngagements||[]).some(p=>p.paidConfirmedByUser&&p.periodConfirmedByUser);
  const title=company+' · '+(credited?(rawMonths+'개월'+(userPaid?' · 유급 · 2024.06~10':'')):unpaid?rawMonths+'개월':uncredited?'미반영':'해당 X');
  const content=credited?'<span class="field-share-dot" style="background:'+color+'"></span>'+
@@ -666,10 +679,11 @@ function ganttActivityGroups(g){
  // Dated authored commits, dated work messages and directly assigned development
  // tasks are useful activity evidence, never substitutes for salary/contract proof.
  // Ignore undated/planning/reference-only, generic freelance umbrella and local tasks.
- const documented=new Set(['git_direct_code_commit','telegram_dated_work','git_commit','assigned_task']);
+ const documented=new Set(['git_direct_code_commit','telegram_dated_work','git_commit','assigned_task','user_confirmed_project_period']);
  const keys=[
   {id:'zeromax',label:'ZeroMax',detail:'조직 연관 개발기록 · 고용·유상 증빙 미연결'},
   {id:'upodium',label:'U.Podium(메타페스트)',detail:'동일/연계 서비스 개발기록 · 법적 고용/발주 법인 미확정'},
+  {id:'metacross',label:'MetaCross · 카지노 개발',detail:'2023.10~2024.03 사용자 확인 · 고용/급여 서류 별도'},
   {id:'multiasset',label:'멀티에셋 트레이더',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'investment',label:'투자전략 대시보드',detail:'프로젝트명 · 유상 증빙 미연결'},
   {id:'suaveforge',label:'SuaveForge',detail:'자체 개발활동 · 유상 고객사 증빙 미연결'},
@@ -684,6 +698,7 @@ function ganttActivityGroups(g){
   if(c==='프리랜서 / Upodium 아트테스트')return 'upodium';
   if(c==='U.Podium'&&/U\.Podium/.test(p.title||''))return 'upodium';
   if(c==='발주처 미확인'&&/U\.Podium/.test(p.title||''))return 'upodium';
+  if(c==='MetaCross'&&p.id==='p15')return 'metacross';
   if(c==='프리랜서 / 멀티에셋 트레이더')return 'multiasset';
   if(c==='프리랜서 / 투자전략 대시보드')return 'investment';
   if(c==='SuaveForge')return 'suaveforge';
@@ -792,7 +807,7 @@ function renderCareerGantt(){
    '개발활동 '+entry.months.size+'개월 · '+esc(dates.length>20?dates.slice(0,19)+'…':dates)+'</small></div><div class="cg-rail">'+rules()+bars+'</div></div>';
  }).join('');
 
- const undatedEntries=(axis.reconstructionCandidates||[]).filter(item=>item.id==='MC');
+ const undatedEntries=(axis.reconstructionCandidates||[]).filter(item=>item.id==='MC'&&!base.some(p=>p.id==='p15'&&inMonths(p)));
  const undatedRows=undatedEntries.map(item=>{
   const label='MetaCross · 카지노 개발',state='별도 카지노 개발기간 미확정';
   return '<div class="cg-row cg-activity-row cg-undated-row" data-gantt-undated="'+esc(item.id)+'">'+
