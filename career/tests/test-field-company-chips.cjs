@@ -205,6 +205,11 @@ setImmediate(()=>{
  assert.equal((gh.match(/data-gantt-undated=/g)||[]).length,0,'MetaCross confirmed period no longer undated');
  assert.ok(!gh.includes('data-gantt-undated="MC"'),'MetaCross no duplicate undated row');
  assert.ok(gh.includes('data-gantt-company="온더라이브"'),'paid OnTheLive has one dated employer row');
+ assert.equal((gh.match(/data-gantt-paid-header=/g)||[]).length,1,'one dedicated paid project divider');
+ assert.ok(gh.includes('유급 외주·프로젝트'),'OnTheLive is visibly separated from health-insured employers');
+ assert.ok(gh.indexOf('data-gantt-paid-header="1"')>gh.indexOf('전체 날짜 현황')&&
+  gh.indexOf('data-gantt-paid-header="1"')<gh.indexOf('data-gantt-company="온더라이브"'),
+  'paid contract section follows overall employer summary and precedes OnTheLive');
  assert.ok(gh.includes('data-gantt-user-period="OL2024"'),'single user-confirmed paid bar drawn');
  assert.ok(gh.includes('온더라이브 · 2024.06.09~2024.10.09 · 유급'),'short accurate tooltip');
  assert.ok(!gh.includes('data-git-activity="OL"')&&!gh.includes('cg-git-evidence'),'overlaid Git marker removed');

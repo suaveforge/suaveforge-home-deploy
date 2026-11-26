@@ -116,6 +116,14 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
        paidEducation:sec.querySelectorAll('[data-gantt-education]').length,
        olPeriod:sec.querySelector('[data-gantt-user-period="OL2024"]')?.title,
        olBarCount:sec.querySelectorAll('[data-gantt-user-period="OL2024"]').length,
+       olSeparateSection:(()=>{
+        const ol=sec.querySelector('[data-gantt-company="온더라이브"]');
+        const hdr=sec.querySelector('[data-gantt-paid-header="1"]');
+        const overview=sec.querySelector('.cg-overview-rail');
+        return !!ol&&!!hdr&&!!overview&&hdr.nextElementSibling===ol&&
+         (overview.closest('.cg-row').compareDocumentPosition(hdr)&Node.DOCUMENT_POSITION_FOLLOWING)!==0&&
+         (hdr.compareDocumentPosition(ol)&Node.DOCUMENT_POSITION_FOLLOWING)!==0;
+       })(),
        olOverlays:sec.querySelectorAll('[data-git-activity="OL"], .cg-git-evidence').length,
        olBarColors:sec.querySelector('[data-gantt-user-period="OL2024"]')?getComputedStyle(sec.querySelector('[data-gantt-user-period="OL2024"]')).backgroundColor:null,
        undatedRows:[...sec.querySelectorAll('[data-gantt-undated]')].map(r=>({
@@ -195,6 +203,7 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'career/data.json'),'utf8')
    assert.ok(stats.gantt.olPeriod?.includes('2024.06.09~2024.10.09'),'user-confirmed work dates in short tooltip');
    assert.ok(stats.gantt.olPeriod?.includes(' · 유급'),'paid tooltip uses concise label');
    assert.equal(stats.gantt.olBarCount,1,'OnTheLive gets exactly one bar');
+    assert.ok(stats.gantt.olSeparateSection,'OnTheLive paid project appears in a dedicated group, not between insured jobs');
    assert.equal(stats.gantt.olOverlays,0,'Git marker is not drawn over paid bar');
    assert.equal(stats.gantt.olBarColors,'rgb(113, 146, 189)','OnTheLive paid bar is one consistent blue');
     assert.ok(stats.gantt.artTestMerged,'no duplicate art-test Gantt row');

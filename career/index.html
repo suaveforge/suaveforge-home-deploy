@@ -187,6 +187,9 @@ textarea.field-input{resize:vertical;min-height:80px}.wide{grid-column:1/-1}
 .cg-activity-clue:focus-visible{outline:2px solid #685793;outline-offset:2px}
 .cg-activity-divider{background:#f5f2fa;min-height:38px}
 .cg-activity-divider .cg-name{background:#f5f2fa}
+.cg-contract-divider{background:#edf4fa}
+.cg-contract-divider .cg-name{background:#edf4fa}
+.cg-contract-divider strong,.cg-contract-divider .cg-activity-header{color:#3d6581}
 .cg-activity-divider strong{color:#574976;font-size:12px}
 .cg-activity-divider .cg-activity-header{padding:9px 12px;align-content:center;
  color:#71648c;font-size:12px;border-left:0}
@@ -771,7 +774,7 @@ function renderCareerGantt(){
  const rules=()=>g.years.map(y=>'<span class="cg-rule" style="left:'+y.position.toFixed(5)+'%"></span>').join('');
  const axisRow='<div class="cg-row"><div class="cg-name cg-axis-label">회사 · 재직/수행일</div><div class="cg-axis">'+
   g.years.map(y=>'<span class="cg-axis-year" style="left:'+y.position.toFixed(5)+'%">'+y.name+'</span>').join('')+'</div></div>';
- const items=g.periods.map(p=>{
+ const renderPeriod=p=>{
   const left=g.percent(p.first),width=100*((p.last+g.DAY-p.first)/g.span);
   const selfConfirmed=p.kind==='user-paid';
   const label=p.company+' · '+fmt(p.start)+'~'+fmt(p.end)+(selfConfirmed?' · 유급':'');
@@ -780,7 +783,12 @@ function renderCareerGantt(){
    '<small>'+fmt(p.start)+' ~ '+fmt(p.end)+' · '+g.workedMonths(p)+'개월</small></div><div class="cg-rail">'+rules()+
    '<span class="cg-bar'+(p.kind==='paid'?' paid':selfConfirmed?' paid user-confirmed':'')+'"'+marker+' tabindex="0" title="'+esc(label)+'" aria-label="'+esc(label)+
    '" style="left:'+left.toFixed(5)+'%;width:'+width.toFixed(5)+'%"></span></div></div>';
- }).join('');
+ };
+ const items=g.periods.filter(p=>p.kind==='insurance').map(renderPeriod).join('');
+ const contracts=g.periods.filter(p=>p.kind!=='insurance').map(renderPeriod).join('');
+ const contractHeader=contracts?
+  '<div class="cg-row cg-activity-divider cg-contract-divider" data-gantt-paid-header="1"><div class="cg-name"><strong>유급 외주·프로젝트</strong></div>'+
+  '<div class="cg-activity-header">건강보험 재직회사와 구분 · 사용자 확인 유급 수행기간 · 증빙은 별도</div></div>':'';
  const summary='<div class="cg-row"><div class="cg-name cg-overview-name"><strong>전체 날짜 현황</strong><small>겹침·공백 동시 확인</small></div>'+
   '<div class="cg-rail cg-overview-rail">'+rules()+g.segments.map(p=>{
    const name=p.kind==='covered'?'확인':p.kind==='overlap'?'중복':'미확인';
@@ -849,7 +857,7 @@ function renderCareerGantt(){
    '<div class="cg-rail">'+rules()+'<span class="cg-undated-note" title="'+esc(state)+'">'+esc(state)+'</span></div></div>';
  }).join('');
  const board=$('ganttBoard');
- board.innerHTML=axisRow+items+summary+paidTeaching+activityHeader+activityRows+undatedRows+
+ board.innerHTML=axisRow+items+summary+contractHeader+contracts+paidTeaching+activityHeader+activityRows+undatedRows+
   '<div class="cg-guide" id="ganttGuide" hidden aria-hidden="true"><span class="cg-guide-date" id="ganttGuideDate"></span></div>';
  board.onpointermove=e=>{
   const rail=e.target?.closest?.('.cg-rail, .cg-axis');
